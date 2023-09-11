@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 file_path = "A1Wortlist.csv"
 
 app = Flask(__name__)
-app.secret_key = 'dfsdfkfsl4320i(*&&^%'
+app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
 
 
 def recreate_wortlist():
