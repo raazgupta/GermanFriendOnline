@@ -7,8 +7,8 @@
     <h1>Vocabulary Translation:</h1>
     <p>{{ result.translation }}</p>
     <form method="POST" action="/ankiRecord">
-        <button type="submit"> {{ result.frequency1 }} </button>
-        <button type="submit"> {{ result.frequency2 }} </button>
+        <button type="submit" name="frequency" value="{{ result.frequency1 }}"> {{ result.frequency1 }} </button>
+        <button type="submit" name="frequency" value="{{ result.frequency2 }}"> {{ result.frequency2 }} </button>
     </form>
 </body>
 </html>

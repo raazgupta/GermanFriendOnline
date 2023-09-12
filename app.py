@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect, url_for
 import csv
 import openai
 import os
@@ -54,32 +54,35 @@ def chooseSelectedWords():
     # Also in the case that 10 words are not found, keep an array of [word,line number] that do not have reviewData
     # Then check for the number of not found words,
     # and choose that number from the array in random and add to the selected words array
-    wortLines = []
+
+    # Format [Word, LineNumber, ReviewFrequency, ReviewDateString]
     selected_words_lineNumber = []
+
+
     not_reviewed_words = []
     number_burned = 0
+    total_lines = 0
     with open(file_path, 'r') as file:
         # num_lines = sum(1 for line in file)
         # print(f"num_lines: {num_lines}")
         for lineNumber, line in enumerate(file, start=0):
             line = line.strip()
             lineElements = line.split(',')
-            wortLines.append(line.split(','))
             if lineNumber >= 1:
-
                 word = lineElements[0]
                 reviewFrequency = lineElements[1]
                 reviewDateString = lineElements[2]
 
                 if reviewDateString == "":
-                    not_reviewed_words.append([word, lineNumber])
+                    not_reviewed_words.append([word, lineNumber, reviewFrequency, reviewDateString])
                 elif reviewFrequency != "B":
                     reviewDateObject = datetime.strptime(reviewDateString, "%Y-%m-%d").date()
                     today = datetime.now().date()
                     if reviewDateObject <= today and len(selected_words_lineNumber) < 10:
-                        selected_words_lineNumber.append([word, lineNumber])
+                        selected_words_lineNumber.append([word, lineNumber, reviewFrequency, reviewDateString])
                 elif reviewFrequency == "B":
                     number_burned = number_burned + 1
+                total_lines = total_lines + 1
 
     print("Number of selected words using reviewDate:", len(selected_words_lineNumber))
 
@@ -102,9 +105,9 @@ def chooseSelectedWords():
         selected_words.append(selected_word_lineNumber[0])
 
 
-    percentage_burned = number_burned / (len(wortLines) - 1)
+    percentage_burned = number_burned / total_lines
 
-    return wortLines, selected_words_lineNumber, selected_words, percentage_burned
+    return selected_words_lineNumber, selected_words, percentage_burned
 
 
 def create_story(selected_words, temperature=0.0):
@@ -173,7 +176,7 @@ def index():
 
 @app.route('/germanStory', methods=['POST'])
 def germanStory():
-    wortLines, selected_words_lineNumber, selected_words, percentage_burned = chooseSelectedWords()
+    selected_words_lineNumber, selected_words, percentage_burned = chooseSelectedWords()
     messages, response = create_story(selected_words, temperature=percentage_burned)
 
     result_data = {
@@ -183,13 +186,10 @@ def germanStory():
 
     session['selected_words_position'] = 0
     session['selected_words_lineNumber'] = selected_words_lineNumber
-    session['wortLines'] = wortLines
-
-    print('in germanStory func, session wortlines:', session['wortLines'])
 
     return render_template('germanStory.html', result = result_data)
 
-@app.route('/anki', methods=['POST'])
+@app.route('/anki', methods=['POST','GET'])
 def anki():
 
         selected_words_lineNumber = session['selected_words_lineNumber']
@@ -210,7 +210,6 @@ def anki_translate():
 
     selected_words_lineNumber = session['selected_words_lineNumber']
     selected_words_position = session['selected_words_position']
-    wortLines = session['wortLines']
 
     wort = selected_words_lineNumber[selected_words_position][0]
     lineNumber = selected_words_lineNumber[selected_words_position][1]
@@ -242,31 +241,33 @@ def anki_translate():
     result_data['translation'] = response
 
     # Request for next Frequency
-    currentFrequency = wortLines[lineNumber][1]
+    currentFrequency = selected_words_lineNumber[selected_words_position][2]
     if currentFrequency == "" or currentFrequency == "T":
-        result_data['frequency1'] = 'Tomorrow'
-        result_data['frequency2'] = 'Week'
+        result_data['frequency1'] = 'T'
+        result_data['frequency2'] = 'W'
     elif currentFrequency == "W":
-        result_data['frequency1'] = 'Tomorrow'
-        result_data['frequency2'] = 'Month'
+        result_data['frequency1'] = 'T'
+        result_data['frequency2'] = 'M'
     elif currentFrequency == "M":
-        result_data['frequency1'] = 'Tomorrow'
-        result_data['frequency2'] = '3 Months'
+        result_data['frequency1'] = 'T'
+        result_data['frequency2'] = '3M'
     elif currentFrequency == "3M":
-        result_data['frequency1'] = 'Tomorrow'
-        result_data['frequency2'] = 'Burn'
+        result_data['frequency1'] = 'T'
+        result_data['frequency2'] = 'B'
     elif currentFrequency == "B":
-        result_data['frequency1'] = 'Burn'
-        result_data['frequency2'] = 'Burn'
+        result_data['frequency1'] = 'B'
+        result_data['frequency2'] = 'B'
 
     return render_template('ankiTranslate.html', result=result_data)
 
+@app.route('/ankiRecord', methods=['POST'])
 def updateReviewDate():
     # Based on next Frequency update the review date
     today = datetime.now().date()
     nextReviewDate = ""
-    if freq_input == "":
-        freq_input = "T"
+
+    freq_input = request.form['frequency']
+
     if freq_input == "T":
         nextReviewDate = today + timedelta(days=1)
     elif freq_input == "W":
@@ -278,10 +279,19 @@ def updateReviewDate():
     elif freq_input == "B":
         nextReviewDate = today
 
-    # print(f"{wort} line number: {lineNumber}\n")
-    wortLines[lineNumber][1] = freq_input
-    wortLines[lineNumber][2] = nextReviewDate.strftime("%Y-%m-%d")
+    selected_words_lineNumber = session['selected_words_lineNumber']
+    selected_words_position = session['selected_words_position']
 
+    selected_words_lineNumber[selected_words_position][2] = freq_input
+    selected_words_lineNumber[selected_words_position][3] = nextReviewDate.strftime("%Y-%m-%d")
+
+    session['selected_words_position'] = selected_words_position + 1
+    session['selected_words_lineNumber'] = selected_words_lineNumber
+
+    if (selected_words_position + 1) < len(selected_words_lineNumber):
+        return redirect(url_for('anki'))
+    else:
+        return f'{selected_words_position + 1}, {len(selected_words_lineNumber)}'
 
 
 if __name__ == '__main__':
