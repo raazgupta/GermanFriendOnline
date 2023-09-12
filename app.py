@@ -183,6 +183,9 @@ def germanStory():
 
     session['selected_words_position'] = 0
     session['selected_words_lineNumber'] = selected_words_lineNumber
+    session['wortLines'] = wortLines
+
+    print('in germanStory func, session wortlines:', session['wortLines'])
 
     return render_template('germanStory.html', result = result_data)
 
@@ -201,9 +204,23 @@ def anki():
 
         return render_template('anki.html', result = result_data)
 
-'''
+
 @app.route('/ankiTranslate', methods=['POST'])
 def anki_translate():
+
+    selected_words_lineNumber = session['selected_words_lineNumber']
+    selected_words_position = session['selected_words_position']
+    wortLines = session['wortLines']
+
+    wort = selected_words_lineNumber[selected_words_position][0]
+    lineNumber = selected_words_lineNumber[selected_words_position][1]
+
+    result_data = {
+        'translation': '',
+        'frequency1': '',
+        'frequency2': ''
+    }
+
     # Get the English translation using OpenAI
     messages = [
         {'role': 'system',
@@ -222,24 +239,29 @@ def anki_translate():
          },
     ]
     response = get_completion_from_messages(messages, temperature=0)
-    user_input = input(response + "\n")
+    result_data['translation'] = response
+
     # Request for next Frequency
     currentFrequency = wortLines[lineNumber][1]
-    freq_input = ""
-    if currentFrequency == "":
-        freq_input = input("Review again Tomorrow (T) or in 1 Week (W): ")
-    elif currentFrequency == "T":
-        freq_input = input("Review again Tomorrow (T) or in 1 Week (W): ")
+    if currentFrequency == "" or currentFrequency == "T":
+        result_data['frequency1'] = 'Tomorrow'
+        result_data['frequency2'] = 'Week'
     elif currentFrequency == "W":
-        freq_input = input("Review again Tomorrow (T) or in 1 Month (M): ")
+        result_data['frequency1'] = 'Tomorrow'
+        result_data['frequency2'] = 'Month'
     elif currentFrequency == "M":
-        freq_input = input("Review again Tomorrow (T) or in 3 Months (3M): ")
+        result_data['frequency1'] = 'Tomorrow'
+        result_data['frequency2'] = '3 Months'
     elif currentFrequency == "3M":
-        freq_input = input("Review again Tomorrow (T) or is it Burned in memory (B): ")
+        result_data['frequency1'] = 'Tomorrow'
+        result_data['frequency2'] = 'Burn'
     elif currentFrequency == "B":
-        freq_input = "B"
-        print("This word is Burned in memory\n")
+        result_data['frequency1'] = 'Burn'
+        result_data['frequency2'] = 'Burn'
 
+    return render_template('ankiTranslate.html', result=result_data)
+
+def updateReviewDate():
     # Based on next Frequency update the review date
     today = datetime.now().date()
     nextReviewDate = ""
@@ -260,8 +282,7 @@ def anki_translate():
     wortLines[lineNumber][1] = freq_input
     wortLines[lineNumber][2] = nextReviewDate.strftime("%Y-%m-%d")
 
-    print('\n')
-'''
+
 
 if __name__ == '__main__':
     app.run(debug=True)
