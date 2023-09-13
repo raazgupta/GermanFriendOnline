@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-import csv
 import openai
 import os
 import random
@@ -144,28 +143,35 @@ def create_story(selected_words, temperature=0.0):
 
 
 
-def translate_to_English(messages):
-    messages.append(
-        {'role': 'user',
-         'content': 'Translate this German Story to English.'
-         }
-    )
 
-    # Print story in English
-    response = get_completion_from_messages(messages)
-    print("English translation:")
-    print(response)
-    input()
+def save_to_csv():
 
+    updated_content = []
 
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
 
+    # Modify the rows that have updated frequency and review date
+    selected_words_lineNumber = session['selected_words_lineNumber']
+    rows_to_update = []
+    for selected_word_LineNumber in selected_words_lineNumber:
+        rows_to_update.append(selected_word_LineNumber[1])
 
-def save_to_csv(wortLines):
+    for i, line in enumerate(lines, start=0):
+        if i in rows_to_update:
+            updated_line = ""
+            for selected_word_LineNumber in selected_words_lineNumber:
+                if selected_word_LineNumber[1] == i:
+                    updated_line = selected_word_LineNumber[0] + "," + selected_word_LineNumber[2] + ',' + selected_word_LineNumber[3] + "\n"
+            updated_content.append(updated_line)
+            print(updated_line)
+        else:
+            updated_content.append(line)
+
     # Write data to CSV file
-    with open(file_path, 'w', newline='') as csv_file:
-        csv_writer = csv.writer(csv_file)
-        for row in wortLines:
-            csv_writer.writerow(row)
+    print(updated_content[0])
+    with open(file_path, 'w') as file:
+        file.writelines(updated_content)
 
 @app.route('/')
 def index():
@@ -186,6 +192,8 @@ def germanStory():
 
     session['selected_words_position'] = 0
     session['selected_words_lineNumber'] = selected_words_lineNumber
+    session['messages'] = messages
+    session['germanStory'] = response
 
     return render_template('germanStory.html', result = result_data)
 
@@ -260,6 +268,27 @@ def anki_translate():
 
     return render_template('ankiTranslate.html', result=result_data)
 
+@app.route('/englishTranslation', methods=['POST','GET'])
+def englishTranslation():
+    messages = session['messages']
+    germanStory = session['germanStory']
+
+    messages.append(
+        {'role': 'user',
+         'content': 'Translate this German Story to English.'
+         }
+    )
+
+    # Print story in English
+    response = get_completion_from_messages(messages)
+
+    result_data = {
+        'germanStory': germanStory,
+        'englishStory': response
+    }
+
+    return render_template('englishTranslation.html', result=result_data)
+
 @app.route('/ankiRecord', methods=['POST'])
 def updateReviewDate():
     # Based on next Frequency update the review date
@@ -291,8 +320,10 @@ def updateReviewDate():
     if (selected_words_position + 1) < len(selected_words_lineNumber):
         return redirect(url_for('anki'))
     else:
-        return f'{selected_words_position + 1}, {len(selected_words_lineNumber)}'
-
+        # Update the Wortlist file with updated frequency and date
+        save_to_csv()
+        # Show the English Translation
+        return redirect(url_for('englishTranslation'))
 
 if __name__ == '__main__':
     app.run(debug=True)

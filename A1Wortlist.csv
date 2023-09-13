@@ -6,14 +6,14 @@ Geburtsdatum,,
 Geburtsort,,
 Alter,,
 Wohnung,,
-Räume,W,2023-09-11
+Räume,T,2023-09-15
 Einrichtung,,
 Möbel,,
 Pflanzen,,
 Tiere,,
 Klima,,
 Wetter,,
-Nahrungsmittel,W,2023-09-11
+Nahrungsmittel,,
 Mahlzeiten,,
 Speisen,,
 Getränke,,
@@ -32,8 +32,8 @@ Familie,,
 Persönliche,,
 Beziehungen,,
 Staatsangehörigkeit,,
-Nationalität,M,2023-10-08
-Herkunft,W,2023-09-15
+Nationalität,T,2023-09-15
+Herkunft,T,2023-09-15
 Aussehen,,
 Gewohnheiten,,
 Tagesablauf,,
@@ -74,7 +74,7 @@ sieben,,
 acht,,
 neun,,
 zehn,,
-elf,M,2023-10-08
+elf,T,2023-09-15
 zwölf,,
 dreizehn,,
 vierzehn,,
@@ -98,7 +98,7 @@ zweihundert,,
 eintausend,,
 eine Million,,
 eine Milliarde,,
-erste,W,2023-09-10
+erste,T,2023-09-15
 zweite,,
 dritte,,
 vierte,,
@@ -122,9 +122,9 @@ Tag,,
 Morgen,,
 Vormittag,,
 Mittag,,
-Januar,W,2023-09-10
+Januar,T,2023-09-15
 Februar,,
-März,W,2023-09-10
+März,T,2023-09-15
 April,,
 Mai,,
 Juni,,
@@ -132,7 +132,7 @@ Tag,,
 Woche,,
 Jahr,,
 Wochenende,,
-Nachmittag,M,2023-10-08
+Nachmittag,T,2023-09-15
 Abend,,
 Nacht,,
 Juli,,
@@ -173,9 +173,9 @@ weiß,,
 rot,,
 Norden,,
 Süden,,
-blau,M,2023-10-08
+blau,T,2023-09-15
 gelb,,
-Westen,M,2023-10-08
+Westen,T,2023-09-15
 braun,,
 Osten,,
 ab,,
@@ -186,7 +186,7 @@ abgeben,,
 abholen,,
 der Absender,,
 Achtung,,
-die Adresse,W,2023-09-11
+die Adresse,,
 allein,,
 also,,
 alt,,
@@ -205,7 +205,7 @@ anmachen,,
 anmelden,,
 die Anmeldung,,
 die Anrede,,
-anrufen,W,2023-09-10
+anrufen,M,2023-10-14
 der Anruf,,
 beantworter,,
 die Ansage,,
@@ -221,7 +221,7 @@ der Appetit,,
 arbeiten,,
 die Arbeit,,
 arbeitslos,,
-der Arbeitsplatz,M,2023-10-08
+der Arbeitsplatz,M,2023-10-14
 der Arm,,
 der Arzt,,
 auch,,
@@ -229,14 +229,14 @@ auf,,
 die Aufgabe,,
 aufhören,,
 aufstehen,,
-der Aufzug,W,2023-09-11
+der Aufzug,M,2023-10-14
 das Auge,,
 aus,,
 der Ausflug,,
 ausfüllen,,
 der Ausgang,,
 die Auskunft,,
-das Ausland,W,2023-09-11
+das Ausland,,
 der Ausländer,,
 ausländisch,,
 ausmachen,,
@@ -254,7 +254,7 @@ das Baby,,
 die Bäckerei,,
 das Bad,,
 baden,,
-die Bahn,M,2023-10-08
+die Bahn,M,2023-10-14
 der Bahnhof,,
 der Bahnsteig,,
 bald,,
@@ -264,7 +264,7 @@ die Bank,,
 bar,,
 der Bauch,,
 der Baum,,
-der Beamte,W,2023-09-11
+der Beamte,M,2023-10-14
 bedeuten,,
 beginnen,,
 bei,,
@@ -279,7 +279,7 @@ benutzen,,
 der Beruf,,
 besetzt,,
 besichtigen,,
-besser,M,2023-10-08
+besser,M,2023-10-14
 bestellen,,
 besuchen,,
 das Bett,,
@@ -300,7 +300,7 @@ die Blume,,
 der Bogen,,
 böse,,
 brauchen,,
-breit,W,2023-09-11
+breit,M,2023-10-14
 der Brief,,
 die Briefmarke,,
 bringen,,
@@ -336,7 +336,7 @@ der Doktor,,
 das Doppelzimmer,,
 das Dorf,,
 dort,,
-draußen,T,2023-09-09
+draußen,W,2023-09-21
 drucken,,
 der Drucker,,
 drücken,,
@@ -346,9 +346,9 @@ dürfen,,
 der Durst,,
 duschen,,
 die Dusche,,
-die Ecke,W,2023-09-11
+die Ecke,,
 die Ehefrau,,
-der Ehemann,W,2023-09-10
+der Ehemann,M,2023-10-14
 das Ei,,
 eilig,,
 ein,,
@@ -409,7 +409,7 @@ der Flughafen,,
 das Flugzeug,,
 das Formular,,
 das Foto,,
-fragen,W,2023-09-07
+fragen,M,2023-10-14
 die Frage,,
 die Frau,,
 frei,,
@@ -485,7 +485,7 @@ die Hausaufgabe,,
 die Hausfrau,,
 der Hausmann,W,2023-09-07
 die Heimat,,
-heiraten,W,2023-09-11
+heiraten,,
 heißen,,
 helfen,,
 hell,,
@@ -506,7 +506,7 @@ der Hund,,
 der Hunger,,
 ich,,
 ihr,,
-ihm,T,2023-09-05
+ihm,,
 ihn,,
 immer,,
 in,,
@@ -521,7 +521,7 @@ der Job,,
 der Jugendliche,,
 jung,,
 der Junge,,
-der Kaffee,W,2023-09-11
+der Kaffee,,
 kaputt,,
 die Karte,,
 Kredit Karte,,
@@ -573,7 +573,7 @@ ledig,,
 legen,,
 der Lehrer,,
 leicht,,
-leider,T,2023-09-05
+leider,,
 leise,,
 lernen,,
 lesen,,
@@ -652,7 +652,7 @@ die Partnerin,,
 die Party,,
 der Pass,,
 die Pause,,
-der Plan,W,2023-09-11
+der Plan,,
 der Platz,,
 die Polizei,,
 die Pommes frites,,
@@ -841,7 +841,7 @@ wissen,,
 wo,,
 woher,,
 wohin,,
-wohnen,W,2023-09-11
+wohnen,,
 die Wohnung,,
 wollen,,
 das Wort,,
