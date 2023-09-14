@@ -6,7 +6,7 @@ Geburtsdatum,,
 Geburtsort,,
 Alter,,
 Wohnung,,
-Räume,T,2023-09-15
+Räume,W,2023-09-22
 Einrichtung,,
 Möbel,,
 Pflanzen,,
@@ -32,8 +32,8 @@ Familie,,
 Persönliche,,
 Beziehungen,,
 Staatsangehörigkeit,,
-Nationalität,T,2023-09-15
-Herkunft,T,2023-09-15
+Nationalität,W,2023-09-22
+Herkunft,W,2023-09-22
 Aussehen,,
 Gewohnheiten,,
 Tagesablauf,,
@@ -74,8 +74,8 @@ sieben,,
 acht,,
 neun,,
 zehn,,
-elf,T,2023-09-15
-zwölf,,
+elf,W,2023-09-22
+zwölf,W,2023-09-22
 dreizehn,,
 vierzehn,,
 fünfzehn,,
@@ -89,7 +89,7 @@ dreißig,,
 vierzig,,
 fünfzig,,
 sechzig,,
-siebzig,,
+siebzig,W,2023-09-22
 achtzig,,
 neunzig,,
 einhundert,,
@@ -98,7 +98,7 @@ zweihundert,,
 eintausend,,
 eine Million,,
 eine Milliarde,,
-erste,T,2023-09-15
+erste,W,2023-09-22
 zweite,,
 dritte,,
 vierte,,
@@ -122,17 +122,17 @@ Tag,,
 Morgen,,
 Vormittag,,
 Mittag,,
-Januar,T,2023-09-15
+Januar,W,2023-09-22
 Februar,,
-März,T,2023-09-15
+März,W,2023-09-22
 April,,
 Mai,,
 Juni,,
 Tag,,
-Woche,,
+Woche,W,2023-09-22
 Jahr,,
 Wochenende,,
-Nachmittag,T,2023-09-15
+Nachmittag,W,2023-09-22
 Abend,,
 Nacht,,
 Juli,,
@@ -145,13 +145,13 @@ Frühling,,
 Frühjahr,,
 Sommer,,
 Herbst,,
-Winter,,
+Winter,W,2023-09-22
 Euro,,
 Cent,,
 Meter,,
 Zentimeter,,
 Kilometer,,
-Quadratmeter,,
+Quadratmeter,T,2023-09-16
 Grad,,
 Prozent,,
 Liter,,
@@ -173,9 +173,9 @@ weiß,,
 rot,,
 Norden,,
 Süden,,
-blau,T,2023-09-15
+blau,W,2023-09-22
 gelb,,
-Westen,T,2023-09-15
+Westen,W,2023-09-22
 braun,,
 Osten,,
 ab,,
@@ -201,7 +201,7 @@ anklicken,,
 ankommen,,
 die Ankunft,,
 ankreuzen,,
-anmachen,,
+anmachen,W,2023-09-22
 anmelden,,
 die Anmeldung,,
 die Anrede,,
@@ -244,7 +244,7 @@ die Aussage,,
 aussehen,,
 aus sein,,
 aussteigen,,
-der Ausweis,,
+der Ausweis,W,2023-09-22
 ausziehen,,
 das Auto,,
 die Autobahn,,
@@ -276,7 +276,7 @@ bekannt,,
 die Bekannte,,
 bekommen,,
 benutzen,,
-der Beruf,,
+der Beruf,W,2023-09-22
 besetzt,,
 besichtigen,,
 besser,M,2023-10-14
@@ -329,7 +329,7 @@ dauern,,
 dein,,
 denn,,
 dich,,
-dies,,
+dies,W,2023-09-22
 dir,,
 die Disco,,
 der Doktor,,
@@ -402,7 +402,7 @@ die Firma,,
 der Fisch,,
 die Flasche,,
 das Fleisch,,
-fliegen,,
+fliegen,W,2023-09-22
 abfliegen,,
 der Abflug,,
 der Flughafen,,
@@ -416,7 +416,7 @@ frei,,
 die Freizeit,,
 fremd,,
 freuen,,
-der Freund,,
+der Freund,W,2023-09-22
 früher,,
 frühstücken,,
 das Frühstück,,
@@ -430,7 +430,7 @@ geben,,
 geboren,,
 das Geburtsjahr,,
 der Geburtsort,,
-der Geburtstag,W,2023-09-07
+der Geburtstag,M,2023-10-15
 gefallen,,
 gegen,,
 gehen,,
@@ -441,26 +441,26 @@ das Gepäck,,
 gerade,,
 geradeaus,,
 gerne,,
-das Geschäft,W,2023-09-07
+das Geschäft,M,2023-10-15
 das Geschenk,,
 die Geschwister,,
-das Gespräch,W,2023-09-07
-gestern,W,2023-09-07
+das Gespräch,M,2023-10-15
+gestern,M,2023-10-15
 gestorben,,
 das Getränk,,
-das Gewicht,W,2023-09-10
+das Gewicht,M,2023-10-15
 gewinnen,,
 das Glas,,
 glauben,,
 gleich,,
-das Gleis,,
+das Gleis,T,2023-09-16
 das Glück,,
 glücklich,,
 der Glückwunsch,,
 Grad,,
 gratulieren,,
 grillen,,
-groß,,
+groß,W,2023-09-22
 die Größe,,
 die Großeltern,,
 die Großmutter,,
@@ -468,7 +468,7 @@ der Großvater,,
 die Gruppe,,
 der Gruß,,
 gültig,,
-günstig,W,2023-09-10
+günstig,M,2023-10-15
 gut,,
 das Haar,,
 haben,,
@@ -483,7 +483,7 @@ das Handy,,
 das Haus,,
 die Hausaufgabe,,
 die Hausfrau,,
-der Hausmann,W,2023-09-07
+der Hausmann,M,2023-10-15
 die Heimat,,
 heiraten,,
 heißen,,
@@ -492,7 +492,7 @@ hell,,
 der Herd,,
 der Herr,,
 herzlich,,
-heute,W,2023-09-07
+heute,M,2023-10-15
 hier,,
 die Hilfe,,
 hinten,,
@@ -508,7 +508,7 @@ ich,,
 ihr,,
 ihm,,
 ihn,,
-immer,,
+immer,W,2023-09-22
 in,,
 die Information,,
 international,,
@@ -532,10 +532,10 @@ kein,,
 kennen,,
 kennenlernen,,
 das Kind,,
-der Kindergarten,,
+der Kindergarten,W,2023-09-22
 das Kino,,
 der Kiosk,,
-klar,W,2023-09-07
+klar,M,2023-10-15
 die Klasse,,
 die Kleidung,,
 klein,,
@@ -548,7 +548,7 @@ das Konto,,
 der Kopf,,
 kosten,,
 krank,,
-kriegen,T,2023-09-05
+kriegen,T,2023-09-16
 die Küche,,
 der Kuchen,,
 der Kugelschreiber,,
@@ -559,7 +559,7 @@ der Kunde,,
 der Kurs,,
 kurz,,
 lachen,,
-der Laden,,
+der Laden,W,2023-09-22
 das Land,,
 er lang,,
 lange,,
@@ -567,7 +567,7 @@ langsam,,
 laufen,,
 laut,,
 leben,,
-das Leben,W,2023-09-10
+das Leben,M,2023-10-15
 die Lebensmittel,,
 ledig,,
 legen,,
@@ -583,7 +583,7 @@ das Licht,,
 lieben,,
 lieber,,
 Lieblings,,
-das Lied,W,2023-09-07
+das Lied,M,2023-10-15
 liegen,,
 links,,
 der Lkw,,
@@ -648,7 +648,7 @@ der Ort,,
 das Papier,,
 die Papiere,,
 der Partner,,
-die Partnerin,,
+die Partnerin,W,2023-09-22
 die Party,,
 der Pass,,
 die Pause,,
@@ -672,7 +672,7 @@ die Rechnung,,
 rechts,,
 regnen,,
 der Regen,,
-der Reis,W,2023-09-11
+der Reis,M,2023-10-15
 reisen,,
 die Reise,,
 das Reisebüro,,
@@ -689,7 +689,7 @@ sagen,,
 der Salat,,
 das Salz,,
 Satz,,
-die S-Bahn,W,2023-09-10
+die S-Bahn,M,2023-10-15
 der Schalter,,
 scheinen,,
 schicken,,
@@ -727,7 +727,7 @@ seit,,
 selbstständig,,
 sich,,
 sie,,
-Sie,W,2023-09-07
+Sie,M,2023-10-15
 sitzen,,
 so,,
 das Sofa,,
@@ -745,7 +745,7 @@ sprechen,,
 die Stadt,,
 stehen,,
 die Stelle,,
-stellen,W,2023-09-11
+stellen,T,2023-09-16
 der Stock,,
 die Straße,,
 die Straßenbahn,,
@@ -754,7 +754,7 @@ das Studium,,
 der Student,,
 die Stunde,,
 suchen,,
-tanzen,,
+tanzen,W,2023-09-22
 die Tasche,,
 das Taxi,,
 der Tee,,
@@ -781,7 +781,7 @@ über,,
 übernachten,,
 überweisen,,
 die Uhr,,
-um,W,2023-09-11
+um,T,2023-09-16
 umziehen,,
 und,,
 unser,,
@@ -796,10 +796,10 @@ verboten,,
 verdienen,,
 der Verein,,
 verheiratet,,
-verkaufen,,
+verkaufen,T,2023-09-16
 der Verkäufer,,
 vermieten,,
-der Vermieter,W,2023-09-11
+der Vermieter,T,2023-09-16
 verstehen,,
 der Verwandte,,
 viel,,
@@ -830,7 +830,7 @@ werden,,
 das Wetter,,
 wichtig,,
 wie,,
-wiederholen,W,2023-09-07
+wiederholen,M,2023-10-15
 das Wiederhören,,
 das Wiedersehen,,
 wie viel,,
@@ -844,7 +844,7 @@ wohin,,
 wohnen,,
 die Wohnung,,
 wollen,,
-das Wort,,
+das Wort,W,2023-09-22
 wunderbar,,
 zahlen,,
 die Zeit,,
@@ -856,6 +856,6 @@ der Zoll,,
 zu,,
 zufrieden,,
 der Zug,,
-zurück,W,2023-09-10
+zurück,M,2023-10-15
 zusammen,,
 zwischen,,

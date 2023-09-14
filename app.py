@@ -102,7 +102,7 @@ def chooseSelectedWords():
     selected_words = []
     for selected_word_lineNumber in selected_words_lineNumber:
         selected_words.append(selected_word_lineNumber[0])
-
+    random.shuffle(selected_words)
 
     percentage_burned = number_burned / total_lines
 
@@ -180,20 +180,44 @@ def index():
     # save_to_csv(wortLines)
     return render_template('index.html')
 
+def log_datetime():
+    now = datetime.now()
+    with open('datetime_log.txt', 'a') as log_file:
+        log_file.write(now.strftime("%Y-%m-%d %H:%M:%S") + "\n")
+
+
+def get_last_run_datetime():
+    try:
+        with open('datetime_log.txt', 'r') as log_file:
+            lines = log_file.readlines()
+            if lines:
+                last_run_datetime = lines[-1].strip()
+                return last_run_datetime
+    except FileNotFoundError:
+        return "No run history available."
+
 @app.route('/germanStory', methods=['POST'])
 def germanStory():
+
     selected_words_lineNumber, selected_words, percentage_burned = chooseSelectedWords()
     messages, response = create_story(selected_words, temperature=percentage_burned)
-
-    result_data = {
-        'germanStoryString': response,
-        'percentageBurned': percentage_burned * 100
-    }
 
     session['selected_words_position'] = 0
     session['selected_words_lineNumber'] = selected_words_lineNumber
     session['messages'] = messages
     session['germanStory'] = response
+
+    # Get the last run datetime from the log file
+    last_run_datetime = get_last_run_datetime()
+
+    result_data = {
+        'germanStoryString': response,
+        'percentageBurned': percentage_burned * 100,
+        'lastRunDateTime': last_run_datetime
+    }
+
+    # Save current run datetime in log file
+    log_datetime()
 
     return render_template('germanStory.html', result = result_data)
 
@@ -225,7 +249,9 @@ def anki_translate():
     result_data = {
         'translation': '',
         'frequency1': '',
-        'frequency2': ''
+        'frequency2': '',
+        'frequency1_display': '',
+        'frequency2_display': ''
     }
 
     # Get the English translation using OpenAI
@@ -265,6 +291,23 @@ def anki_translate():
     elif currentFrequency == "B":
         result_data['frequency1'] = 'B'
         result_data['frequency2'] = 'B'
+
+    def get_display_frequency(frequency_code):
+        if frequency_code == 'T':
+            return 'Tomorrow'
+        elif frequency_code == 'W':
+            return 'Week'
+        elif frequency_code == 'M':
+            return 'Month'
+        elif frequency_code == '3M':
+            return '3 Months'
+        elif frequency_code == 'B':
+            return 'Burned'
+        else:
+            return 'Unknown'
+
+    result_data['frequency1_display'] = get_display_frequency(result_data['frequency1'])
+    result_data['frequency2_display'] = get_display_frequency(result_data['frequency2'])
 
     return render_template('ankiTranslate.html', result=result_data)
 
