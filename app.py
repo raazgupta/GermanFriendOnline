@@ -361,12 +361,12 @@ def updateReviewDate():
     session['selected_words_lineNumber'] = selected_words_lineNumber
 
     if (selected_words_position + 1) < len(selected_words_lineNumber):
-        return redirect(url_for('anki'))
+        return redirect(url_for('anki', _external=False))
     else:
         # Update the Wortlist file with updated frequency and date
         save_to_csv()
         # Show the English Translation
-        return redirect(url_for('englishTranslation'))
+        return redirect(url_for('englishTranslation', _external=False))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

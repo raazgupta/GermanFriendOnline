@@ -118,7 +118,7 @@ Donnerstag,,
 Freitag,,
 Samstag,,
 Sonnabend,,
-Tag,,
+Tag,T,2023-09-19
 Morgen,,
 Vormittag,,
 Mittag,,
@@ -151,7 +151,7 @@ Cent,,
 Meter,,
 Zentimeter,,
 Kilometer,,
-Quadratmeter,T,2023-09-16
+Quadratmeter,W,2023-09-25
 Grad,,
 Prozent,,
 Liter,,
@@ -453,7 +453,7 @@ gewinnen,,
 das Glas,,
 glauben,,
 gleich,,
-das Gleis,T,2023-09-16
+das Gleis,W,2023-09-25
 das Glück,,
 glücklich,,
 der Glückwunsch,,
@@ -506,7 +506,7 @@ der Hund,,
 der Hunger,,
 ich,,
 ihr,,
-ihm,,
+ihm,T,2023-09-19
 ihn,,
 immer,W,2023-09-22
 in,,
@@ -548,7 +548,7 @@ das Konto,,
 der Kopf,,
 kosten,,
 krank,,
-kriegen,T,2023-09-16
+kriegen,W,2023-09-25
 die Küche,,
 der Kuchen,,
 der Kugelschreiber,,
@@ -652,7 +652,7 @@ die Partnerin,W,2023-09-22
 die Party,,
 der Pass,,
 die Pause,,
-der Plan,,
+der Plan,T,2023-09-19
 der Platz,,
 die Polizei,,
 die Pommes frites,,
@@ -745,7 +745,7 @@ sprechen,,
 die Stadt,,
 stehen,,
 die Stelle,,
-stellen,T,2023-09-16
+stellen,T,2023-09-19
 der Stock,,
 die Straße,,
 die Straßenbahn,,
@@ -781,7 +781,7 @@ über,,
 übernachten,,
 überweisen,,
 die Uhr,,
-um,T,2023-09-16
+um,T,2023-09-19
 umziehen,,
 und,,
 unser,,
@@ -796,10 +796,10 @@ verboten,,
 verdienen,,
 der Verein,,
 verheiratet,,
-verkaufen,T,2023-09-16
+verkaufen,T,2023-09-19
 der Verkäufer,,
 vermieten,,
-der Vermieter,T,2023-09-16
+der Vermieter,T,2023-09-19
 verstehen,,
 der Verwandte,,
 viel,,
