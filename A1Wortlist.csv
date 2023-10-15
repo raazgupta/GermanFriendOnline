@@ -6,7 +6,7 @@ Geburtsdatum,,
 Geburtsort,,
 Alter,,
 Wohnung,,
-Räume,W,2023-09-22
+Räume,M,2023-11-15
 Einrichtung,,
 Möbel,,
 Pflanzen,,
@@ -32,8 +32,8 @@ Familie,,
 Persönliche,,
 Beziehungen,,
 Staatsangehörigkeit,,
-Nationalität,W,2023-09-22
-Herkunft,W,2023-09-22
+Nationalität,M,2023-11-15
+Herkunft,M,2023-11-15
 Aussehen,,
 Gewohnheiten,,
 Tagesablauf,,
@@ -74,8 +74,8 @@ sieben,,
 acht,,
 neun,,
 zehn,,
-elf,W,2023-09-22
-zwölf,W,2023-09-22
+elf,M,2023-11-15
+zwölf,M,2023-11-15
 dreizehn,,
 vierzehn,,
 fünfzehn,,
@@ -89,7 +89,7 @@ dreißig,,
 vierzig,,
 fünfzig,,
 sechzig,,
-siebzig,W,2023-09-22
+siebzig,M,2023-11-15
 achtzig,,
 neunzig,,
 einhundert,,
@@ -98,7 +98,7 @@ zweihundert,,
 eintausend,,
 eine Million,,
 eine Milliarde,,
-erste,W,2023-09-22
+erste,M,2023-11-15
 zweite,,
 dritte,,
 vierte,,
@@ -118,21 +118,21 @@ Donnerstag,,
 Freitag,,
 Samstag,,
 Sonnabend,,
-Tag,T,2023-09-19
+Tag,W,2023-10-23
 Morgen,,
 Vormittag,,
 Mittag,,
-Januar,W,2023-09-22
+Januar,M,2023-11-15
 Februar,,
-März,W,2023-09-22
+März,M,2023-11-15
 April,,
 Mai,,
 Juni,,
 Tag,,
-Woche,W,2023-09-22
+Woche,M,2023-11-15
 Jahr,,
 Wochenende,,
-Nachmittag,W,2023-09-22
+Nachmittag,M,2023-11-15
 Abend,,
 Nacht,,
 Juli,,
@@ -145,13 +145,13 @@ Frühling,,
 Frühjahr,,
 Sommer,,
 Herbst,,
-Winter,W,2023-09-22
+Winter,M,2023-11-15
 Euro,,
 Cent,,
 Meter,,
 Zentimeter,,
 Kilometer,,
-Quadratmeter,W,2023-09-25
+Quadratmeter,M,2023-11-15
 Grad,,
 Prozent,,
 Liter,,
@@ -173,9 +173,9 @@ weiß,,
 rot,,
 Norden,,
 Süden,,
-blau,W,2023-09-22
+blau,M,2023-11-15
 gelb,,
-Westen,W,2023-09-22
+Westen,M,2023-11-15
 braun,,
 Osten,,
 ab,,
@@ -201,11 +201,11 @@ anklicken,,
 ankommen,,
 die Ankunft,,
 ankreuzen,,
-anmachen,W,2023-09-22
+anmachen,M,2023-11-15
 anmelden,,
 die Anmeldung,,
 die Anrede,,
-anrufen,M,2023-10-14
+anrufen,3M,2024-01-14
 der Anruf,,
 beantworter,,
 die Ansage,,
@@ -221,7 +221,7 @@ der Appetit,,
 arbeiten,,
 die Arbeit,,
 arbeitslos,,
-der Arbeitsplatz,M,2023-10-14
+der Arbeitsplatz,3M,2024-01-14
 der Arm,,
 der Arzt,,
 auch,,
@@ -229,7 +229,7 @@ auf,,
 die Aufgabe,,
 aufhören,,
 aufstehen,,
-der Aufzug,M,2023-10-14
+der Aufzug,3M,2024-01-14
 das Auge,,
 aus,,
 der Ausflug,,

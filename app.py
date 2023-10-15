@@ -1,3 +1,12 @@
+"""
+# Import the activate_this.py script from the virtual environment
+activate_this = '/home/public/App/GermanFriendOnline/venv/bin/activate_this.py'
+
+with open(activate_this) as file_:
+    exec(file_.read(), dict(__file__=activate_this))
+"""
+
+
 from flask import Flask, render_template, request, session, redirect, url_for
 import openai
 import os
@@ -245,13 +254,18 @@ def anki_translate():
 
     wort = selected_words_lineNumber[selected_words_position][0]
     lineNumber = selected_words_lineNumber[selected_words_position][1]
+    final_word = 0
+
+    if (selected_words_position + 1) == len(selected_words_lineNumber):
+        final_word = 1
 
     result_data = {
         'translation': '',
         'frequency1': '',
         'frequency2': '',
         'frequency1_display': '',
-        'frequency2_display': ''
+        'frequency2_display': '',
+        'final_word': final_word
     }
 
     # Get the English translation using OpenAI
@@ -362,11 +376,13 @@ def updateReviewDate():
 
     if (selected_words_position + 1) < len(selected_words_lineNumber):
         return redirect(url_for('anki', _external=False))
+        # return redirect('/App/GermanFriendOnline/anki')
     else:
         # Update the Wortlist file with updated frequency and date
         save_to_csv()
         # Show the English Translation
         return redirect(url_for('englishTranslation', _external=False))
+        # return redirect('/App/GermanFriendOnline/englishTranslation')
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=False, port=5000)

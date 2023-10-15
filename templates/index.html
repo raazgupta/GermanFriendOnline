@@ -2,11 +2,45 @@
 <html>
 <head>
     <title>German Friend Online</title>
+    <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <style>
+        /* Add your CSS styling for the loading text here */
+        #loading {
+            display: none;
+            text-align: left;
+            padding: 0px;
+        }
+        /* Style the button */
+        .custom-button {
+            font-size: 12px; /* Set the font size to 20 pixels */
+            font-family: Arial, sans-serif; /* Set the font family */
+            padding: 5px 10px; /* Add some padding for a larger button */
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <h1>German Friend Online</h1>
-    <form method="POST" action="./germanStory">
-        <button type="submit">Show German Story</button>
+    <form id="story-form" method="POST" action="./germanStory">
+        <button type="submit" class="custom-button">Show German Story</button>
     </form>
+
+    <div id="loading">
+        <p style="color: white;">AI is cooking your tasty story. Please be patient ...</p>
+    </div>
+
+    <script>
+        // JavaScript code to show the loading text
+        document.addEventListener("DOMContentLoaded", function () {
+            var storyForm = document.getElementById("story-form");
+            var loading = document.getElementById("loading");
+
+            storyForm.addEventListener("submit", function (event) {
+                // Display loading text while waiting for the response
+                loading.style.display = "block";
+            });
+        });
+    </script>
+
 </body>
 </html>
