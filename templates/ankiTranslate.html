@@ -7,7 +7,7 @@
         /* Add your CSS styling for the loading text here */
         /* Style the button */
         .custom-button {
-            font-size: 12px; /* Set the font size to 20 pixels */
+            font-size: 20px; /* Set the font size to 20 pixels */
             font-family: Arial, sans-serif; /* Set the font family */
             padding: 5px 10px; /* Add some padding for a larger button */
             border-radius: 5px;
@@ -21,9 +21,10 @@
 </head>
 <body>
     <h1>Vocabulary Translation:</h1>
-    <p style="font-size: 20px;">{{ result.translation }}</p>
+    <p style="font-size: 30px;">{{ result.translation }}</p>
     <form id="translate-form" method="POST" action="./ankiRecord">
         <button type="submit" class="custom-button" name="frequency" value="{{ result.frequency1 }}"> {{ result.frequency1_display }} </button>
+        <span style="margin-right: 20px;"></span> <!-- Add some space between buttons -->
         <button type="submit" class="custom-button" name="frequency" value="{{ result.frequency2 }}"> {{ result.frequency2_display }} </button>
     </form>
     <div id="loading">

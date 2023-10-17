@@ -17,7 +17,7 @@ Nahrungsmittel,,
 Mahlzeiten,,
 Speisen,,
 Getränke,,
-Lokale,,
+Lokale,T,2023-10-19
 Restaurant,,
 Café,,
 Post,,
@@ -209,7 +209,7 @@ anrufen,3M,2024-01-14
 der Anruf,,
 beantworter,,
 die Ansage,,
-der Anschluss,,
+der Anschluss,T,2023-10-19
 sein,,
 antworten,,
 die Antwort,,
@@ -244,7 +244,7 @@ die Aussage,,
 aussehen,,
 aus sein,,
 aussteigen,,
-der Ausweis,W,2023-09-22
+der Ausweis,T,2023-10-19
 ausziehen,,
 das Auto,,
 die Autobahn,,
@@ -254,7 +254,7 @@ das Baby,,
 die Bäckerei,,
 das Bad,,
 baden,,
-die Bahn,M,2023-10-14
+die Bahn,T,2023-10-19
 der Bahnhof,,
 der Bahnsteig,,
 bald,,
@@ -264,7 +264,7 @@ die Bank,,
 bar,,
 der Bauch,,
 der Baum,,
-der Beamte,M,2023-10-14
+der Beamte,T,2023-10-19
 bedeuten,,
 beginnen,,
 bei,,
@@ -276,10 +276,10 @@ bekannt,,
 die Bekannte,,
 bekommen,,
 benutzen,,
-der Beruf,W,2023-09-22
+der Beruf,T,2023-10-19
 besetzt,,
 besichtigen,,
-besser,M,2023-10-14
+besser,T,2023-10-19
 bestellen,,
 besuchen,,
 das Bett,,
@@ -290,7 +290,7 @@ billig,,
 die Birne,,
 bisschen,,
 bitte,,
-die Bitte,,
+die Bitte,T,2023-10-19
 bitten,,
 bitter,,
 bleiben,,
@@ -300,7 +300,7 @@ die Blume,,
 der Bogen,,
 böse,,
 brauchen,,
-breit,M,2023-10-14
+breit,T,2023-10-19
 der Brief,,
 die Briefmarke,,
 bringen,,
@@ -329,14 +329,14 @@ dauern,,
 dein,,
 denn,,
 dich,,
-dies,W,2023-09-22
+dies,T,2023-10-19
 dir,,
 die Disco,,
 der Doktor,,
 das Doppelzimmer,,
 das Dorf,,
 dort,,
-draußen,W,2023-09-21
+draußen,T,2023-10-19
 drucken,,
 der Drucker,,
 drücken,,
@@ -348,7 +348,7 @@ duschen,,
 die Dusche,,
 die Ecke,,
 die Ehefrau,,
-der Ehemann,M,2023-10-14
+der Ehemann,T,2023-10-19
 das Ei,,
 eilig,,
 ein,,
@@ -365,7 +365,7 @@ die Eltern,,
 die E-Mail,,
 der Empfänger,,
 empfehlen,,
-enden,,
+enden,T,2023-10-19
 das Ende,,
 entschuldigen,,
 die Entschuldigung,,
@@ -386,7 +386,7 @@ falsch,,
 die Familie,,
 der Familienname,,
 der Familienstand,,
-die Farbe,,
+die Farbe,T,2023-10-19
 das Fax,,
 Feier,,
 feiern,,
@@ -402,21 +402,21 @@ die Firma,,
 der Fisch,,
 die Flasche,,
 das Fleisch,,
-fliegen,W,2023-09-22
+fliegen,T,2023-10-19
 abfliegen,,
 der Abflug,,
 der Flughafen,,
 das Flugzeug,,
 das Formular,,
 das Foto,,
-fragen,M,2023-10-14
+fragen,T,2023-10-19
 die Frage,,
 die Frau,,
 frei,,
 die Freizeit,,
 fremd,,
 freuen,,
-der Freund,W,2023-09-22
+der Freund,T,2023-10-19
 früher,,
 frühstücken,,
 das Frühstück,,
@@ -430,7 +430,7 @@ geben,,
 geboren,,
 das Geburtsjahr,,
 der Geburtsort,,
-der Geburtstag,M,2023-10-15
+der Geburtstag,T,2023-10-19
 gefallen,,
 gegen,,
 gehen,,
@@ -441,26 +441,26 @@ das Gepäck,,
 gerade,,
 geradeaus,,
 gerne,,
-das Geschäft,M,2023-10-15
+das Geschäft,T,2023-10-19
 das Geschenk,,
 die Geschwister,,
-das Gespräch,M,2023-10-15
-gestern,M,2023-10-15
+das Gespräch,T,2023-10-19
+gestern,T,2023-10-19
 gestorben,,
 das Getränk,,
-das Gewicht,M,2023-10-15
+das Gewicht,T,2023-10-19
 gewinnen,,
 das Glas,,
 glauben,,
 gleich,,
-das Gleis,W,2023-09-25
+das Gleis,T,2023-10-19
 das Glück,,
 glücklich,,
 der Glückwunsch,,
 Grad,,
 gratulieren,,
 grillen,,
-groß,W,2023-09-22
+groß,T,2023-10-19
 die Größe,,
 die Großeltern,,
 die Großmutter,,
@@ -468,7 +468,7 @@ der Großvater,,
 die Gruppe,,
 der Gruß,,
 gültig,,
-günstig,M,2023-10-15
+günstig,T,2023-10-19
 gut,,
 das Haar,,
 haben,,
@@ -483,7 +483,7 @@ das Handy,,
 das Haus,,
 die Hausaufgabe,,
 die Hausfrau,,
-der Hausmann,M,2023-10-15
+der Hausmann,T,2023-10-19
 die Heimat,,
 heiraten,,
 heißen,,
@@ -492,7 +492,7 @@ hell,,
 der Herd,,
 der Herr,,
 herzlich,,
-heute,M,2023-10-15
+heute,T,2023-10-19
 hier,,
 die Hilfe,,
 hinten,,
@@ -506,9 +506,9 @@ der Hund,,
 der Hunger,,
 ich,,
 ihr,,
-ihm,T,2023-09-19
+ihm,T,2023-10-19
 ihn,,
-immer,W,2023-09-22
+immer,T,2023-10-19
 in,,
 die Information,,
 international,,
@@ -532,10 +532,10 @@ kein,,
 kennen,,
 kennenlernen,,
 das Kind,,
-der Kindergarten,W,2023-09-22
+der Kindergarten,T,2023-10-19
 das Kino,,
 der Kiosk,,
-klar,M,2023-10-15
+klar,T,2023-10-19
 die Klasse,,
 die Kleidung,,
 klein,,
@@ -548,7 +548,7 @@ das Konto,,
 der Kopf,,
 kosten,,
 krank,,
-kriegen,W,2023-09-25
+kriegen,T,2023-10-19
 die Küche,,
 der Kuchen,,
 der Kugelschreiber,,
@@ -559,7 +559,7 @@ der Kunde,,
 der Kurs,,
 kurz,,
 lachen,,
-der Laden,W,2023-09-22
+der Laden,T,2023-10-19
 das Land,,
 er lang,,
 lange,,
@@ -567,7 +567,7 @@ langsam,,
 laufen,,
 laut,,
 leben,,
-das Leben,M,2023-10-15
+das Leben,T,2023-10-19
 die Lebensmittel,,
 ledig,,
 legen,,
@@ -583,7 +583,7 @@ das Licht,,
 lieben,,
 lieber,,
 Lieblings,,
-das Lied,M,2023-10-15
+das Lied,T,2023-10-19
 liegen,,
 links,,
 der Lkw,,
@@ -636,7 +636,7 @@ nur,,
 oben,,
 das Obst,,
 oder,,
-öffnen,,
+öffnen,T,2023-10-19
 geöffnet,,
 oft,,
 ohne,,
@@ -648,11 +648,11 @@ der Ort,,
 das Papier,,
 die Papiere,,
 der Partner,,
-die Partnerin,W,2023-09-22
+die Partnerin,T,2023-10-19
 die Party,,
 der Pass,,
 die Pause,,
-der Plan,T,2023-09-19
+der Plan,T,2023-10-19
 der Platz,,
 die Polizei,,
 die Pommes frites,,
@@ -672,7 +672,7 @@ die Rechnung,,
 rechts,,
 regnen,,
 der Regen,,
-der Reis,M,2023-10-15
+der Reis,T,2023-10-19
 reisen,,
 die Reise,,
 das Reisebüro,,
@@ -684,12 +684,12 @@ die Rezeption,,
 richtig,,
 riechen,,
 ruhig,,
-der Saft,,
+der Saft,T,2023-10-19
 sagen,,
 der Salat,,
 das Salz,,
 Satz,,
-die S-Bahn,M,2023-10-15
+die S-Bahn,T,2023-10-19
 der Schalter,,
 scheinen,,
 schicken,,
@@ -727,7 +727,7 @@ seit,,
 selbstständig,,
 sich,,
 sie,,
-Sie,M,2023-10-15
+Sie,T,2023-10-19
 sitzen,,
 so,,
 das Sofa,,
@@ -745,7 +745,7 @@ sprechen,,
 die Stadt,,
 stehen,,
 die Stelle,,
-stellen,T,2023-09-19
+stellen,T,2023-10-19
 der Stock,,
 die Straße,,
 die Straßenbahn,,
@@ -754,7 +754,7 @@ das Studium,,
 der Student,,
 die Stunde,,
 suchen,,
-tanzen,W,2023-09-22
+tanzen,T,2023-10-19
 die Tasche,,
 das Taxi,,
 der Tee,,
@@ -781,7 +781,7 @@ über,,
 übernachten,,
 überweisen,,
 die Uhr,,
-um,T,2023-09-19
+um,T,2023-10-19
 umziehen,,
 und,,
 unser,,
@@ -796,10 +796,10 @@ verboten,,
 verdienen,,
 der Verein,,
 verheiratet,,
-verkaufen,T,2023-09-19
+verkaufen,T,2023-10-19
 der Verkäufer,,
 vermieten,,
-der Vermieter,T,2023-09-19
+der Vermieter,T,2023-10-19
 verstehen,,
 der Verwandte,,
 viel,,
@@ -830,7 +830,7 @@ werden,,
 das Wetter,,
 wichtig,,
 wie,,
-wiederholen,M,2023-10-15
+wiederholen,T,2023-10-19
 das Wiederhören,,
 das Wiedersehen,,
 wie viel,,
@@ -844,7 +844,7 @@ wohin,,
 wohnen,,
 die Wohnung,,
 wollen,,
-das Wort,W,2023-09-22
+das Wort,T,2023-10-19
 wunderbar,,
 zahlen,,
 die Zeit,,
@@ -856,6 +856,6 @@ der Zoll,,
 zu,,
 zufrieden,,
 der Zug,,
-zurück,M,2023-10-15
+zurück,T,2023-10-19
 zusammen,,
 zwischen,,
