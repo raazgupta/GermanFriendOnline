@@ -137,9 +137,10 @@ def create_story(selected_words, temperature=0.0):
     ]
 
     # Print story in German
-    response = get_completion_from_messages(messages, temperature=temperature)
-    print("German Story:")
-    print(response)
+    response = get_completion_from_messages(messages, model="gpt-4", temperature=temperature)
+    response = response.strip('"')
+    #print("German Story:")
+    #print(response)
     # input()
 
     messages.append(
@@ -325,6 +326,41 @@ def anki_translate():
 
     return render_template('ankiTranslate.html', result=result_data)
 
+def translateToEnglish(germanText):
+    messages = [
+        {'role': 'system',
+         'content': f"""
+                    You are given text in German. Translate it to English. 
+                 """
+         },
+        {'role': 'user',
+         'content': germanText
+         }
+    ]
+
+    englishVersion = get_completion_from_messages(messages, max_tokens=100)
+
+    return englishVersion
+
+def correctSpellingGrammar(germanText):
+    messages = [
+        {'role': 'system',
+         'content': f"""
+                        Read this German text and fix any spelling and grammar errors.
+                        If there are no errors then respond back with the same German text.
+                     """
+         },
+        {'role': 'user',
+         'content': germanText
+         }
+    ]
+    # print("correctSpellingGrammar:")
+    # print(messages)
+    correctSpellingGrammarVersion = get_completion_from_messages(messages, model="gpt-4", max_tokens=500)
+    # print(correctSpellingGrammarVersion)
+
+    return correctSpellingGrammarVersion
+
 @app.route('/englishTranslation', methods=['POST','GET'])
 def englishTranslation():
     messages = session['messages']
@@ -383,6 +419,73 @@ def updateReviewDate():
         # Show the English Translation
         return redirect(url_for('englishTranslation', _external=False))
         # return redirect('/App/GermanFriendOnline/englishTranslation')
+
+@app.route('/germanConversation', methods=['POST'])
+def germanConversation():
+    # Save current run datetime in log file
+    log_datetime()
+    return render_template('germanConversation.html')
+
+@app.route('/germanScenario', methods=['POST'])
+def germanScenario():
+    result_data = []
+
+    scenarioText = request.form['scenarioText']
+
+    scenarioText = scenarioText + ". You will always respond in German. Only use words that are from the Goethe-Zertifikat A1 vocabulary list."
+
+    # Start a CharGPT conversation with the scenarioText as the system message
+    conversationMessages = [
+        {'role': 'system',
+         'content': scenarioText
+         }
+    ]
+
+    session['conversationMessages'] = conversationMessages
+
+    return render_template('iSay.html', result=result_data)
+
+@app.route('/iSayDynamic', methods=['POST'])
+def iSayDynamic():
+    session['iSayText'] = request.form['iSayText']
+    iSayText = request.form['iSayText']
+    conversationMessages = session['conversationMessages']
+    conversationMessages.append(
+        {'role': 'user',
+         'content': iSayText
+         }
+    )
+    youSayText = get_completion_from_messages(conversationMessages, max_tokens=100)
+    session['youSayText'] = youSayText
+    conversationMessages.append(
+        {'role': 'assistant',
+         'content': youSayText
+         }
+    )
+    session['conversationMessages'] = conversationMessages
+
+    result_data = {
+        'youSayText': youSayText,
+        'iSayText': iSayText
+    }
+
+    return render_template('youSayDynamic.html', result=result_data)
+
+@app.route('/conversationEnglishTranslation')
+def conversationEnglishTranslation():
+    youSayText = session['youSayText']
+    youSayTextEnglish = translateToEnglish(youSayText)
+    return youSayTextEnglish
+
+@app.route('/conversationSpellGrammarCheck')
+def conversationSpellGrammarCheck():
+    iSayText = session['iSayText']
+    iSayTextReviewed = correctSpellingGrammar(iSayText)
+    return iSayTextReviewed
+
+@app.route('/youSay', methods=['POST'])
+def youSay():
+    return render_template('iSay.html')
 
 if __name__ == '__main__':
     app.run(debug=False, port=5000)

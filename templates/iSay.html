@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>German Friend Online</title>
+    <title>I Say</title>
     <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
     <style>
-        /* Add your CSS styling for the loading text here */
-        #loading {
-            display: none;
-            text-align: left;
-            padding: 0px;
-        }
         /* Style the button */
         .custom-button {
             font-size: 20px; /* Set the font size to 20 pixels */
@@ -17,28 +11,32 @@
             padding: 5px 10px; /* Add some padding for a larger button */
             border-radius: 5px;
         }
-        #converse-form button {
-            margin-top: 30px; /* Adjust the margin to your preference */
+        #iSayText {
+            width: 100%;
+            height: 3em; /* 3 lines */
+        }
+        /* Add your CSS styling for the loading text here */
+        #loading {
+            display: none;
+            text-align: left;
+            padding: 0px;
         }
     </style>
 </head>
 <body>
-    <h1>German Friend Online</h1>
-    <form id="story-form" method="POST" action="./germanStory">
-        <button type="submit" class="custom-button">Show German Story</button>
+    <h1>I Say</h1>
+    <form id="iSayForm" method="POST" action="./iSayDynamic">
+        <textarea id="iSayText" name="iSayText" rows="3" cols="50" placeholder="Start or continue the conversation in German. Limit it to 1 sentence each time."></textarea>
+        <br> <!-- Add a line break to move the button to a new line -->
+        <button type="submit" class="custom-button">Submit</button>
     </form>
-    <form id="converse-form" method="POST" action="./germanConversation">
-        <button type="submit" class="custom-button">Converse in German</button>
-    </form>
-
     <div id="loading">
-        <p style="color: white;">AI is cooking your tasty story. Please be patient ...</p>
+        <p style="color: white;">naja ...</p>
     </div>
-
     <script>
         // JavaScript code to show the loading text
         document.addEventListener("DOMContentLoaded", function () {
-            var storyForm = document.getElementById("story-form");
+            var storyForm = document.getElementById("iSayForm");
             var loading = document.getElementById("loading");
 
             storyForm.addEventListener("submit", function (event) {
@@ -47,6 +45,5 @@
             });
         });
     </script>
-
 </body>
 </html>
