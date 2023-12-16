@@ -9,6 +9,7 @@ with open(activate_this) as file_:
 
 from flask import Flask, render_template, request, session, redirect, url_for
 import openai
+from openai import OpenAI
 import os
 import random
 from datetime import datetime, timedelta
@@ -117,6 +118,56 @@ def chooseSelectedWords():
 
     return selected_words_lineNumber, selected_words, percentage_burned
 
+def assistant_create_story(selected_words):
+
+    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
+    # Thread represents a conversation per user
+    # Once this is no longer a beta feature, can consider initiating a thread when the user clicks on Create Story button
+    # However this will require a thorough rework of the app and with little upside at the moment
+    thread = client.beta.threads.create()
+
+    # Add a message to the thread
+    message = client.beta.threads.messages.create(
+        thread_id=thread.id,
+        role="user",
+        content=f"""
+            Write a story in German with maximum 3 sentences.
+            Make sure these words are in the story: {",".join(selected_words)}
+        """
+    )
+
+    # Run the Assistant
+    # The Assitant id and details are on OpenAI API webpage
+    run = client.beta.threads.runs.create(
+        thread_id=thread.id,
+        assistant_id="asst_qXm8leIYM7P33EpQb0m582g7"
+    )
+
+    # By default run goes into queued state. You can periodically retrieve the Run to check on its status to see if it moved to completed
+    while run.status == "queued" or run.status == "in_progress":
+        run = client.beta.threads.runs.retrieve(
+            thread_id=thread.id,
+            run_id=run.id
+        )
+    if run.status == "completed":
+        # Return a list of message objects in descending order as I am interested only in the last response
+        thread_messages = client.beta.threads.messages.list(thread_id=thread.id, order="desc")
+        print(thread_messages)
+        try:
+            # Since the returned list is in descending order take the first message object and extract its text value
+            # response = thread_messages.data[0].content[0].text.value
+            # Remove annotation text
+            message_content = thread_messages.data[0].content[0].text
+            annotations = message_content.annotations
+            for annotation in annotations:
+                message_content.value = message_content.value.replace(annotation.text, "")
+            response = message_content.value
+        except Exception as e:
+            response = f"An unexpected error occurred: {e}"
+    else:
+        response = "Error: OpenAI Run Failed"
+    return response
 
 def create_story(selected_words, temperature=0.0):
     # Prompt to create German Story
@@ -136,12 +187,14 @@ def create_story(selected_words, temperature=0.0):
          },
     ]
 
+    # Use the latest Assistants API beta feature here because it allows referencing vocabulary list and
+    # is better at following instructions
+
     # Print story in German
-    response = get_completion_from_messages(messages, model="gpt-4", temperature=temperature)
-    response = response.strip('"')
-    #print("German Story:")
-    #print(response)
-    # input()
+    # response = get_completion_from_messages(messages, model="gpt-4", temperature=temperature)
+    # response = response.strip('"')
+
+    response = assistant_create_story(selected_words)
 
     messages.append(
         {'role': 'assistant',
