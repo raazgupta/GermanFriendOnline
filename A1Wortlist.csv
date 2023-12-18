@@ -6,7 +6,7 @@ Geburtsdatum,,
 Geburtsort,,
 Alter,,
 Wohnung,,
-Räume,M,2023-11-15
+Räume,T,2023-12-20
 Einrichtung,,
 Möbel,,
 Pflanzen,,
@@ -17,7 +17,7 @@ Nahrungsmittel,,
 Mahlzeiten,,
 Speisen,,
 Getränke,,
-Lokale,T,2023-10-28
+Lokale,T,2023-12-20
 Restaurant,,
 Café,,
 Post,,
@@ -32,8 +32,8 @@ Familie,,
 Persönliche,,
 Beziehungen,,
 Staatsangehörigkeit,,
-Nationalität,M,2023-11-15
-Herkunft,M,2023-11-15
+Nationalität,T,2023-12-20
+Herkunft,T,2023-12-20
 Aussehen,,
 Gewohnheiten,,
 Tagesablauf,,
@@ -74,8 +74,8 @@ sieben,,
 acht,,
 neun,,
 zehn,,
-elf,M,2023-11-15
-zwölf,M,2023-11-15
+elf,T,2023-12-20
+zwölf,T,2023-12-20
 dreizehn,,
 vierzehn,,
 fünfzehn,,
@@ -89,7 +89,7 @@ dreißig,,
 vierzig,,
 fünfzig,,
 sechzig,,
-siebzig,M,2023-11-15
+siebzig,T,2023-12-20
 achtzig,,
 neunzig,,
 einhundert,,
@@ -98,7 +98,7 @@ zweihundert,,
 eintausend,,
 eine Million,,
 eine Milliarde,,
-erste,M,2023-11-15
+erste,T,2023-12-20
 zweite,,
 dritte,,
 vierte,,
@@ -118,11 +118,11 @@ Donnerstag,,
 Freitag,,
 Samstag,,
 Sonnabend,,
-Tag,T,2023-10-28
+Tag,T,2023-12-20
 Morgen,,
 Vormittag,,
 Mittag,,
-Januar,M,2023-11-15
+Januar,T,2023-12-20
 Februar,,
 März,M,2023-11-15
 April,,

@@ -46,15 +46,25 @@ def recreate_wortlist():
 
 
 def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0.0, max_tokens=500):
-    openai.api_key = os.getenv('OPENAI_API_KEY')
-    # print("Get completion message: ", messages)
-    response = openai.ChatCompletion.create(
+    # openai.api_key = os.getenv('OPENAI_API_KEY')
+    # # print("Get completion message: ", messages)
+    # response = openai.ChatCompletion.create(
+    #     model=model,
+    #     messages=messages,
+    #     temperature=temperature,
+    #     max_tokens=max_tokens,
+    # )
+    # return response.choices[0].message["content"]
+
+    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+    response = client.chat.completions.create(
         model=model,
-        messages=messages,
         temperature=temperature,
         max_tokens=max_tokens,
+        messages=messages
     )
-    return response.choices[0].message["content"]
+
+    return response.choices[0].message.content
 
 
 def chooseSelectedWords():
