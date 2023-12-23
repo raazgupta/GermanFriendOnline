@@ -19,6 +19,8 @@ file_path = "A1Wortlist.csv"
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
 
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
 
 def recreate_wortlist():
     input_file = "A1Wortlist-backup.csv"
@@ -56,7 +58,6 @@ def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0.
     # )
     # return response.choices[0].message["content"]
 
-    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
     response = client.chat.completions.create(
         model=model,
         temperature=temperature,
@@ -66,6 +67,49 @@ def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0.
 
     return response.choices[0].message.content
 
+def get_response_from_assistant(thread_id):
+
+    # Run the Assistant
+    # The Assistant id and details are on OpenAI API webpage
+    run = client.beta.threads.runs.create(
+        thread_id=thread_id,
+        assistant_id="asst_qXm8leIYM7P33EpQb0m582g7"
+    )
+
+    # By default run goes into queued state. You can periodically retrieve the Run to check on its status to see if it moved to completed
+    while run.status == "queued" or run.status == "in_progress":
+        run = client.beta.threads.runs.retrieve(
+            thread_id=thread_id,
+            run_id=run.id
+        )
+    if run.status == "completed":
+
+        # Print run steps
+        """
+        run_steps = client.beta.threads.runs.steps.list(
+            thread_id= thread_id,
+            run_id=run.id
+        )
+        print(run_steps)
+        """
+
+        # Return a list of message objects in descending order as I am interested only in the last response
+        thread_messages = client.beta.threads.messages.list(thread_id=thread_id, order="desc")
+        #print(thread_messages)
+        try:
+            # Since the returned list is in descending order take the first message object and extract its text value
+            # response = thread_messages.data[0].content[0].text.value
+            # Remove annotation text
+            message_content = thread_messages.data[0].content[0].text
+            annotations = message_content.annotations
+            for annotation in annotations:
+                message_content.value = message_content.value.replace(annotation.text, "")
+            response = message_content.value
+        except Exception as e:
+            response = f"An unexpected error occurred: {e}"
+    else:
+        response = "Error: OpenAI Run Failed"
+    return response
 
 def chooseSelectedWords():
     # Go through the file
@@ -129,8 +173,10 @@ def chooseSelectedWords():
     return selected_words_lineNumber, selected_words, percentage_burned
 
 def assistant_create_story(selected_words):
-
-    client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+    content = f"""
+                    Write a story in German with maximum 3 sentences.
+                    Make sure these words are in the story: {",".join(selected_words)}
+                """
 
     # Thread represents a conversation per user
     # Once this is no longer a beta feature, can consider initiating a thread when the user clicks on Create Story button
@@ -141,43 +187,12 @@ def assistant_create_story(selected_words):
     message = client.beta.threads.messages.create(
         thread_id=thread.id,
         role="user",
-        content=f"""
-            Write a story in German with maximum 3 sentences.
-            Make sure these words are in the story: {",".join(selected_words)}
-        """
+        content=content
     )
 
-    # Run the Assistant
-    # The Assitant id and details are on OpenAI API webpage
-    run = client.beta.threads.runs.create(
-        thread_id=thread.id,
-        assistant_id="asst_qXm8leIYM7P33EpQb0m582g7"
-    )
-
-    # By default run goes into queued state. You can periodically retrieve the Run to check on its status to see if it moved to completed
-    while run.status == "queued" or run.status == "in_progress":
-        run = client.beta.threads.runs.retrieve(
-            thread_id=thread.id,
-            run_id=run.id
-        )
-    if run.status == "completed":
-        # Return a list of message objects in descending order as I am interested only in the last response
-        thread_messages = client.beta.threads.messages.list(thread_id=thread.id, order="desc")
-        print(thread_messages)
-        try:
-            # Since the returned list is in descending order take the first message object and extract its text value
-            # response = thread_messages.data[0].content[0].text.value
-            # Remove annotation text
-            message_content = thread_messages.data[0].content[0].text
-            annotations = message_content.annotations
-            for annotation in annotations:
-                message_content.value = message_content.value.replace(annotation.text, "")
-            response = message_content.value
-        except Exception as e:
-            response = f"An unexpected error occurred: {e}"
-    else:
-        response = "Error: OpenAI Run Failed"
+    response = get_response_from_assistant(thread.id)
     return response
+
 
 def create_story(selected_words, temperature=0.0):
     # Prompt to create German Story
@@ -237,12 +252,12 @@ def save_to_csv():
                 if selected_word_LineNumber[1] == i:
                     updated_line = selected_word_LineNumber[0] + "," + selected_word_LineNumber[2] + ',' + selected_word_LineNumber[3] + "\n"
             updated_content.append(updated_line)
-            print(updated_line)
+            #print(updated_line)
         else:
             updated_content.append(line)
 
     # Write data to CSV file
-    print(updated_content[0])
+    #print(updated_content[0])
     with open(file_path, 'w') as file:
         file.writelines(updated_content)
 
@@ -495,16 +510,26 @@ def germanScenario():
 
     scenarioText = request.form['scenarioText']
 
-    scenarioText = scenarioText + ". You will always respond in German. Only use words that are from the Goethe-Zertifikat A1 vocabulary list."
+    # scenarioText = scenarioText + ". You will always respond in German. Only use words that are from the Goethe-Zertifikat A1 vocabulary list."
 
     # Start a CharGPT conversation with the scenarioText as the system message
-    conversationMessages = [
-        {'role': 'system',
-         'content': scenarioText
-         }
-    ]
+    # conversationMessages = [
+    #     {'role': 'system',
+    #      'content': scenarioText
+    #      }
+    # ]
 
-    session['conversationMessages'] = conversationMessages
+    # session['conversationMessages'] = conversationMessages
+
+    chat_thread = client.beta.threads.create()
+
+    message = client.beta.threads.messages.create(
+        thread_id=chat_thread.id,
+        role="user",
+        content=scenarioText
+    )
+
+    session['chat_thread_id'] = chat_thread.id
 
     return render_template('iSay.html', result=result_data)
 
@@ -512,20 +537,38 @@ def germanScenario():
 def iSayDynamic():
     session['iSayText'] = request.form['iSayText']
     iSayText = request.form['iSayText']
-    conversationMessages = session['conversationMessages']
+
+    # conversationMessages = session['conversationMessages']
+
+    """
     conversationMessages.append(
         {'role': 'user',
          'content': iSayText
          }
     )
-    youSayText = get_completion_from_messages(conversationMessages, max_tokens=100)
+    """
+
+    chat_thread_id = session['chat_thread_id']
+
+    isay_message = client.beta.threads.messages.create(
+        thread_id=chat_thread_id,
+        role="user",
+        content=iSayText
+    )
+
+    # youSayText = get_completion_from_messages(conversationMessages, max_tokens=100)
+
+    youSayText = get_response_from_assistant(chat_thread_id)
+
     session['youSayText'] = youSayText
+    """
     conversationMessages.append(
         {'role': 'assistant',
          'content': youSayText
          }
     )
     session['conversationMessages'] = conversationMessages
+    """
 
     result_data = {
         'youSayText': youSayText,

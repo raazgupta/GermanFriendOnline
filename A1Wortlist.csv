@@ -6,7 +6,7 @@ Geburtsdatum,,
 Geburtsort,,
 Alter,,
 Wohnung,,
-Räume,T,2023-12-20
+Räume,W,2023-12-28
 Einrichtung,,
 Möbel,,
 Pflanzen,,
@@ -17,7 +17,7 @@ Nahrungsmittel,,
 Mahlzeiten,,
 Speisen,,
 Getränke,,
-Lokale,T,2023-12-20
+Lokale,W,2023-12-28
 Restaurant,,
 Café,,
 Post,,
@@ -32,8 +32,8 @@ Familie,,
 Persönliche,,
 Beziehungen,,
 Staatsangehörigkeit,,
-Nationalität,T,2023-12-20
-Herkunft,T,2023-12-20
+Nationalität,W,2023-12-28
+Herkunft,W,2023-12-28
 Aussehen,,
 Gewohnheiten,,
 Tagesablauf,,
@@ -74,8 +74,8 @@ sieben,,
 acht,,
 neun,,
 zehn,,
-elf,T,2023-12-20
-zwölf,T,2023-12-20
+elf,W,2023-12-28
+zwölf,W,2023-12-28
 dreizehn,,
 vierzehn,,
 fünfzehn,,
@@ -89,7 +89,7 @@ dreißig,,
 vierzig,,
 fünfzig,,
 sechzig,,
-siebzig,T,2023-12-20
+siebzig,W,2023-12-28
 achtzig,,
 neunzig,,
 einhundert,,
@@ -98,7 +98,7 @@ zweihundert,,
 eintausend,,
 eine Million,,
 eine Milliarde,,
-erste,T,2023-12-20
+erste,W,2023-12-28
 zweite,,
 dritte,,
 vierte,,
@@ -118,21 +118,21 @@ Donnerstag,,
 Freitag,,
 Samstag,,
 Sonnabend,,
-Tag,T,2023-12-20
+Tag,W,2023-12-28
 Morgen,,
 Vormittag,,
 Mittag,,
-Januar,T,2023-12-20
+Januar,W,2023-12-28
 Februar,,
-März,M,2023-11-15
+März,3M,2024-03-20
 April,,
 Mai,,
 Juni,,
 Tag,,
-Woche,M,2023-11-15
+Woche,3M,2024-03-20
 Jahr,,
 Wochenende,,
-Nachmittag,M,2023-11-15
+Nachmittag,3M,2024-03-20
 Abend,,
 Nacht,,
 Juli,,
@@ -145,13 +145,13 @@ Frühling,,
 Frühjahr,,
 Sommer,,
 Herbst,,
-Winter,M,2023-11-15
+Winter,3M,2024-03-20
 Euro,,
 Cent,,
 Meter,,
 Zentimeter,,
 Kilometer,,
-Quadratmeter,M,2023-11-15
+Quadratmeter,3M,2024-03-20
 Grad,,
 Prozent,,
 Liter,,
@@ -173,9 +173,9 @@ weiß,,
 rot,,
 Norden,,
 Süden,,
-blau,M,2023-11-15
+blau,3M,2024-03-20
 gelb,,
-Westen,M,2023-11-15
+Westen,3M,2024-03-20
 braun,,
 Osten,,
 ab,,
@@ -201,7 +201,7 @@ anklicken,,
 ankommen,,
 die Ankunft,,
 ankreuzen,,
-anmachen,M,2023-11-15
+anmachen,3M,2024-03-20
 anmelden,,
 die Anmeldung,,
 die Anrede,,
@@ -209,7 +209,7 @@ anrufen,3M,2024-01-14
 der Anruf,,
 beantworter,,
 die Ansage,,
-der Anschluss,T,2023-10-28
+der Anschluss,W,2023-12-28
 sein,,
 antworten,,
 die Antwort,,
@@ -244,7 +244,7 @@ die Aussage,,
 aussehen,,
 aus sein,,
 aussteigen,,
-der Ausweis,T,2023-10-28
+der Ausweis,W,2023-12-28
 ausziehen,,
 das Auto,,
 die Autobahn,,
@@ -254,7 +254,7 @@ das Baby,,
 die Bäckerei,,
 das Bad,,
 baden,,
-die Bahn,T,2023-10-28
+die Bahn,W,2023-12-31
 der Bahnhof,,
 der Bahnsteig,,
 bald,,
@@ -264,7 +264,7 @@ die Bank,,
 bar,,
 der Bauch,,
 der Baum,,
-der Beamte,T,2023-10-28
+der Beamte,W,2023-12-31
 bedeuten,,
 beginnen,,
 bei,,
@@ -276,10 +276,10 @@ bekannt,,
 die Bekannte,,
 bekommen,,
 benutzen,,
-der Beruf,T,2023-10-28
+der Beruf,W,2023-12-31
 besetzt,,
 besichtigen,,
-besser,T,2023-10-28
+besser,W,2023-12-31
 bestellen,,
 besuchen,,
 das Bett,,
@@ -290,7 +290,7 @@ billig,,
 die Birne,,
 bisschen,,
 bitte,,
-die Bitte,T,2023-10-28
+die Bitte,W,2023-12-31
 bitten,,
 bitter,,
 bleiben,,
@@ -300,7 +300,7 @@ die Blume,,
 der Bogen,,
 böse,,
 brauchen,,
-breit,T,2023-10-28
+breit,W,2023-12-31
 der Brief,,
 die Briefmarke,,
 bringen,,
@@ -329,14 +329,14 @@ dauern,,
 dein,,
 denn,,
 dich,,
-dies,T,2023-10-28
+dies,W,2023-12-31
 dir,,
 die Disco,,
 der Doktor,,
 das Doppelzimmer,,
 das Dorf,,
 dort,,
-draußen,T,2023-10-28
+draußen,W,2023-12-31
 drucken,,
 der Drucker,,
 drücken,,
@@ -348,7 +348,7 @@ duschen,,
 die Dusche,,
 die Ecke,,
 die Ehefrau,,
-der Ehemann,T,2023-10-28
+der Ehemann,W,2023-12-31
 das Ei,,
 eilig,,
 ein,,
@@ -361,11 +361,11 @@ einmal,,
 einsteigen,,
 der Eintritt,,
 das Einzelzimmer,,
-die Eltern,,
+die Eltern,W,2023-12-31
 die E-Mail,,
 der Empfänger,,
 empfehlen,,
-enden,T,2023-10-28
+enden,W,2023-12-31
 das Ende,,
 entschuldigen,,
 die Entschuldigung,,
@@ -386,7 +386,7 @@ falsch,,
 die Familie,,
 der Familienname,,
 der Familienstand,,
-die Farbe,T,2023-10-28
+die Farbe,W,2023-12-31
 das Fax,,
 Feier,,
 feiern,,
@@ -402,21 +402,21 @@ die Firma,,
 der Fisch,,
 die Flasche,,
 das Fleisch,,
-fliegen,T,2023-10-28
+fliegen,W,2023-12-31
 abfliegen,,
 der Abflug,,
 der Flughafen,,
 das Flugzeug,,
 das Formular,,
 das Foto,,
-fragen,T,2023-10-28
+fragen,W,2023-12-31
 die Frage,,
 die Frau,,
 frei,,
 die Freizeit,,
 fremd,,
 freuen,,
-der Freund,T,2023-10-28
+der Freund,W,2023-12-31
 früher,,
 frühstücken,,
 das Frühstück,,
@@ -430,7 +430,7 @@ geben,,
 geboren,,
 das Geburtsjahr,,
 der Geburtsort,,
-der Geburtstag,T,2023-10-28
+der Geburtstag,W,2023-12-31
 gefallen,,
 gegen,,
 gehen,,
@@ -441,26 +441,26 @@ das Gepäck,,
 gerade,,
 geradeaus,,
 gerne,,
-das Geschäft,T,2023-10-28
+das Geschäft,W,2023-12-31
 das Geschenk,,
 die Geschwister,,
-das Gespräch,T,2023-10-19
-gestern,T,2023-10-19
+das Gespräch,W,2023-12-31
+gestern,W,2023-12-31
 gestorben,,
 das Getränk,,
-das Gewicht,T,2023-10-19
+das Gewicht,W,2023-12-31
 gewinnen,,
 das Glas,,
 glauben,,
 gleich,,
-das Gleis,T,2023-10-19
+das Gleis,W,2023-12-31
 das Glück,,
 glücklich,,
 der Glückwunsch,,
 Grad,,
 gratulieren,,
 grillen,,
-groß,T,2023-10-19
+groß,W,2023-12-31
 die Größe,,
 die Großeltern,,
 die Großmutter,,
@@ -468,7 +468,7 @@ der Großvater,,
 die Gruppe,,
 der Gruß,,
 gültig,,
-günstig,T,2023-10-19
+günstig,W,2023-12-31
 gut,,
 das Haar,,
 haben,,
@@ -483,7 +483,7 @@ das Handy,,
 das Haus,,
 die Hausaufgabe,,
 die Hausfrau,,
-der Hausmann,T,2023-10-19
+der Hausmann,W,2023-12-31
 die Heimat,,
 heiraten,,
 heißen,,
@@ -492,7 +492,7 @@ hell,,
 der Herd,,
 der Herr,,
 herzlich,,
-heute,T,2023-10-19
+heute,W,2023-12-31
 hier,,
 die Hilfe,,
 hinten,,
@@ -506,12 +506,12 @@ der Hund,,
 der Hunger,,
 ich,,
 ihr,,
-ihm,T,2023-10-19
+ihm,W,2023-12-31
 ihn,,
-immer,T,2023-10-19
+immer,W,2023-12-31
 in,,
 die Information,,
-international,,
+international,W,2023-12-31
 das Internet,,
 ja,,
 die Jacke,,
@@ -532,10 +532,10 @@ kein,,
 kennen,,
 kennenlernen,,
 das Kind,,
-der Kindergarten,T,2023-10-19
+der Kindergarten,W,2023-12-31
 das Kino,,
 der Kiosk,,
-klar,T,2023-10-19
+klar,W,2023-12-31
 die Klasse,,
 die Kleidung,,
 klein,,
@@ -548,7 +548,7 @@ das Konto,,
 der Kopf,,
 kosten,,
 krank,,
-kriegen,T,2023-10-19
+kriegen,W,2023-12-31
 die Küche,,
 der Kuchen,,
 der Kugelschreiber,,
@@ -559,7 +559,7 @@ der Kunde,,
 der Kurs,,
 kurz,,
 lachen,,
-der Laden,T,2023-10-19
+der Laden,W,2023-12-31
 das Land,,
 er lang,,
 lange,,
@@ -567,7 +567,7 @@ langsam,,
 laufen,,
 laut,,
 leben,,
-das Leben,T,2023-10-19
+das Leben,W,2023-12-31
 die Lebensmittel,,
 ledig,,
 legen,,
@@ -583,7 +583,7 @@ das Licht,,
 lieben,,
 lieber,,
 Lieblings,,
-das Lied,T,2023-10-19
+das Lied,W,2023-12-31
 liegen,,
 links,,
 der Lkw,,
@@ -636,7 +636,7 @@ nur,,
 oben,,
 das Obst,,
 oder,,
-öffnen,T,2023-10-19
+öffnen,W,2023-12-31
 geöffnet,,
 oft,,
 ohne,,
@@ -648,11 +648,11 @@ der Ort,,
 das Papier,,
 die Papiere,,
 der Partner,,
-die Partnerin,T,2023-10-19
+die Partnerin,W,2023-12-31
 die Party,,
 der Pass,,
 die Pause,,
-der Plan,T,2023-10-19
+der Plan,W,2023-12-31
 der Platz,,
 die Polizei,,
 die Pommes frites,,
@@ -663,7 +663,7 @@ die Praxis,,
 der Preis,,
 das Problem,,
 der Prospekt,,
-die Prüfung,,
+die Prüfung,W,2023-12-31
 pünktlich,,
 Rad fahren,,
 rauchen,,
@@ -672,7 +672,7 @@ die Rechnung,,
 rechts,,
 regnen,,
 der Regen,,
-der Reis,T,2023-10-19
+der Reis,W,2023-12-31
 reisen,,
 die Reise,,
 das Reisebüro,,
@@ -684,12 +684,12 @@ die Rezeption,,
 richtig,,
 riechen,,
 ruhig,,
-der Saft,T,2023-10-19
+der Saft,W,2023-12-31
 sagen,,
 der Salat,,
 das Salz,,
 Satz,,
-die S-Bahn,T,2023-10-19
+die S-Bahn,W,2023-12-31
 der Schalter,,
 scheinen,,
 schicken,,
@@ -727,7 +727,7 @@ seit,,
 selbstständig,,
 sich,,
 sie,,
-Sie,T,2023-10-19
+Sie,W,2023-12-31
 sitzen,,
 so,,
 das Sofa,,
@@ -745,7 +745,7 @@ sprechen,,
 die Stadt,,
 stehen,,
 die Stelle,,
-stellen,T,2023-10-19
+stellen,W,2023-12-31
 der Stock,,
 die Straße,,
 die Straßenbahn,,
@@ -754,7 +754,7 @@ das Studium,,
 der Student,,
 die Stunde,,
 suchen,,
-tanzen,T,2023-10-19
+tanzen,W,2023-12-31
 die Tasche,,
 das Taxi,,
 der Tee,,
@@ -781,7 +781,7 @@ über,,
 übernachten,,
 überweisen,,
 die Uhr,,
-um,T,2023-10-19
+um,W,2023-12-31
 umziehen,,
 und,,
 unser,,
@@ -796,10 +796,10 @@ verboten,,
 verdienen,,
 der Verein,,
 verheiratet,,
-verkaufen,T,2023-10-19
+verkaufen,W,2023-12-31
 der Verkäufer,,
 vermieten,,
-der Vermieter,T,2023-10-19
+der Vermieter,W,2023-12-31
 verstehen,,
 der Verwandte,,
 viel,,
@@ -830,7 +830,7 @@ werden,,
 das Wetter,,
 wichtig,,
 wie,,
-wiederholen,T,2023-10-19
+wiederholen,W,2023-12-31
 das Wiederhören,,
 das Wiedersehen,,
 wie viel,,
@@ -844,7 +844,7 @@ wohin,,
 wohnen,,
 die Wohnung,,
 wollen,,
-das Wort,T,2023-10-19
+das Wort,W,2023-12-31
 wunderbar,,
 zahlen,,
 die Zeit,,
@@ -856,6 +856,6 @@ der Zoll,,
 zu,,
 zufrieden,,
 der Zug,,
-zurück,T,2023-10-19
+zurück,W,2023-12-31
 zusammen,,
 zwischen,,
