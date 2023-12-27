@@ -1,12 +1,3 @@
-"""
-# Import the activate_this.py script from the virtual environment
-activate_this = '/home/public/App/GermanFriendOnline/venv/bin/activate_this.py'
-
-with open(activate_this) as file_:
-    exec(file_.read(), dict(__file__=activate_this))
-"""
-
-
 from flask import Flask, render_template, request, session, redirect, url_for
 import openai
 from openai import OpenAI
@@ -67,13 +58,13 @@ def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0.
 
     return response.choices[0].message.content
 
-def get_response_from_assistant(thread_id):
+def get_response_from_assistant(assistant_id, thread_id):
 
     # Run the Assistant
     # The Assistant id and details are on OpenAI API webpage
     run = client.beta.threads.runs.create(
         thread_id=thread_id,
-        assistant_id="asst_qXm8leIYM7P33EpQb0m582g7"
+        assistant_id=assistant_id
     )
 
     # By default run goes into queued state. You can periodically retrieve the Run to check on its status to see if it moved to completed
@@ -85,13 +76,13 @@ def get_response_from_assistant(thread_id):
     if run.status == "completed":
 
         # Print run steps
-        """
+
         run_steps = client.beta.threads.runs.steps.list(
             thread_id= thread_id,
             run_id=run.id
         )
         print(run_steps)
-        """
+
 
         # Return a list of message objects in descending order as I am interested only in the last response
         thread_messages = client.beta.threads.messages.list(thread_id=thread_id, order="desc")
@@ -109,6 +100,7 @@ def get_response_from_assistant(thread_id):
             response = f"An unexpected error occurred: {e}"
     else:
         response = "Error: OpenAI Run Failed"
+
     return response
 
 def chooseSelectedWords():
@@ -173,8 +165,11 @@ def chooseSelectedWords():
     return selected_words_lineNumber, selected_words, percentage_burned
 
 def assistant_create_story(selected_words):
+
+    assistant_id = "asst_qXm8leIYM7P33EpQb0m582g7"
+
     content = f"""
-                    Write a story in German with maximum 3 sentences.
+                    Write a story in simple German with maximum 3 sentences.
                     Make sure these words are in the story: {",".join(selected_words)}
                 """
 
@@ -190,7 +185,7 @@ def assistant_create_story(selected_words):
         content=content
     )
 
-    response = get_response_from_assistant(thread.id)
+    response = get_response_from_assistant(assistant_id, thread.id)
     return response
 
 
@@ -316,6 +311,7 @@ def anki():
         selected_words_position = session['selected_words_position']
 
         wort = selected_words_lineNumber[selected_words_position][0]
+        session['anki_word'] = wort
 
         result_data = {
             'wort': wort,
@@ -324,6 +320,30 @@ def anki():
 
         return render_template('anki.html', result = result_data)
 
+
+@app.route('/ankiSentence')
+def ankiSentence():
+    wort = session['anki_word']
+
+    assistant_id = "asst_qXm8leIYM7P33EpQb0m582g7"
+
+    content = "Write 1 sentence in German that has this word: " + wort
+
+    # Thread represents a conversation per user
+    thread = client.beta.threads.create()
+
+    # Add a message to the thread
+    message = client.beta.threads.messages.create(
+        thread_id=thread.id,
+        role="user",
+        content=content
+    )
+
+    response = get_response_from_assistant(assistant_id, thread.id)
+
+    session['anki_sentence'] = response
+
+    return response
 
 @app.route('/ankiTranslate', methods=['POST'])
 def anki_translate():
@@ -403,6 +423,12 @@ def anki_translate():
     result_data['frequency2_display'] = get_display_frequency(result_data['frequency2'])
 
     return render_template('ankiTranslate.html', result=result_data)
+
+@app.route('/ankiSentenceEnglish')
+def ankiSentenceEnglish():
+   anki_sentence = session['anki_sentence']
+   anki_sentence_english = translateToEnglish(anki_sentence)
+   return anki_sentence_english
 
 def translateToEnglish(germanText):
     messages = [
@@ -535,6 +561,9 @@ def germanScenario():
 
 @app.route('/iSayDynamic', methods=['POST'])
 def iSayDynamic():
+
+    assistant_id = "asst_SMi97meJ2ArZr2iMwNSQ2Hy0"
+
     session['iSayText'] = request.form['iSayText']
     iSayText = request.form['iSayText']
 
@@ -558,7 +587,7 @@ def iSayDynamic():
 
     # youSayText = get_completion_from_messages(conversationMessages, max_tokens=100)
 
-    youSayText = get_response_from_assistant(chat_thread_id)
+    youSayText = get_response_from_assistant(assistant_id, chat_thread_id)
 
     session['youSayText'] = youSayText
     """
@@ -588,6 +617,8 @@ def conversationSpellGrammarCheck():
     iSayText = session['iSayText']
     iSayTextReviewed = correctSpellingGrammar(iSayText)
     return iSayTextReviewed
+
+
 
 @app.route('/youSay', methods=['POST'])
 def youSay():

@@ -3,6 +3,29 @@
 <head>
     <title>Vocabulary Translation</title>
     <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        // Define a function to make the API request for Anki Sentence English
+        function fetchAnkiSentenceEnglish() {
+            $.ajax({
+                url: '/ankiSentenceEnglish',  // Replace with the actual API endpoint
+                // url: '/App/GermanFriendOnline/conversationEnglishTranslation',
+                method: 'GET',              // Use 'GET' or 'POST' based on your API
+                success: function(data) {
+                    // Update the content of the paragraph with the response data
+                    $('#dynamic-anki-sentence-english').text(data);
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        // Call the function to fetch data when the page loads
+        fetchAnkiSentenceEnglish();
+    });
+    </script>
     <style>
         /* Add your CSS styling for the loading text here */
         /* Style the button */
@@ -22,6 +45,7 @@
 <body>
     <h1>Vocabulary Translation:</h1>
     <p style="font-size: 30px;">{{ result.translation }}</p>
+    <p id="dynamic-anki-sentence-english" style="font-size: 30px;">thinking...</p>
     <form id="translate-form" method="POST" action="./ankiRecord">
         <button type="submit" class="custom-button" name="frequency" value="{{ result.frequency1 }}"> {{ result.frequency1_display }} </button>
         <span style="margin-right: 20px;"></span> <!-- Add some space between buttons -->

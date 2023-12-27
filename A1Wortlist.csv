@@ -6,7 +6,7 @@ Geburtsdatum,,
 Geburtsort,,
 Alter,,
 Wohnung,,
-Räume,W,2023-12-28
+Räume,M,2024-01-27
 Einrichtung,,
 Möbel,,
 Pflanzen,,
@@ -17,7 +17,7 @@ Nahrungsmittel,,
 Mahlzeiten,,
 Speisen,,
 Getränke,,
-Lokale,W,2023-12-28
+Lokale,M,2024-01-27
 Restaurant,,
 Café,,
 Post,,
@@ -32,8 +32,8 @@ Familie,,
 Persönliche,,
 Beziehungen,,
 Staatsangehörigkeit,,
-Nationalität,W,2023-12-28
-Herkunft,W,2023-12-28
+Nationalität,M,2024-01-27
+Herkunft,M,2024-01-27
 Aussehen,,
 Gewohnheiten,,
 Tagesablauf,,
@@ -47,7 +47,7 @@ privater,,
 öffentlicher,,
 Verkehr,,
 Reisen,,
-Unterkunft,,
+Unterkunft,W,2024-01-02
 Gepäck,,
 Geschäfte,,
 Preis,,
@@ -74,8 +74,8 @@ sieben,,
 acht,,
 neun,,
 zehn,,
-elf,W,2023-12-28
-zwölf,W,2023-12-28
+elf,M,2024-01-27
+zwölf,M,2024-01-27
 dreizehn,,
 vierzehn,,
 fünfzehn,,
@@ -89,7 +89,7 @@ dreißig,,
 vierzig,,
 fünfzig,,
 sechzig,,
-siebzig,W,2023-12-28
+siebzig,T,2023-12-29
 achtzig,,
 neunzig,,
 einhundert,,
@@ -98,8 +98,8 @@ zweihundert,,
 eintausend,,
 eine Million,,
 eine Milliarde,,
-erste,W,2023-12-28
-zweite,,
+erste,T,2023-12-29
+zweite,W,2024-01-02
 dritte,,
 vierte,,
 halb,,
@@ -118,11 +118,11 @@ Donnerstag,,
 Freitag,,
 Samstag,,
 Sonnabend,,
-Tag,W,2023-12-28
+Tag,T,2023-12-29
 Morgen,,
 Vormittag,,
 Mittag,,
-Januar,W,2023-12-28
+Januar,M,2024-01-27
 Februar,,
 März,3M,2024-03-20
 April,,
@@ -169,7 +169,7 @@ europäisch,,
 Farben,,
 schwarz,,
 grau,,
-weiß,,
+weiß,W,2024-01-02
 rot,,
 Norden,,
 Süden,,
@@ -366,7 +366,7 @@ die E-Mail,,
 der Empfänger,,
 empfehlen,,
 enden,W,2023-12-31
-das Ende,,
+das Ende,W,2024-01-02
 entschuldigen,,
 die Entschuldigung,,
 das Ergebnis,,
@@ -517,11 +517,11 @@ ja,,
 die Jacke,,
 jedem,,
 jetzt,,
-der Job,,
+der Job,W,2024-01-02
 der Jugendliche,,
 jung,,
 der Junge,,
-der Kaffee,,
+der Kaffee,W,2024-01-02
 kaputt,,
 die Karte,,
 Kredit Karte,,
@@ -557,7 +557,7 @@ kulturell,,
 sich kümmern,,
 der Kunde,,
 der Kurs,,
-kurz,,
+kurz,W,2024-01-02
 lachen,,
 der Laden,W,2023-12-31
 das Land,,
@@ -577,7 +577,7 @@ leider,,
 leise,,
 lernen,,
 lesen,,
-letzt,,
+letzt,W,2024-01-02
 die Leute,,
 das Licht,,
 lieben,,
@@ -683,7 +683,7 @@ das Restaurant,,
 die Rezeption,,
 richtig,,
 riechen,,
-ruhig,,
+ruhig,W,2024-01-02
 der Saft,W,2023-12-31
 sagen,,
 der Salat,,
@@ -853,7 +853,7 @@ die Zeitung,,
 die Zigarette,,
 das Zimmer,,
 der Zoll,,
-zu,,
+zu,W,2024-01-02
 zufrieden,,
 der Zug,,
 zurück,W,2023-12-31
