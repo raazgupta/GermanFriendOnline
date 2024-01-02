@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-import openai
 from openai import OpenAI
 import os
 import random
 from datetime import datetime, timedelta
+import json
+import unicodedata
 
 file_path = "A1Wortlist.csv"
 
@@ -11,31 +12,6 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-
-
-def recreate_wortlist():
-    input_file = "A1Wortlist-backup.csv"
-    output_file = "A1Wortlist.csv"
-
-    # Read the file and process each line
-    with open(input_file, 'r') as file:
-        lines = file.readlines()
-
-    processed_lines = []
-
-    for index, line in enumerate(lines, start=1):
-        stripped_line = line.rstrip()  # Remove trailing spaces
-        if index == 1:
-            modified_line = "Wort, reviewFrequency, reviewDate"
-        else:
-            modified_line = stripped_line + ',,'  # Add two commas to the end
-        processed_lines.append(modified_line + '\n')  # Add newline character
-
-    # Write the processed lines back to the same file
-    with open(output_file, 'w') as file:
-        file.writelines(processed_lines)
-
-    print("File processing complete.")
 
 
 def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0.0, max_tokens=500):
@@ -76,17 +52,21 @@ def get_response_from_assistant(assistant_id, thread_id):
     if run.status == "completed":
 
         # Print run steps
-
+        """
         run_steps = client.beta.threads.runs.steps.list(
-            thread_id= thread_id,
+            thread_id=thread_id,
             run_id=run.id
         )
         print(run_steps)
+        """
 
 
         # Return a list of message objects in descending order as I am interested only in the last response
         thread_messages = client.beta.threads.messages.list(thread_id=thread_id, order="desc")
-        #print(thread_messages)
+        """
+        print("thread_messages:")
+        print(thread_messages)
+        """
         try:
             # Since the returned list is in descending order take the first message object and extract its text value
             # response = thread_messages.data[0].content[0].text.value
@@ -102,6 +82,58 @@ def get_response_from_assistant(assistant_id, thread_id):
         response = "Error: OpenAI Run Failed"
 
     return response
+
+# Function to start the assistant run
+def start_assistant_run(assistant_id, thread_id):
+    # Run the Assistant
+    # The Assistant id and details are on OpenAI API webpage
+    run = client.beta.threads.runs.create(
+        thread_id=thread_id,
+        assistant_id=assistant_id
+    )
+    return run.id
+
+# Function to check if assistant run is complete and provide the latest status and if complete the latest message as response
+def check_assistant_run_completed(thread_id, run_id):
+
+    run = client.beta.threads.runs.retrieve(
+        thread_id=thread_id,
+        run_id=run_id
+    )
+
+    if run.status == "completed":
+
+        # Print run steps
+        """
+        run_steps = client.beta.threads.runs.steps.list(
+            thread_id=thread_id,
+            run_id=run.id
+        )
+        print(run_steps)
+        """
+
+        # Return a list of message objects in descending order as I am interested only in the last response
+        thread_messages = client.beta.threads.messages.list(thread_id=thread_id, order="desc")
+        """
+        print("thread_messages:")
+        print(thread_messages)
+        """
+        try:
+            # Since the returned list is in descending order take the first message object and extract its text value
+            # response = thread_messages.data[0].content[0].text.value
+            # Remove annotation text
+            message_content = thread_messages.data[0].content[0].text
+            annotations = message_content.annotations
+            for annotation in annotations:
+                message_content.value = message_content.value.replace(annotation.text, "")
+            response = message_content.value
+        except Exception as e:
+            response = f"An unexpected error occurred: {e}"
+    else:
+        response = "Error: OpenAI Run Failed"
+
+    return run.status, response
+
 
 def chooseSelectedWords():
     # Go through the file
@@ -139,7 +171,7 @@ def chooseSelectedWords():
                     number_burned = number_burned + 1
                 total_lines = total_lines + 1
 
-    print("Number of selected words using reviewDate:", len(selected_words_lineNumber))
+    # print("Number of selected words using reviewDate:", len(selected_words_lineNumber))
 
     # Check if selected_words has 10 orders or add random words to it
     num_selected_words = len(selected_words_lineNumber)
@@ -152,7 +184,7 @@ def chooseSelectedWords():
         for random_index in random_word_indices:
             selected_words_lineNumber.append(not_reviewed_words[random_index])
 
-    print("Number of selected words after adding random:", len(selected_words_lineNumber))
+    # print("Number of selected words after adding random:", len(selected_words_lineNumber))
 
     # Create a list of selected words
     selected_words = []
@@ -168,25 +200,53 @@ def assistant_create_story(selected_words):
 
     assistant_id = "asst_qXm8leIYM7P33EpQb0m582g7"
 
-    content = f"""
-                    Write a story in simple German with maximum 3 sentences.
-                    Make sure these words are in the story: {",".join(selected_words)}
+    story_content = f"""
+                    1. Write a story in simple German with maximum 3 sentences.
+                    2. Make sure these words are in the story: {",".join(selected_words)}
                 """
 
     # Thread represents a conversation per user
     # Once this is no longer a beta feature, can consider initiating a thread when the user clicks on Create Story button
     # However this will require a thorough rework of the app and with little upside at the moment
-    thread = client.beta.threads.create()
+    story_thread = client.beta.threads.create()
 
     # Add a message to the thread
-    message = client.beta.threads.messages.create(
-        thread_id=thread.id,
+    client.beta.threads.messages.create(
+        thread_id=story_thread.id,
         role="user",
-        content=content
+        content=story_content
     )
 
-    response = get_response_from_assistant(assistant_id, thread.id)
-    return response
+    story_response = get_response_from_assistant(assistant_id, story_thread.id)
+
+    # Function to get Anki sentences in 1 go in JSON format. This function starts the run and does not wait for completion
+
+    assistant_id = "asst_qXm8leIYM7P33EpQb0m582g7"
+
+    sentences_content = f"""
+                1. Write 1 sentence in simple German for each of these words: {",".join(selected_words)}
+                2. Provide the response in JSON format where the keys are the words and the values are the corresponding German sentences
+                For example: 
+                    "Word1": "German sentence for Word1",
+                    "Word2": "German sentence for Word2",
+                    "Word3": "German sentence for Word3",
+                """
+
+    # print("Sentences content" + sentences_content)
+
+    sentences_thread = client.beta.threads.create()
+    session['sentences_thread_id'] = sentences_thread.id
+
+    client.beta.threads.messages.create(
+        thread_id=sentences_thread.id,
+        role="user",
+        content=sentences_content
+    )
+
+    session['sentences_run_id'] = start_assistant_run(assistant_id, sentences_thread.id)
+
+    return story_response
+
 
 
 def create_story(selected_words, temperature=0.0):
@@ -256,28 +316,9 @@ def save_to_csv():
     with open(file_path, 'w') as file:
         file.writelines(updated_content)
 
-@app.route('/')
-def index():
-    # anki(selected_words_lineNumber, wortLines)
-    # translate_to_English(messages)
-    # save_to_csv(wortLines)
-    return render_template('index.html')
-
-def log_datetime():
-    now = datetime.now()
-    with open('datetime_log.txt', 'a') as log_file:
-        log_file.write(now.strftime("%Y-%m-%d %H:%M:%S") + "\n")
 
 
-def get_last_run_datetime():
-    try:
-        with open('datetime_log.txt', 'r') as log_file:
-            lines = log_file.readlines()
-            if lines:
-                last_run_datetime = lines[-1].strip()
-                return last_run_datetime
-    except FileNotFoundError:
-        return "No run history available."
+
 
 @app.route('/germanStory', methods=['POST'])
 def germanStory():
@@ -304,6 +345,44 @@ def germanStory():
 
     return render_template('germanStory.html', result = result_data)
 
+@app.route('/ankiSentencesResponse', methods=['POST','GET'])
+def ankiSentencesResponse():
+    sentences_thread_id = session['sentences_thread_id']
+    sentences_run_id = session['sentences_run_id']
+
+    run_status = "in_progress"
+    response = "Error"
+
+    # print("sentences generation in progress...")
+
+    while run_status == "queued" or run_status == "in_progress":
+        run_status, response = check_assistant_run_completed(sentences_thread_id, sentences_run_id)
+
+    # Print run steps
+
+    run_steps = client.beta.threads.runs.steps.list(
+        thread_id=sentences_thread_id,
+        run_id=sentences_run_id
+    )
+    # print(run_steps)
+
+    # print("run status:" + run_status)
+    # print("Sentences response:" + response)
+
+    if run_status == "completed":
+
+        'Clean up the JSON response'
+        if 'json' in response:
+            response = response.replace('json','',1).strip()
+        response = response.strip("```")
+
+        session['anki_sentences'] = response
+    else:
+        session['anki_sentences'] = "Error"
+
+    return response
+
+
 @app.route('/anki', methods=['POST','GET'])
 def anki():
 
@@ -323,27 +402,31 @@ def anki():
 
 @app.route('/ankiSentence')
 def ankiSentence():
+
+    # print("anki_word:" + session['anki_word'])
+
     wort = session['anki_word']
+    anki_sentences = session['anki_sentences']
+    anki_sentence_for_wort = "Error"
+    sentences_data = ""
 
-    assistant_id = "asst_qXm8leIYM7P33EpQb0m582g7"
+    try:
+        # print("anki_sentences:" + anki_sentences)
+        sentences_data = json.loads(anki_sentences)
+    except json.JSONDecodeError:
+        anki_sentence_for_wort = "Failed to parse JSON. Please check the JSON structure"
 
-    content = "Write 1 sentence in German that has this word: " + wort
+    try:
+        wort_normalized = unicodedata.normalize('NFC', wort)
+        sentences_data_normalized = {unicodedata.normalize('NFC', k): v for k, v in sentences_data.items()}
+        anki_sentence_for_wort = sentences_data_normalized.get(wort_normalized)
+    except:
+        anki_sentence_for_wort = 'Failed to get word. Please check if word is in the JSON string'
 
-    # Thread represents a conversation per user
-    thread = client.beta.threads.create()
+    session['anki_sentence'] = anki_sentence_for_wort
+    # print("anki_sentence_for_wort:" + anki_sentence_for_wort)
 
-    # Add a message to the thread
-    message = client.beta.threads.messages.create(
-        thread_id=thread.id,
-        role="user",
-        content=content
-    )
-
-    response = get_response_from_assistant(assistant_id, thread.id)
-
-    session['anki_sentence'] = response
-
-    return response
+    return anki_sentence_for_wort
 
 @app.route('/ankiTranslate', methods=['POST'])
 def anki_translate():
@@ -623,6 +706,27 @@ def conversationSpellGrammarCheck():
 @app.route('/youSay', methods=['POST'])
 def youSay():
     return render_template('iSay.html')
+
+def log_datetime():
+    now = datetime.now()
+    with open('datetime_log.txt', 'a') as log_file:
+        log_file.write(now.strftime("%Y-%m-%d %H:%M:%S") + "\n")
+
+
+def get_last_run_datetime():
+    try:
+        with open('datetime_log.txt', 'r') as log_file:
+            lines = log_file.readlines()
+            if lines:
+                last_run_datetime = lines[-1].strip()
+                return last_run_datetime
+    except FileNotFoundError:
+        return "No run history available."
+
+@app.route('/')
+def index():
+
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=False, port=5000)

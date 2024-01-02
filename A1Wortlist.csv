@@ -47,7 +47,7 @@ privater,,
 öffentlicher,,
 Verkehr,,
 Reisen,,
-Unterkunft,W,2024-01-02
+Unterkunft,M,2024-02-01
 Gepäck,,
 Geschäfte,,
 Preis,,
@@ -89,7 +89,7 @@ dreißig,,
 vierzig,,
 fünfzig,,
 sechzig,,
-siebzig,T,2023-12-29
+siebzig,T,2024-01-04
 achtzig,,
 neunzig,,
 einhundert,,
@@ -98,8 +98,8 @@ zweihundert,,
 eintausend,,
 eine Million,,
 eine Milliarde,,
-erste,T,2023-12-29
-zweite,W,2024-01-02
+erste,T,2024-01-04
+zweite,T,2024-01-04
 dritte,,
 vierte,,
 halb,,
@@ -118,7 +118,7 @@ Donnerstag,,
 Freitag,,
 Samstag,,
 Sonnabend,,
-Tag,T,2023-12-29
+Tag,T,2024-01-04
 Morgen,,
 Vormittag,,
 Mittag,,
@@ -169,7 +169,7 @@ europäisch,,
 Farben,,
 schwarz,,
 grau,,
-weiß,W,2024-01-02
+weiß,T,2024-01-04
 rot,,
 Norden,,
 Süden,,
@@ -209,7 +209,7 @@ anrufen,3M,2024-01-14
 der Anruf,,
 beantworter,,
 die Ansage,,
-der Anschluss,W,2023-12-28
+der Anschluss,T,2024-01-04
 sein,,
 antworten,,
 die Antwort,,
@@ -244,7 +244,7 @@ die Aussage,,
 aussehen,,
 aus sein,,
 aussteigen,,
-der Ausweis,W,2023-12-28
+der Ausweis,T,2024-01-04
 ausziehen,,
 das Auto,,
 die Autobahn,,
@@ -254,7 +254,7 @@ das Baby,,
 die Bäckerei,,
 das Bad,,
 baden,,
-die Bahn,W,2023-12-31
+die Bahn,T,2024-01-04
 der Bahnhof,,
 der Bahnsteig,,
 bald,,
@@ -264,7 +264,7 @@ die Bank,,
 bar,,
 der Bauch,,
 der Baum,,
-der Beamte,W,2023-12-31
+der Beamte,T,2024-01-04
 bedeuten,,
 beginnen,,
 bei,,
@@ -276,10 +276,10 @@ bekannt,,
 die Bekannte,,
 bekommen,,
 benutzen,,
-der Beruf,W,2023-12-31
+der Beruf,T,2024-01-04
 besetzt,,
 besichtigen,,
-besser,W,2023-12-31
+besser,M,2024-02-02
 bestellen,,
 besuchen,,
 das Bett,,
@@ -290,7 +290,7 @@ billig,,
 die Birne,,
 bisschen,,
 bitte,,
-die Bitte,W,2023-12-31
+die Bitte,M,2024-02-02
 bitten,,
 bitter,,
 bleiben,,
@@ -300,7 +300,7 @@ die Blume,,
 der Bogen,,
 böse,,
 brauchen,,
-breit,W,2023-12-31
+breit,M,2024-02-02
 der Brief,,
 die Briefmarke,,
 bringen,,
@@ -329,14 +329,14 @@ dauern,,
 dein,,
 denn,,
 dich,,
-dies,W,2023-12-31
+dies,M,2024-02-02
 dir,,
 die Disco,,
 der Doktor,,
 das Doppelzimmer,,
 das Dorf,,
 dort,,
-draußen,W,2023-12-31
+draußen,M,2024-02-02
 drucken,,
 der Drucker,,
 drücken,,
@@ -348,7 +348,7 @@ duschen,,
 die Dusche,,
 die Ecke,,
 die Ehefrau,,
-der Ehemann,W,2023-12-31
+der Ehemann,M,2024-02-02
 das Ei,,
 eilig,,
 ein,,
@@ -361,12 +361,12 @@ einmal,,
 einsteigen,,
 der Eintritt,,
 das Einzelzimmer,,
-die Eltern,W,2023-12-31
+die Eltern,M,2024-02-02
 die E-Mail,,
 der Empfänger,,
 empfehlen,,
-enden,W,2023-12-31
-das Ende,W,2024-01-02
+enden,M,2024-02-02
+das Ende,M,2024-02-02
 entschuldigen,,
 die Entschuldigung,,
 das Ergebnis,,
@@ -386,7 +386,7 @@ falsch,,
 die Familie,,
 der Familienname,,
 der Familienstand,,
-die Farbe,W,2023-12-31
+die Farbe,M,2024-02-02
 das Fax,,
 Feier,,
 feiern,,
@@ -402,21 +402,21 @@ die Firma,,
 der Fisch,,
 die Flasche,,
 das Fleisch,,
-fliegen,W,2023-12-31
+fliegen,M,2024-02-02
 abfliegen,,
 der Abflug,,
 der Flughafen,,
 das Flugzeug,,
 das Formular,,
 das Foto,,
-fragen,W,2023-12-31
+fragen,M,2024-02-02
 die Frage,,
 die Frau,,
 frei,,
 die Freizeit,,
 fremd,,
 freuen,,
-der Freund,W,2023-12-31
+der Freund,M,2024-02-02
 früher,,
 frühstücken,,
 das Frühstück,,
@@ -430,7 +430,7 @@ geben,,
 geboren,,
 das Geburtsjahr,,
 der Geburtsort,,
-der Geburtstag,W,2023-12-31
+der Geburtstag,M,2024-02-02
 gefallen,,
 gegen,,
 gehen,,
@@ -441,26 +441,26 @@ das Gepäck,,
 gerade,,
 geradeaus,,
 gerne,,
-das Geschäft,W,2023-12-31
+das Geschäft,M,2024-02-02
 das Geschenk,,
 die Geschwister,,
-das Gespräch,W,2023-12-31
-gestern,W,2023-12-31
+das Gespräch,M,2024-02-02
+gestern,M,2024-02-02
 gestorben,,
 das Getränk,,
-das Gewicht,W,2023-12-31
+das Gewicht,M,2024-02-02
 gewinnen,,
 das Glas,,
 glauben,,
 gleich,,
-das Gleis,W,2023-12-31
+das Gleis,M,2024-02-02
 das Glück,,
 glücklich,,
 der Glückwunsch,,
 Grad,,
 gratulieren,,
 grillen,,
-groß,W,2023-12-31
+groß,M,2024-02-02
 die Größe,,
 die Großeltern,,
 die Großmutter,,

@@ -3,6 +3,29 @@
 <head>
     <title>German Story</title>
     <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        // Define a function to check if anki sentences response is complete
+        function fetchAnkiSentencesResponse() {
+            $.ajax({
+                url: '/ankiSentencesResponse',  // Need to replace with line below when uploading to web
+                // url: '/App/GermanFriendOnline/ankiSentencesResponse',
+                method: 'GET',              // Use 'GET' or 'POST' based on your API
+                success: function(data) {
+                    document.getElementById('practice_vocabulary_button').style.display = 'block';
+                    document.getElementById('patient_text').style.display = 'none';
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        // Call the function to fetch data when the page loads
+        fetchAnkiSentencesResponse();
+    });
+    </script>
     <style>
         /* Style the button */
         .custom-button {
@@ -19,7 +42,8 @@
     <p>Last Run DateTime: {{ result.lastRunDateTime }}</p>
     <p style="font-size: 30px;">Story: {{ result.germanStoryString }}</p>
     <form method="POST" action="./anki">
-        <button type="submit" class="custom-button">Practice Vocabulary</button>
+        <button id="practice_vocabulary_button" type="submit" class="custom-button" style="display:none">Practice Vocabulary</button>
+        <div id="patient_text" style="display:block;">Preparing your words and sentences for review. Please be patient</div>
     </form>
 </body>
 </html>
