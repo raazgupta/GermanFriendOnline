@@ -6,7 +6,7 @@ Geburtsdatum,,
 Geburtsort,,
 Alter,,
 Wohnung,,
-Räume,M,2024-01-27
+Räume,T,2024-01-31
 Einrichtung,,
 Möbel,,
 Pflanzen,,
@@ -17,7 +17,7 @@ Nahrungsmittel,,
 Mahlzeiten,,
 Speisen,,
 Getränke,,
-Lokale,M,2024-01-27
+Lokale,3M,2024-04-29
 Restaurant,,
 Café,,
 Post,,
@@ -32,8 +32,8 @@ Familie,,
 Persönliche,,
 Beziehungen,,
 Staatsangehörigkeit,,
-Nationalität,M,2024-01-27
-Herkunft,M,2024-01-27
+Nationalität,3M,2024-04-29
+Herkunft,3M,2024-04-29
 Aussehen,,
 Gewohnheiten,,
 Tagesablauf,,
@@ -74,8 +74,8 @@ sieben,,
 acht,,
 neun,,
 zehn,,
-elf,M,2024-01-27
-zwölf,M,2024-01-27
+elf,3M,2024-04-29
+zwölf,3M,2024-04-29
 dreizehn,,
 vierzehn,,
 fünfzehn,,
@@ -89,7 +89,7 @@ dreißig,,
 vierzig,,
 fünfzig,,
 sechzig,,
-siebzig,T,2024-01-04
+siebzig,W,2024-02-06
 achtzig,,
 neunzig,,
 einhundert,,
@@ -98,8 +98,8 @@ zweihundert,,
 eintausend,,
 eine Million,,
 eine Milliarde,,
-erste,T,2024-01-04
-zweite,T,2024-01-04
+erste,W,2024-02-06
+zweite,W,2024-02-06
 dritte,,
 vierte,,
 halb,,
@@ -118,7 +118,7 @@ Donnerstag,,
 Freitag,,
 Samstag,,
 Sonnabend,,
-Tag,T,2024-01-04
+Tag,W,2024-02-06
 Morgen,,
 Vormittag,,
 Mittag,,
@@ -791,7 +791,7 @@ der Unterricht,,
 unterschreiben,,
 die Unterschrift,,
 der Urlaub,,
-der Vater,,,
+der Vater,,
 verboten,,
 verdienen,,
 der Verein,,

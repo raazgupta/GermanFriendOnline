@@ -148,6 +148,11 @@ def chooseSelectedWords():
 
     not_reviewed_words = []
     number_burned = 0
+    number_week = 0
+    number_month = 0
+    number_3_month = 0
+    number_pending = 0
+    number_tomorrow = 0
     total_lines = 0
     with open(file_path, 'r') as file:
         # num_lines = sum(1 for line in file)
@@ -162,11 +167,22 @@ def chooseSelectedWords():
 
                 if reviewDateString == "":
                     not_reviewed_words.append([word, lineNumber, reviewFrequency, reviewDateString])
+                    number_pending = number_pending + 1
                 elif reviewFrequency != "B":
                     reviewDateObject = datetime.strptime(reviewDateString, "%Y-%m-%d").date()
                     today = datetime.now().date()
                     if reviewDateObject <= today and len(selected_words_lineNumber) < 10:
                         selected_words_lineNumber.append([word, lineNumber, reviewFrequency, reviewDateString])
+
+                    if reviewFrequency == "W":
+                        number_week = number_week + 1
+                    elif reviewFrequency == "M":
+                        number_month = number_month + 1
+                    elif reviewFrequency == "3M":
+                        number_3_month = number_3_month + 1
+                    elif reviewFrequency == "T":
+                        number_tomorrow = number_tomorrow + 1
+
                 elif reviewFrequency == "B":
                     number_burned = number_burned + 1
                 total_lines = total_lines + 1
@@ -192,9 +208,9 @@ def chooseSelectedWords():
         selected_words.append(selected_word_lineNumber[0])
     random.shuffle(selected_words)
 
-    percentage_burned = number_burned / total_lines
+    # percentage_burned = number_burned / total_lines
 
-    return selected_words_lineNumber, selected_words, percentage_burned
+    return selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow
 
 def assistant_create_story(selected_words):
 
@@ -323,7 +339,8 @@ def save_to_csv():
 @app.route('/germanStory', methods=['POST'])
 def germanStory():
 
-    selected_words_lineNumber, selected_words, percentage_burned = chooseSelectedWords()
+    selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow = chooseSelectedWords()
+    percentage_burned = number_burned / (number_burned+number_week+number_month+number_3_month+number_pending)
     messages, response = create_story(selected_words, temperature=percentage_burned)
 
     session['selected_words_position'] = 0
@@ -336,7 +353,12 @@ def germanStory():
 
     result_data = {
         'germanStoryString': response,
-        'percentageBurned': percentage_burned * 100,
+        'numberBurned': number_burned,
+        'numberWeek': number_week,
+        'numberMonth': number_month,
+        'number3Month': number_3_month,
+        'numberPending': number_pending,
+        'numberTomorrow': number_tomorrow,
         'lastRunDateTime': last_run_datetime
     }
 

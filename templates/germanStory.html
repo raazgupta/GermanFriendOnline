@@ -38,7 +38,12 @@
 </head>
 <body>
     <h1>German Story:</h1>
-    <p>Percentage Burned: {{ result.percentageBurned }}</p>
+    <p>Tomorrow: {{ result.numberTomorrow }}</p>
+    <p>Week: {{ result.numberWeek }}</p>
+    <p>Month: {{ result.numberMonth }}</p>
+    <p>3 Month: {{ result.number3Month }}</p>
+    <p>Burned: {{ result.numberBurned }}</p>
+    <p>Pending: {{ result.numberPending }}</p>
     <p>Last Run DateTime: {{ result.lastRunDateTime }}</p>
     <p style="font-size: 30px;">Story: {{ result.germanStoryString }}</p>
     <form method="POST" action="./anki">
