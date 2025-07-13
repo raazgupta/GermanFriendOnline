@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from openai import OpenAI
+import openai
 import os
 import random
 from datetime import datetime, timedelta
@@ -11,66 +11,33 @@ file_path = "A1Wortlist.csv"
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
 
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+openai.api_key = os.getenv('OPENAI_API_KEY')
+# print(openai.api_key)
 
 
-def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0.0, max_tokens=500):
-    # openai.api_key = os.getenv('OPENAI_API_KEY')
-    # # print("Get completion message: ", messages)
-    # response = openai.ChatCompletion.create(
-    #     model=model,
-    #     messages=messages,
-    #     temperature=temperature,
-    #     max_tokens=max_tokens,
-    # )
-    # return response.choices[0].message["content"]
-
-    response = client.chat.completions.create(
+def get_completion_from_messages(messages, model="gpt-4o-mini", temperature=0.0, max_tokens=500):
+    response = openai.chat.completions.create(
         model=model,
+        messages=messages,
         temperature=temperature,
         max_tokens=max_tokens,
-        messages=messages
     )
-
     return response.choices[0].message.content
 
 def get_response_from_assistant(assistant_id, thread_id):
-
-    # Run the Assistant
-    # The Assistant id and details are on OpenAI API webpage
-    run = client.beta.threads.runs.create(
+    run = openai.beta.threads.runs.create(
         thread_id=thread_id,
         assistant_id=assistant_id
     )
 
-    # By default run goes into queued state. You can periodically retrieve the Run to check on its status to see if it moved to completed
-    while run.status == "queued" or run.status == "in_progress":
-        run = client.beta.threads.runs.retrieve(
+    while run.status in ["queued", "in_progress"]:
+        run = openai.beta.threads.runs.retrieve(
             thread_id=thread_id,
             run_id=run.id
         )
     if run.status == "completed":
-
-        # Print run steps
-        """
-        run_steps = client.beta.threads.runs.steps.list(
-            thread_id=thread_id,
-            run_id=run.id
-        )
-        print(run_steps)
-        """
-
-
-        # Return a list of message objects in descending order as I am interested only in the last response
-        thread_messages = client.beta.threads.messages.list(thread_id=thread_id, order="desc")
-        """
-        print("thread_messages:")
-        print(thread_messages)
-        """
+        thread_messages = openai.beta.threads.messages.list(thread_id=thread_id, order="desc")
         try:
-            # Since the returned list is in descending order take the first message object and extract its text value
-            # response = thread_messages.data[0].content[0].text.value
-            # Remove annotation text
             message_content = thread_messages.data[0].content[0].text
             annotations = message_content.annotations
             for annotation in annotations:
@@ -79,15 +46,17 @@ def get_response_from_assistant(assistant_id, thread_id):
         except Exception as e:
             response = f"An unexpected error occurred: {e}"
     else:
+        # print(run)        
         response = "Error: OpenAI Run Failed"
 
     return response
 
+# ... rest of your code remains the same, using 'openai' instead of 'client'
+
+
 # Function to start the assistant run
 def start_assistant_run(assistant_id, thread_id):
-    # Run the Assistant
-    # The Assistant id and details are on OpenAI API webpage
-    run = client.beta.threads.runs.create(
+    run = openai.beta.threads.runs.create(
         thread_id=thread_id,
         assistant_id=assistant_id
     )
@@ -95,33 +64,14 @@ def start_assistant_run(assistant_id, thread_id):
 
 # Function to check if assistant run is complete and provide the latest status and if complete the latest message as response
 def check_assistant_run_completed(thread_id, run_id):
-
-    run = client.beta.threads.runs.retrieve(
+    run = openai.beta.threads.runs.retrieve(
         thread_id=thread_id,
         run_id=run_id
     )
 
     if run.status == "completed":
-
-        # Print run steps
-        """
-        run_steps = client.beta.threads.runs.steps.list(
-            thread_id=thread_id,
-            run_id=run.id
-        )
-        print(run_steps)
-        """
-
-        # Return a list of message objects in descending order as I am interested only in the last response
-        thread_messages = client.beta.threads.messages.list(thread_id=thread_id, order="desc")
-        """
-        print("thread_messages:")
-        print(thread_messages)
-        """
+        thread_messages = openai.beta.threads.messages.list(thread_id=thread_id, order="desc")
         try:
-            # Since the returned list is in descending order take the first message object and extract its text value
-            # response = thread_messages.data[0].content[0].text.value
-            # Remove annotation text
             message_content = thread_messages.data[0].content[0].text
             annotations = message_content.annotations
             for annotation in annotations:
@@ -130,6 +80,7 @@ def check_assistant_run_completed(thread_id, run_id):
         except Exception as e:
             response = f"An unexpected error occurred: {e}"
     else:
+        # print(run)
         response = "Error: OpenAI Run Failed"
 
     return run.status, response
@@ -224,10 +175,10 @@ def assistant_create_story(selected_words):
     # Thread represents a conversation per user
     # Once this is no longer a beta feature, can consider initiating a thread when the user clicks on Create Story button
     # However this will require a thorough rework of the app and with little upside at the moment
-    story_thread = client.beta.threads.create()
+    story_thread = openai.beta.threads.create()
 
     # Add a message to the thread
-    client.beta.threads.messages.create(
+    openai.beta.threads.messages.create(
         thread_id=story_thread.id,
         role="user",
         content=story_content
@@ -250,10 +201,10 @@ def assistant_create_story(selected_words):
 
     # print("Sentences content" + sentences_content)
 
-    sentences_thread = client.beta.threads.create()
+    sentences_thread = openai.beta.threads.create()
     session['sentences_thread_id'] = sentences_thread.id
 
-    client.beta.threads.messages.create(
+    openai.beta.threads.messages.create(
         thread_id=sentences_thread.id,
         role="user",
         content=sentences_content
@@ -382,7 +333,7 @@ def ankiSentencesResponse():
 
     # Print run steps
 
-    run_steps = client.beta.threads.runs.steps.list(
+    run_steps = openai.beta.threads.runs.steps.list(
         thread_id=sentences_thread_id,
         run_id=sentences_run_id
     )
@@ -565,7 +516,7 @@ def correctSpellingGrammar(germanText):
     ]
     # print("correctSpellingGrammar:")
     # print(messages)
-    correctSpellingGrammarVersion = get_completion_from_messages(messages, model="gpt-4", max_tokens=500)
+    correctSpellingGrammarVersion = get_completion_from_messages(messages, model="gpt-4o", max_tokens=500)
     # print(correctSpellingGrammarVersion)
 
     return correctSpellingGrammarVersion
@@ -620,14 +571,14 @@ def updateReviewDate():
     session['selected_words_lineNumber'] = selected_words_lineNumber
 
     if (selected_words_position + 1) < len(selected_words_lineNumber):
-        return redirect(url_for('anki', _external=False))
-        # return redirect('/App/GermanFriendOnline/anki')
+        # return redirect(url_for('anki', _external=False))
+        return redirect('/App/GermanFriendOnline/anki')
     else:
         # Update the Wortlist file with updated frequency and date
         save_to_csv()
         # Show the English Translation
-        return redirect(url_for('englishTranslation', _external=False))
-        # return redirect('/App/GermanFriendOnline/englishTranslation')
+        # return redirect(url_for('englishTranslation', _external=False))
+        return redirect('/App/GermanFriendOnline/englishTranslation')
 
 @app.route('/germanConversation', methods=['POST'])
 def germanConversation():
@@ -652,9 +603,9 @@ def germanScenario():
 
     # session['conversationMessages'] = conversationMessages
 
-    chat_thread = client.beta.threads.create()
+    chat_thread = openai.beta.threads.create()
 
-    message = client.beta.threads.messages.create(
+    message = openai.beta.threads.messages.create(
         thread_id=chat_thread.id,
         role="user",
         content=scenarioText
@@ -684,7 +635,7 @@ def iSayDynamic():
 
     chat_thread_id = session['chat_thread_id']
 
-    isay_message = client.beta.threads.messages.create(
+    isay_message = openai.beta.threads.messages.create(
         thread_id=chat_thread_id,
         role="user",
         content=iSayText

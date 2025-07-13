@@ -1,861 +1,861 @@
 Wort, reviewFrequency, reviewDate
-Name,,
-Adresse,,
-Telefon,,
+Name,B,2025-01-05
+Adresse,3M,2025-08-23
+Telefon,B,2024-09-30
 Geburtsdatum,,
 Geburtsort,,
 Alter,,
-Wohnung,,
-Räume,T,2024-01-31
-Einrichtung,,
-Möbel,,
-Pflanzen,,
-Tiere,,
+Wohnung,3M,2025-09-29
+Räume,,
+Einrichtung,W,2025-07-06
+Möbel,B,2025-01-05
+Pflanzen,B,2024-03-11
+Tiere,M,2025-07-12
 Klima,,
 Wetter,,
-Nahrungsmittel,,
+Nahrungsmittel,3M,2025-08-23
 Mahlzeiten,,
-Speisen,,
-Getränke,,
-Lokale,3M,2024-04-29
-Restaurant,,
-Café,,
-Post,,
+Speisen,B,2024-02-04
+Getränke,B,2025-06-25
+Lokale,B,2025-02-24
+Restaurant,B,2024-04-29
+Café,B,2025-03-26
+Post,M,2025-07-17
 Telekommunikation,,
-Banken,,
-Polizei,,
-Arbeitsplatz,,
-Urlaub,,
+Banken,B,2024-05-01
+Polizei,B,2024-06-09
+Arbeitsplatz,B,2024-05-01
+Urlaub,B,2025-02-24
 Geschlecht,,
-Familienstand,,
-Familie,,
-Persönliche,,
+Familienstand,M,2025-07-29
+Familie,B,2024-01-28
+Persönliche,B,2024-06-09
 Beziehungen,,
-Staatsangehörigkeit,,
-Nationalität,3M,2024-04-29
-Herkunft,3M,2024-04-29
-Aussehen,,
+Staatsangehörigkeit,B,2025-06-25
+Nationalität,,
+Herkunft,B,2024-05-01
+Aussehen,B,2024-02-04
 Gewohnheiten,,
 Tagesablauf,,
 Haushalt,,
-technische,,
-Einrichtungen,,
-Miete,,
+technische,B,2024-11-18
+Einrichtungen,B,2024-09-10
+Miete,B,2024-03-11
 Mietverhältnis,,
-Wohnungswechsel,,
-privater,,
-öffentlicher,,
-Verkehr,,
-Reisen,,
-Unterkunft,M,2024-02-01
-Gepäck,,
-Geschäfte,,
+Wohnungswechsel,B,2024-05-06
+privater,B,2024-05-01
+öffentlicher,B,2025-03-26
+Verkehr,M,2025-07-12
+Reisen,B,2024-06-09
+Unterkunft,B,2024-04-17
+Gepäck,B,2025-03-26
+Geschäfte,B,2025-06-25
 Preis,,
-Bezahlen,,
+Bezahlen,B,2024-05-01
 Lebensmittel,,
-Kleidung,,
+Kleidung,M,2025-07-12
 Kinderbetreuung,,
-Schule,,
+Schule,B,2025-06-25
 Sprachen lernen,,
 Interessen,,
-Sport treiben,,
-Radio,,
-Fernsehen,,
+Sport treiben,B,2024-05-21
+Radio,B,2025-06-25
+Fernsehen,M,2025-07-09
 Internet,,
-Lektüre,,
-Presse,,
-eins,,
-zwei,,
-drei,,
-vier,,
-fünf,,
+Lektüre,B,2024-07-09
+Presse,B,2025-06-25
+eins,B,2024-05-20
+zwei,B,2024-06-09
+drei,B,2025-06-29
+vier,B,2024-11-24
+fünf,B,2024-06-09
 sechs,,
-sieben,,
-acht,,
-neun,,
-zehn,,
-elf,3M,2024-04-29
-zwölf,3M,2024-04-29
-dreizehn,,
-vierzehn,,
+sieben,B,2025-02-24
+acht,B,2025-01-13
+neun,B,2024-03-11
+zehn,B,2024-02-13
+elf,,
+zwölf,,
+dreizehn,B,2024-01-28
+vierzehn,M,2025-07-23
 fünfzehn,,
-sechzehn,,
-siebzehn,,
-achtzehn,,
-neunzehn,,
-zwanzig,,
+sechzehn,B,2025-02-01
+siebzehn,3M,2025-08-23
+achtzehn,B,2025-06-29
+neunzehn,B,2025-05-06
+zwanzig,B,2024-03-11
 einundzwanzig,,
-dreißig,,
-vierzig,,
-fünfzig,,
-sechzig,,
-siebzig,W,2024-02-06
-achtzig,,
-neunzig,,
-einhundert,,
-hunderteins,,
+dreißig,B,2025-03-30
+vierzig,B,2024-03-11
+fünfzig,B,2025-02-01
+sechzig,B,2024-06-09
+siebzig,B,2024-06-09
+achtzig,B,2024-05-06
+neunzig,B,2024-02-21
+einhundert,B,2025-05-06
+hunderteins,B,2024-10-08
 zweihundert,,
 eintausend,,
-eine Million,,
-eine Milliarde,,
-erste,W,2024-02-06
-zweite,W,2024-02-06
-dritte,,
-vierte,,
+eine Million,B,2024-10-27
+eine Milliarde,B,2025-06-29
+erste,B,2024-06-09
+zweite,,
+dritte,B,2024-09-30
+vierte,B,2024-01-24
 halb,,
-Viertel,,
-neunzehnhundertneunundneunzig,,
+Viertel,B,2024-05-01
+neunzehnhundertneunundneunzig,B,2024-06-10
 zweitausendvierzehn,,
-Uhr,,
+Uhr,B,2025-01-05
 Minuten,,
 Sekunde,,
-Wochentag,,
-Sonntag,,
+Wochentag,B,2024-09-10
+Sonntag,B,2025-01-05
 Montag,,
-Dienstag,,
+Dienstag,B,2025-05-06
 Mittwoch,,
-Donnerstag,,
-Freitag,,
-Samstag,,
+Donnerstag,B,2024-01-24
+Freitag,M,2025-07-25
+Samstag,M,2025-07-09
 Sonnabend,,
-Tag,W,2024-02-06
-Morgen,,
-Vormittag,,
-Mittag,,
-Januar,M,2024-01-27
-Februar,,
-März,3M,2024-03-20
-April,,
-Mai,,
-Juni,,
 Tag,,
-Woche,3M,2024-03-20
-Jahr,,
-Wochenende,,
-Nachmittag,3M,2024-03-20
-Abend,,
-Nacht,,
-Juli,,
-August,,
-September,,
-Oktober,,
-November,,
+Morgen,3M,2025-08-23
+Vormittag,B,2024-05-01
+Mittag,B,2025-02-01
+Januar,B,2024-03-13
+Februar,B,2024-04-29
+März,,
+April,B,2024-01-28
+Mai,,
+Juni,B,2025-01-05
+Tag,B,2024-03-13
+Woche,B,2024-02-13
+Jahr,B,2025-03-30
+Wochenende,B,2025-01-13
+Nachmittag,B,2024-05-28
+Abend,M,2025-07-09
+Nacht,B,2024-03-13
+Juli,B,2024-05-01
+August,M,2025-07-29
+September,B,2025-03-30
+Oktober,B,2025-06-29
+November,B,2024-06-11
 Dezember,,
 Frühling,,
 Frühjahr,,
-Sommer,,
-Herbst,,
-Winter,3M,2024-03-20
-Euro,,
-Cent,,
+Sommer,B,2025-03-30
+Herbst,B,2024-09-26
+Winter,B,2024-05-06
+Euro,M,2025-07-29
+Cent,M,2025-07-29
 Meter,,
-Zentimeter,,
-Kilometer,,
-Quadratmeter,3M,2024-03-20
+Zentimeter,B,2024-05-06
+Kilometer,B,2024-03-13
+Quadratmeter,,
 Grad,,
 Prozent,,
-Liter,,
+Liter,B,2024-02-21
 Gramm,,
-Pfund,,
-Kilo,,
+Pfund,B,2025-05-06
+Kilo,B,2024-05-21
 Deutschland,,
-Deutsche,,
-Deutscher,,
-Deutsche,,
+Deutsche,B,2025-05-06
+Deutscher,M,2025-07-12
+Deutsche,B,2024-04-29
 deutsch,,
-Europa,,
-Europäer,,
+Europa,B,2025-02-01
+Europäer,B,2024-05-06
 europäisch,,
 Farben,,
-schwarz,,
+schwarz,B,2024-05-28
 grau,,
-weiß,T,2024-01-04
+weiß,B,2025-03-30
 rot,,
-Norden,,
+Norden,B,2024-05-06
 Süden,,
-blau,3M,2024-03-20
-gelb,,
-Westen,3M,2024-03-20
+blau,,
+gelb,B,2025-05-11
+Westen,B,2024-03-13
 braun,,
 Osten,,
-ab,,
-aber,,
-abfahren,,
+ab,B,2024-08-18
+aber,B,2025-05-11
+abfahren,B,2024-03-13
 die Abfahrt,,
 abgeben,,
-abholen,,
-der Absender,,
+abholen,B,2024-05-06
+der Absender,B,2025-03-30
 Achtung,,
-die Adresse,,
-allein,,
-also,,
-alt,,
+die Adresse,3M,2025-08-23
+allein,B,2024-02-21
+also,B,2024-02-21
+alt,3M,2025-08-23
 das Alter,,
-an,,
-anbieten,,
-das Angebot,,
-ander,,
-anfangen,,
-der Anfang,,
+an,B,2024-11-18
+anbieten,3M,2025-07-02
+das Angebot,B,2024-06-11
+ander,B,2024-05-06
+anfangen,B,2024-05-21
+der Anfang,B,2024-05-20
 anklicken,,
-ankommen,,
-die Ankunft,,
-ankreuzen,,
-anmachen,3M,2024-03-20
-anmelden,,
+ankommen,B,2024-11-24
+die Ankunft,3M,2025-08-13
+ankreuzen,B,2024-11-18
+anmachen,B,2024-03-13
+anmelden,3M,2025-07-02
 die Anmeldung,,
-die Anrede,,
-anrufen,3M,2024-01-14
-der Anruf,,
+die Anrede,B,2025-02-05
+anrufen,,
+der Anruf,M,2025-07-12
 beantworter,,
-die Ansage,,
-der Anschluss,T,2024-01-04
+die Ansage,B,2024-02-18
+der Anschluss,,
 sein,,
-antworten,,
-die Antwort,,
-die Anzeige,,
-anziehen,,
-das Apartment,,
-der Apfel̈,,
+antworten,B,2024-06-10
+die Antwort,B,2024-09-30
+die Anzeige,B,2024-05-28
+anziehen,W,2025-07-08
+das Apartment,B,2025-02-24
+der Apfel,B,2024-06-10
 der Appetit,,
 arbeiten,,
-die Arbeit,,
-arbeitslos,,
-der Arbeitsplatz,3M,2024-01-14
-der Arm,,
-der Arzt,,
-auch,,
+die Arbeit,B,2024-05-06
+arbeitslos,W,2025-07-02
+der Arbeitsplatz,B,2025-05-11
+der Arm,M,2025-07-30
+der Arzt,B,2025-01-07
+auch,B,2024-10-21
 auf,,
-die Aufgabe,,
-aufhören,,
-aufstehen,,
-der Aufzug,3M,2024-01-14
+die Aufgabe,B,2024-01-28
+aufhören,3M,2025-07-02
+aufstehen,M,2025-07-17
+der Aufzug,B,2025-05-25
 das Auge,,
 aus,,
 der Ausflug,,
-ausfüllen,,
-der Ausgang,,
+ausfüllen,3M,2025-07-02
+der Ausgang,B,2024-09-26
 die Auskunft,,
-das Ausland,,
-der Ausländer,,
+das Ausland,B,2025-05-11
+der Ausländer,B,2024-11-18
 ausländisch,,
 ausmachen,,
-die Aussage,,
-aussehen,,
-aus sein,,
-aussteigen,,
-der Ausweis,T,2024-01-04
-ausziehen,,
-das Auto,,
+die Aussage,M,2025-07-02
+aussehen,M,2025-07-19
+aus sein,W,2025-07-08
+aussteigen,B,2024-03-18
+der Ausweis,B,2025-04-03
+ausziehen,M,2025-07-02
+das Auto,B,2025-04-14
 die Autobahn,,
-der Automat,,
-automatisch,,
-das Baby,,
-die Bäckerei,,
-das Bad,,
-baden,,
-die Bahn,T,2024-01-04
+der Automat,B,2024-09-26
+automatisch,B,2024-10-27
+das Baby,B,2024-05-07
+die Bäckerei,3M,2025-08-24
+das Bad,B,2025-01-26
+baden,B,2025-01-13
+die Bahn,B,2024-09-10
 der Bahnhof,,
-der Bahnsteig,,
-bald,,
+der Bahnsteig,B,2025-02-01
+bald,B,2025-04-13
 der Balkon,,
 die Banane,,
-die Bank,,
+die Bank,B,2024-10-27
 bar,,
-der Bauch,,
-der Baum,,
-der Beamte,T,2024-01-04
-bedeuten,,
-beginnen,,
-bei,,
-beide,,
-das Bein,,
-das Beispiel,,
-zum Beispiel,,
-bekannt,,
-die Bekannte,,
+der Bauch,3M,2025-07-02
+der Baum,B,2024-11-19
+der Beamte,,
+bedeuten,B,2024-02-21
+beginnen,B,2025-02-25
+bei,B,2024-05-07
+beide,B,2024-05-07
+das Bein,B,2025-04-03
+das Beispiel,B,2024-09-26
+zum Beispiel,B,2025-04-03
+bekannt,B,2025-02-25
+die Bekannte,B,2024-11-19
 bekommen,,
-benutzen,,
-der Beruf,T,2024-01-04
-besetzt,,
+benutzen,3M,2025-07-02
+der Beruf,B,2024-02-05
+besetzt,B,2025-04-13
 besichtigen,,
-besser,M,2024-02-02
+besser,B,2024-10-28
 bestellen,,
-besuchen,,
-das Bett,,
-bezahlen,,
-das Bier,,
-das Bild,,
-billig,,
-die Birne,,
+besuchen,3M,2025-09-03
+das Bett,B,2025-02-25
+bezahlen,B,2025-04-06
+das Bier,B,2025-01-13
+das Bild,B,2024-05-20
+billig,M,2025-07-30
+die Birne,B,2024-11-19
 bisschen,,
-bitte,,
-die Bitte,M,2024-02-02
-bitten,,
-bitter,,
-bleiben,,
-der Bleistift,,
-der Blick,,
-die Blume,,
+bitte,B,2024-09-18
+die Bitte,B,2024-10-28
+bitten,M,2025-07-30
+bitter,B,2024-10-28
+bleiben,B,2025-02-25
+der Bleistift,B,2024-05-07
+der Blick,B,2024-11-19
+die Blume,B,2024-03-18
 der Bogen,,
 böse,,
-brauchen,,
-breit,M,2024-02-02
+brauchen,B,2025-02-25
+breit,B,2024-01-28
 der Brief,,
-die Briefmarke,,
-bringen,,
-das Brot,,
-das Brötchen,,
-der Bruder,,
-das Buch,,
-der Buchstabe,,
-buchstabieren,,
-der Bus,,
-die Butter,,
-das Café,,
-die CD,,
+die Briefmarke,B,2025-02-25
+bringen,B,2024-03-18
+das Brot,B,2024-11-19
+das Brötchen,B,2024-05-07
+der Bruder,B,2024-03-18
+das Buch,B,2025-05-13
+der Buchstabe,B,2024-05-13
+buchstabieren,B,2024-10-28
+der Bus,B,2024-10-23
+die Butter,B,2025-01-14
+das Café,B,2025-04-14
+die CD,B,2024-11-26
 der Chef,,
-circa,,
-der Computer,,
+circa,B,2024-09-10
+der Computer,B,2024-05-07
 da,,
-die Dame,,
-daneben,,
+die Dame,B,2025-05-15
+daneben,M,2025-07-30
 danken,,
-der Dank,,
-danke,,
-dann,,
-das Datum,,
-dauern,,
-dein,,
+der Dank,B,2024-11-26
+danke,M,2025-07-12
+dann,B,2024-11-26
+das Datum,B,2024-01-28
+dauern,B,2024-06-16
+dein,B,2024-02-21
 denn,,
-dich,,
-dies,M,2024-02-02
-dir,,
-die Disco,,
-der Doktor,,
-das Doppelzimmer,,
+dich,M,2025-07-15
+dies,B,2024-03-18
+dir,B,2024-03-18
+die Disco,B,2024-11-26
+der Doktor,B,2024-03-18
+das Doppelzimmer,B,2024-01-28
 das Dorf,,
-dort,,
-draußen,M,2024-02-02
-drucken,,
+dort,M,2025-07-16
+draußen,B,2024-02-25
+drucken,B,2024-03-18
 der Drucker,,
 drücken,,
-durch,,
+durch,B,2024-05-07
 die Durchsage,,
-dürfen,,
-der Durst,,
-duschen,,
-die Dusche,,
-die Ecke,,
+dürfen,B,2025-04-27
+der Durst,B,2025-05-15
+duschen,3M,2025-08-24
+die Dusche,B,2024-05-28
+die Ecke,3M,2025-07-05
 die Ehefrau,,
-der Ehemann,M,2024-02-02
+der Ehemann,B,2025-01-14
 das Ei,,
-eilig,,
-ein,,
-einfach,,
-der Eingang,,
-einkaufen,,
-einladen,,
-die Einladung,,
-einmal,,
-einsteigen,,
-der Eintritt,,
-das Einzelzimmer,,
-die Eltern,M,2024-02-02
-die E-Mail,,
-der Empfänger,,
-empfehlen,,
-enden,M,2024-02-02
-das Ende,M,2024-02-02
-entschuldigen,,
-die Entschuldigung,,
+eilig,B,2024-04-21
+ein,B,2025-04-14
+einfach,B,2024-05-08
+der Eingang,B,2024-03-25
+einkaufen,M,2025-07-30
+einladen,B,2024-10-27
+die Einladung,B,2025-04-06
+einmal,B,2025-02-01
+einsteigen,3M,2025-07-05
+der Eintritt,B,2024-02-06
+das Einzelzimmer,B,2024-10-08
+die Eltern,B,2024-11-26
+die E-Mail,B,2024-02-13
+der Empfänger,B,2024-07-23
+empfehlen,B,2024-11-26
+enden,,
+das Ende,,
+entschuldigen,B,2025-02-25
+die Entschuldigung,B,2024-05-08
 das Ergebnis,,
-erklären,,
-erlauben,,
-der Erwachsene,,
-erzählen,,
+erklären,B,2024-06-23
+erlauben,3M,2025-07-05
+der Erwachsene,M,2025-07-12
+erzählen,B,2025-02-01
 es,,
-essen,,
+essen,B,2024-03-25
 das Essen,,
-euer,,
-fahren,,
-der Fahrer,,
+euer,B,2025-04-14
+fahren,B,2024-05-08
+der Fahrer,B,2024-02-06
 die Fahrkarte,,
-das Fahrrad,,
-falsch,,
-die Familie,,
-der Familienname,,
-der Familienstand,,
-die Farbe,M,2024-02-02
-das Fax,,
-Feier,,
+das Fahrrad,M,2025-07-16
+falsch,3M,2025-09-17
+die Familie,B,2024-03-25
+der Familienname,B,2024-06-10
+der Familienstand,3M,2025-08-11
+die Farbe,B,2024-02-25
+das Fax,B,2024-09-30
+Feier,3M,2025-07-05
 feiern,,
-fehlen,,
+fehlen,B,2025-05-28
 der Fehler,,
 fernsehen,,
-fertig,,
-das Feuer,,
-das Fieber,,
-der Film,,
-finden,,
-die Firma,,
-der Fisch,,
-die Flasche,,
-das Fleisch,,
-fliegen,M,2024-02-02
+fertig,B,2024-11-27
+das Feuer,B,2024-03-25
+das Fieber,B,2025-01-14
+der Film,B,2025-04-20
+finden,B,2024-09-10
+die Firma,B,2024-02-13
+der Fisch,B,2024-09-10
+die Flasche,B,2024-02-06
+das Fleisch,B,2025-05-26
+fliegen,B,2024-11-27
 abfliegen,,
-der Abflug,,
-der Flughafen,,
-das Flugzeug,,
-das Formular,,
-das Foto,,
-fragen,M,2024-02-02
-die Frage,,
-die Frau,,
-frei,,
-die Freizeit,,
-fremd,,
-freuen,,
-der Freund,M,2024-02-02
-früher,,
-frühstücken,,
+der Abflug,M,2025-07-12
+der Flughafen,B,2024-05-20
+das Flugzeug,B,2025-02-26
+das Formular,B,2024-11-27
+das Foto,B,2024-09-16
+fragen,B,2024-05-30
+die Frage,3M,2025-07-05
+die Frau,B,2024-05-08
+frei,B,2025-05-28
+die Freizeit,3M,2025-08-24
+fremd,3M,2025-08-13
+freuen,B,2024-02-07
+der Freund,B,2024-03-25
+früher,3M,2025-07-06
+frühstücken,B,2025-02-26
 das Frühstück,,
-die Führung,,
-für,,
-der Fuß,,
-der Fußball,,
-der Garten,,
-der Gast,,
-geben,,
-geboren,,
+die Führung,B,2024-03-25
+für,M,2025-07-16
+der Fuß,3M,2025-09-23
+der Fußball,B,2025-01-20
+der Garten,B,2024-03-26
+der Gast,B,2024-06-24
+geben,B,2024-06-24
+geboren,B,2024-09-18
 das Geburtsjahr,,
-der Geburtsort,,
-der Geburtstag,M,2024-02-02
+der Geburtsort,B,2025-02-26
+der Geburtstag,B,2024-10-27
 gefallen,,
-gegen,,
-gehen,,
-gehören,,
-das Geld,,
-das Gemüse,,
+gegen,B,2024-03-26
+gehen,B,2024-10-27
+gehören,3M,2025-09-28
+das Geld,B,2025-04-23
+das Gemüse,B,2024-03-26
 das Gepäck,,
 gerade,,
-geradeaus,,
-gerne,,
-das Geschäft,M,2024-02-02
-das Geschenk,,
-die Geschwister,,
-das Gespräch,M,2024-02-02
-gestern,M,2024-02-02
+geradeaus,3M,2025-08-24
+gerne,B,2024-03-26
+das Geschäft,,
+das Geschenk,3M,2025-09-03
+die Geschwister,B,2024-03-26
+das Gespräch,M,2025-07-05
+gestern,B,2024-02-13
 gestorben,,
 das Getränk,,
-das Gewicht,M,2024-02-02
-gewinnen,,
-das Glas,,
-glauben,,
-gleich,,
-das Gleis,M,2024-02-02
-das Glück,,
-glücklich,,
-der Glückwunsch,,
-Grad,,
-gratulieren,,
-grillen,,
-groß,M,2024-02-02
-die Größe,,
-die Großeltern,,
-die Großmutter,,
-der Großvater,,
-die Gruppe,,
-der Gruß,,
-gültig,,
-günstig,W,2023-12-31
-gut,,
-das Haar,,
-haben,,
+das Gewicht,,
+gewinnen,B,2025-02-26
+das Glas,B,2024-05-08
+glauben,B,2024-03-26
+gleich,M,2025-07-02
+das Gleis,,
+das Glück,B,2024-02-07
+glücklich,B,2024-10-27
+der Glückwunsch,B,2025-04-27
+Grad,B,2024-02-08
+gratulieren,B,2024-10-01
+grillen,B,2024-04-10
+groß,B,2024-04-10
+die Größe,B,2024-04-10
+die Großeltern,3M,2025-07-06
+die Großmutter,3M,2025-09-28
+der Großvater,M,2025-07-30
+die Gruppe,B,2024-05-08
+der Gruß,B,2024-11-28
+gültig,3M,2025-09-29
+günstig,,
+gut,B,2024-05-08
+das Haar,B,2024-05-09
+haben,B,2024-02-13
 das Hähnchen,,
-die Halbpension,,
-die Halle,,
-hallo,,
-halten,,
+die Halbpension,B,2024-04-10
+die Halle,M,2025-07-12
+hallo,3M,2025-07-06
+halten,3M,2025-09-06
 die Haltestelle,,
-die Hand,,
+die Hand,B,2024-05-09
 das Handy,,
-das Haus,,
-die Hausaufgabe,,
-die Hausfrau,,
-der Hausmann,W,2023-12-31
-die Heimat,,
-heiraten,,
-heißen,,
-helfen,,
-hell,,
-der Herd,,
-der Herr,,
-herzlich,,
-heute,W,2023-12-31
-hier,,
-die Hilfe,,
+das Haus,B,2025-04-27
+die Hausaufgabe,3M,2025-07-06
+die Hausfrau,B,2025-04-27
+der Hausmann,B,2025-02-26
+die Heimat,B,2024-04-10
+heiraten,B,2024-02-13
+heißen,B,2025-01-21
+helfen,M,2025-07-09
+hell,3M,2025-09-29
+der Herd,B,2025-01-21
+der Herr,B,2024-02-08
+herzlich,3M,2025-07-06
+heute,B,2024-11-28
+hier,B,2024-01-24
+die Hilfe,M,2025-07-17
 hinten,,
 das Hobby,,
-hoch,,
-die Hochzeit,,
+hoch,3M,2025-08-26
+die Hochzeit,B,2024-04-10
 holen,,
-hören,,
-das Hotel,,
+hören,3M,2025-08-26
+das Hotel,B,2024-07-09
 der Hund,,
 der Hunger,,
-ich,,
-ihr,,
-ihm,W,2023-12-31
-ihn,,
-immer,W,2023-12-31
-in,,
-die Information,,
-international,W,2023-12-31
-das Internet,,
-ja,,
-die Jacke,,
-jedem,,
+ich,B,2024-04-11
+ihr,W,2025-07-08
+ihm,M,2025-07-15
+ihn,3M,2025-08-13
+immer,B,2025-02-27
+in,B,2024-04-11
+die Information,B,2025-02-27
+international,B,2024-04-11
+das Internet,B,2024-01-29
+ja,B,2024-09-18
+die Jacke,B,2024-09-18
+jedem,3M,2025-07-06
 jetzt,,
-der Job,W,2024-01-02
-der Jugendliche,,
+der Job,B,2024-05-20
+der Jugendliche,3M,2025-09-06
 jung,,
 der Junge,,
-der Kaffee,W,2024-01-02
-kaputt,,
-die Karte,,
+der Kaffee,,
+kaputt,B,2024-01-29
+die Karte,B,2024-04-11
 Kredit Karte,,
-die Kartoffel,,
-die Kasse,,
-kaufen,,
-kein,,
-kennen,,
-kennenlernen,,
-das Kind,,
-der Kindergarten,W,2023-12-31
-das Kino,,
+die Kartoffel,B,2024-04-11
+die Kasse,3M,2025-08-13
+kaufen,B,2025-04-30
+kein,B,2024-01-29
+kennen,B,2024-04-11
+kennenlernen,B,2024-05-09
+das Kind,B,2024-09-16
+der Kindergarten,,
+das Kino,B,2024-10-28
 der Kiosk,,
-klar,W,2023-12-31
-die Klasse,,
-die Kleidung,,
-klein,,
-kochen,,
+klar,B,2025-04-30
+die Klasse,B,2024-12-01
+die Kleidung,3M,2025-09-29
+klein,B,2024-04-11
+kochen,B,2024-07-10
 der Koffer,,
 der Kollege,,
-kommen,,
+kommen,B,2024-04-11
 können,,
-das Konto,,
-der Kopf,,
-kosten,,
-krank,,
-kriegen,W,2023-12-31
+das Konto,M,2025-07-15
+der Kopf,B,2024-02-08
+kosten,M,2025-07-31
+krank,B,2025-04-30
+kriegen,,
 die Küche,,
 der Kuchen,,
 der Kugelschreiber,,
-der Kühlschrank,,
-kulturell,,
-sich kümmern,,
-der Kunde,,
-der Kurs,,
-kurz,W,2024-01-02
-lachen,,
-der Laden,W,2023-12-31
-das Land,,
-er lang,,
-lange,,
-langsam,,
-laufen,,
-laut,,
-leben,,
-das Leben,W,2023-12-31
-die Lebensmittel,,
-ledig,,
-legen,,
-der Lehrer,,
-leicht,,
-leider,,
-leise,,
-lernen,,
-lesen,,
-letzt,W,2024-01-02
-die Leute,,
-das Licht,,
-lieben,,
-lieber,,
+der Kühlschrank,B,2025-03-02
+kulturell,B,2025-03-02
+sich kümmern,B,2024-07-10
+der Kunde,B,2024-12-01
+der Kurs,B,2024-02-13
+kurz,,
+lachen,B,2025-04-30
+der Laden,,
+das Land,B,2025-02-01
+er lang,B,2024-07-15
+lange,B,2024-05-16
+langsam,B,2024-04-14
+laufen,M,2025-07-15
+laut,B,2024-10-28
+leben,B,2024-04-14
+das Leben,B,2025-04-30
+die Lebensmittel,B,2025-05-28
+ledig,3M,2025-08-30
+legen,B,2024-05-30
+der Lehrer,B,2025-04-30
+leicht,B,2024-07-15
+leider,B,2025-05-29
+leise,3M,2025-08-30
+lernen,B,2024-05-20
+lesen,B,2024-12-01
+letzt,B,2025-03-02
+die Leute,B,2024-05-30
+das Licht,3M,2025-07-07
+lieben,B,2025-05-06
+lieber,B,2024-02-14
 Lieblings,,
-das Lied,W,2023-12-31
-liegen,,
-links,,
-der Lkw,,
-das Lokal,,
-die Lösung,,
-lustig,,
-machen,,
-das Mädchen,,
-man,,
-der Mann,,
-männlich,,
-die Maschine,,
-das Meer,,
-mehr,,
+das Lied,,
+liegen,B,2025-05-29
+links,B,2025-05-06
+der Lkw,B,2025-05-29
+das Lokal,B,2024-05-16
+die Lösung,M,2025-07-15
+lustig,B,2025-05-29
+machen,B,2024-05-21
+das Mädchen,B,2024-04-14
+man,3M,2025-08-27
+der Mann,B,2025-05-06
+männlich,B,2025-05-07
+die Maschine,B,2024-01-30
+das Meer,B,2024-10-29
+mehr,B,2025-05-07
 mein,,
-meist,,
-der Mensch,,
+meist,B,2025-03-02
+der Mensch,M,2025-07-31
 mieten,,
-die Miete,,
-die Milch,,
+die Miete,M,2025-07-17
+die Milch,B,2024-10-29
 mit,,
-mitbringen,,
-mitkommen,,
-mitmachen,,
+mitbringen,M,2025-07-23
+mitkommen,B,2024-04-14
+mitmachen,B,2024-04-14
 mitnehmen,,
-die Mitte,,
-die Möbel,,
-möchten,,
-mögen,,
+die Mitte,B,2024-02-14
+die Möbel,3M,2025-09-06
+möchten,B,2025-01-27
+mögen,M,2025-07-16
 möglich,,
-der Moment,,
-morgen,,
+der Moment,B,2025-01-27
+morgen,B,2024-12-02
 müde,,
-der Mund,,
-müssen,,
-die Mutter̈,,
-nach,,
+der Mund,B,2024-02-14
+müssen,B,2024-05-16
+die Mutter̈,B,2024-12-02
+nach,B,2025-01-27
 nächst,,
 der Name,,
-nehmen,,
-nein,,
-neu,,
-nicht,,
-nichts,,
-nie,,
-noch,,
+nehmen,B,2025-06-01
+nein,B,2024-04-14
+neu,3M,2025-09-29
+nicht,B,2024-12-02
+nichts,3M,2025-07-07
+nie,B,2024-10-04
+noch,B,2025-01-28
 normal,,
-die Nummer,,
-nur,,
-oben,,
+die Nummer,B,2025-03-02
+nur,3M,2025-07-07
+oben,B,2024-06-11
 das Obst,,
-oder,,
-öffnen,W,2023-12-31
-geöffnet,,
-oft,,
-ohne,,
-das Öl,,
-die Oma,,
+oder,B,2024-04-17
+öffnen,B,2024-05-16
+geöffnet,M,2025-07-17
+oft,B,2024-04-14
+ohne,B,2024-12-02
+das Öl,B,2024-05-16
+die Oma,B,2025-05-07
 der Opa,,
-die Ordnung,,
-der Ort,,
-das Papier,,
-die Papiere,,
-der Partner,,
-die Partnerin,W,2023-12-31
+die Ordnung,B,2024-05-19
+der Ort,B,2024-02-15
+das Papier,B,2024-02-15
+die Papiere,M,2025-07-15
+der Partner,B,2025-03-02
+die Partnerin,,
 die Party,,
 der Pass,,
-die Pause,,
-der Plan,W,2023-12-31
+die Pause,B,2024-05-19
+der Plan,B,2024-12-03
 der Platz,,
-die Polizei,,
-die Pommes frites,,
+die Polizei,B,2024-04-14
+die Pommes frites,B,2024-05-19
 die Post,,
-die Postleitzahl,,
-das Praktikum,,
-die Praxis,,
+die Postleitzahl,B,2024-04-17
+das Praktikum,B,2024-12-03
+die Praxis,B,2024-07-16
 der Preis,,
 das Problem,,
-der Prospekt,,
-die Prüfung,W,2023-12-31
-pünktlich,,
-Rad fahren,,
+der Prospekt,3M,2025-07-07
+die Prüfung,B,2024-09-16
+pünktlich,B,2024-09-16
+Rad fahren,B,2024-04-17
 rauchen,,
 der Raum,,
 die Rechnung,,
-rechts,,
-regnen,,
+rechts,B,2024-04-17
+regnen,B,2024-02-15
 der Regen,,
-der Reis,W,2023-12-31
-reisen,,
-die Reise,,
-das Reisebüro,,
-der Reiseführer,,
-reparieren,,
+der Reis,B,2024-06-11
+reisen,3M,2025-08-27
+die Reise,B,2024-02-18
+das Reisebüro,B,2024-02-18
+der Reiseführer,B,2025-03-03
+reparieren,B,2024-05-21
 die Reparatur,,
-das Restaurant,,
+das Restaurant,M,2025-07-09
 die Rezeption,,
 richtig,,
-riechen,,
-ruhig,W,2024-01-02
-der Saft,W,2023-12-31
-sagen,,
-der Salat,,
+riechen,B,2024-04-17
+ruhig,,
+der Saft,3M,2025-09-06
+sagen,B,2024-10-29
+der Salat,B,2024-09-16
 das Salz,,
-Satz,,
-die S-Bahn,W,2023-12-31
-der Schalter,,
-scheinen,,
-schicken,,
-das Schild,,
-der Schinken,,
+Satz,T,2025-06-24
+die S-Bahn,3M,2025-09-17
+der Schalter,B,2024-12-03
+scheinen,B,2024-05-19
+schicken,B,2025-03-03
+das Schild,3M,2025-09-06
+der Schinken,3M,2025-09-06
 schlafen,,
 schlecht,,
-schließen,,
-geschlossen,,
+schließen,3M,2025-07-07
+geschlossen,B,2024-09-16
 der Schluss,,
-der Schlüssel,,
-schmecken,,
-schnell,,
-schon,,
-schön,,
-der Schrank,,
-schreiben,,
-der Schuh,,
-die Schule,,
+der Schlüssel,B,2024-04-17
+schmecken,B,2024-12-03
+schnell,B,2024-05-19
+schon,M,2025-07-05
+schön,B,2024-06-13
+der Schrank,B,2024-02-18
+schreiben,B,2025-05-07
+der Schuh,B,2025-02-02
+die Schule,B,2024-12-03
 der Schüler,,
-schwer,,
-die Schwester,,
-schwimmen,,
-das Schwimmbad,,
-der See,,
-sehen,,
-die Sehenswürdigkeit,,
-sehr,,
-sein,,
+schwer,B,2024-11-04
+die Schwester,B,2024-04-17
+schwimmen,3M,2025-07-08
+das Schwimmbad,B,2024-07-30
+der See,B,2024-05-19
+sehen,B,2024-04-21
+die Sehenswürdigkeit,3M,2025-07-08
+sehr,B,2024-04-21
+sein,B,2025-05-11
 an sein,,
-auf sein,,
-weg sein,,
-zu sein,,
-seit,,
+auf sein,3M,2025-09-17
+weg sein,B,2024-05-19
+zu sein,W,2025-06-30
+seit,B,2025-05-11
 selbstständig,,
-sich,,
-sie,,
-Sie,W,2023-12-31
-sitzen,,
-so,,
-das Sofa,,
+sich,B,2024-11-04
+sie,B,2024-12-03
+Sie,,
+sitzen,B,2024-02-18
+so,B,2024-04-21
+das Sofa,B,2024-06-13
 sofort,,
-der Sohn,,
-sollen,,
-die Sonne,,
+der Sohn,B,2024-07-31
+sollen,B,2024-11-04
+die Sonne,3M,2025-08-27
 spät,,
-später,,
-die Speisekarte,,
-spielen,,
-der Sport,,
-die Sprache,,
-sprechen,,
-die Stadt,,
+später,M,2025-07-15
+die Speisekarte,B,2024-05-21
+spielen,B,2024-02-26
+der Sport,B,2025-03-04
+die Sprache,B,2024-06-13
+sprechen,B,2025-05-11
+die Stadt,B,2024-04-21
 stehen,,
-die Stelle,,
-stellen,W,2023-12-31
-der Stock,,
-die Straße,,
+die Stelle,B,2024-11-04
+stellen,M,2025-07-01
+der Stock,3M,2025-07-08
+die Straße,B,2024-12-04
 die Straßenbahn,,
-studieren,,
-das Studium,,
-der Student,,
-die Stunde,,
-suchen,,
-tanzen,W,2023-12-31
-die Tasche,,
-das Taxi,,
+studieren,M,2025-07-17
+das Studium,B,2024-04-24
+der Student,B,2025-06-01
+die Stunde,B,2024-04-21
+suchen,B,2024-06-13
+tanzen,B,2024-02-26
+die Tasche,B,2024-04-21
+das Taxi,B,2025-02-02
 der Tee,,
-der Teil,,
-telefonieren,,
-das Telefon,,
-der Termin,,
-der Test,,
-teuer,,
-der Text,,
-das Thema,,
-das Ticket,,
-der Tisch,,
-die Tochter,,
+der Teil,B,2025-05-11
+telefonieren,B,2024-06-13
+das Telefon,B,2024-04-24
+der Termin,B,2024-12-04
+der Test,B,2024-02-26
+teuer,W,2025-06-29
+der Text,M,2025-07-17
+das Thema,B,2025-05-11
+das Ticket,B,2024-09-17
+der Tisch,M,2025-07-17
+die Tochter,B,2024-02-26
 die Toilette,,
-die Tomate,,
-tot,,
-treffen,,
-die Treppe,,
+die Tomate,B,2025-02-03
+tot,B,2024-06-16
+treffen,M,2025-07-16
+die Treppe,B,2025-02-03
 trinken,,
-tschüss,,
-tun,,
-über,,
+tschüss,B,2025-02-03
+tun,B,2024-04-29
+über,B,2025-06-02
 übernachten,,
-überweisen,,
-die Uhr,,
-um,W,2023-12-31
-umziehen,,
-und,,
+überweisen,B,2025-02-03
+die Uhr,B,2024-06-16
+um,3M,2025-07-08
+umziehen,B,2024-06-16
+und,B,2024-04-29
 unser,,
 unten,,
 unter,,
-der Unterricht,,
-unterschreiben,,
-die Unterschrift,,
-der Urlaub,,
-der Vater,,
-verboten,,
-verdienen,,
-der Verein,,
-verheiratet,,
-verkaufen,W,2023-12-31
-der Verkäufer,,
-vermieten,,
-der Vermieter,W,2023-12-31
+der Unterricht,M,2025-07-23
+unterschreiben,B,2024-04-29
+die Unterschrift,3M,2025-07-08
+der Urlaub,B,2024-06-16
+der Vater,B,2024-06-16
+verboten,B,2024-04-29
+verdienen,M,2025-07-15
+der Verein,3M,2025-07-08
+verheiratet,B,2024-04-29
+verkaufen,T,2025-06-24
+der Verkäufer,B,2024-09-17
+vermieten,B,2024-04-24
+der Vermieter,B,2024-09-17
 verstehen,,
-der Verwandte,,
+der Verwandte,T,2025-06-24
 viel,,
 vielleicht,,
-von,,
+von,B,2024-07-31
 vor,,
-der Vorname,,
-die Vorsicht,,
-vorstellen,,
-die Vorwahl,,
+der Vorname,B,2025-04-09
+die Vorsicht,M,2025-07-01
+vorstellen,B,2025-02-03
+die Vorwahl,B,2024-11-05
 wandern,,
 wann,,
-warten,,
-warum,,
-was,,
+warten,B,2024-04-24
+warum,B,2024-12-04
+was,B,2025-02-03
 waschen,,
 das Wasser,,
 weh tun,,
-weiblich,,
+weiblich,B,2024-07-31
 der Wein,,
-weit,,
+weit,B,2024-09-17
 weiter,,
-welch,,
-die Welt,,
-wenig,,
-wer,,
-werden,,
-das Wetter,,
-wichtig,,
-wie,,
-wiederholen,W,2023-12-31
-das Wiederhören,,
+welch,B,2024-11-05
+die Welt,B,2024-11-05
+wenig,B,2025-04-09
+wer,B,2024-12-04
+werden,B,2024-07-31
+das Wetter,B,2025-05-12
+wichtig,B,2024-09-17
+wie,B,2024-08-21
+wiederholen,B,2025-02-04
+das Wiederhören,B,2025-05-12
 das Wiedersehen,,
-wie viel,,
+wie viel,B,2025-02-04
 willkommen,,
 der Wind,,
-wir,,
-wissen,,
-wo,,
-woher,,
+wir,B,2024-04-25
+wissen,3M,2025-07-09
+wo,M,2025-07-01
+woher,3M,2025-08-30
 wohin,,
 wohnen,,
-die Wohnung,,
-wollen,,
-das Wort,W,2023-12-31
-wunderbar,,
+die Wohnung,B,2024-04-29
+wollen,B,2025-04-10
+das Wort,,
+wunderbar,B,2025-04-10
 zahlen,,
-die Zeit,,
-zurzeit,,
+die Zeit,B,2024-11-06
+zurzeit,M,2025-07-15
 die Zeitung,,
-die Zigarette,,
-das Zimmer,,
-der Zoll,,
-zu,W,2024-01-02
-zufrieden,,
+die Zigarette,B,2024-08-21
+das Zimmer,B,2024-04-25
+der Zoll,W,2025-06-24
+zu,M,2025-07-01
+zufrieden,B,2024-12-04
 der Zug,,
-zurück,W,2023-12-31
-zusammen,,
-zwischen,,
+zurück,3M,2025-07-09
+zusammen,3M,2025-09-14
+zwischen,3M,2025-07-09

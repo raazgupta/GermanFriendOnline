@@ -2,36 +2,40 @@
 <html>
 <head>
     <title>German Story</title>
-    <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <!-- load CSS via url_for -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dark-mode.css') }}"
+          id="dark-mode-stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
+    // Embed the real endpoint into JS
+    const ankiSentencesUrl = "{{ url_for('ankiSentencesResponse') }}";
+
     $(document).ready(function() {
-        // Define a function to check if anki sentences response is complete
         function fetchAnkiSentencesResponse() {
             $.ajax({
-                url: '/ankiSentencesResponse',  // Need to replace with line below when uploading to web
-                // url: '/App/GermanFriendOnline/ankiSentencesResponse',
-                method: 'GET',              // Use 'GET' or 'POST' based on your API
+                url: ankiSentencesUrl,
+                method: 'GET',
                 success: function(data) {
-                    document.getElementById('practice_vocabulary_button').style.display = 'block';
-                    document.getElementById('patient_text').style.display = 'none';
+                    $('#practice_vocabulary_button').show();
+                    $('#patient_text').hide();
                 },
-                error: function(error) {
-                    console.error('Error:', error);
+                error: function(err) {
+                    console.error('Error fetching sentences:', err);
                 }
             });
         }
 
-        // Call the function to fetch data when the page loads
         fetchAnkiSentencesResponse();
     });
     </script>
+
     <style>
-        /* Style the button */
         .custom-button {
-            font-size: 20px; /* Set the font size to 20 pixels */
-            font-family: Arial, sans-serif; /* Set the font family */
-            padding: 5px 10px; /* Add some padding for a larger button */
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            padding: 5px 10px;
             border-radius: 5px;
         }
     </style>
@@ -39,16 +43,27 @@
 <body>
     <h1>German Story:</h1>
     <p>Tomorrow: {{ result.numberTomorrow }}</p>
-    <p>Week: {{ result.numberWeek }}</p>
-    <p>Month: {{ result.numberMonth }}</p>
-    <p>3 Month: {{ result.number3Month }}</p>
-    <p>Burned: {{ result.numberBurned }}</p>
-    <p>Pending: {{ result.numberPending }}</p>
-    <p>Last Run DateTime: {{ result.lastRunDateTime }}</p>
-    <p style="font-size: 30px;">Story: {{ result.germanStoryString }}</p>
-    <form method="POST" action="./anki">
-        <button id="practice_vocabulary_button" type="submit" class="custom-button" style="display:none">Practice Vocabulary</button>
-        <div id="patient_text" style="display:block;">Preparing your words and sentences for review. Please be patient</div>
+    <p>Week:     {{ result.numberWeek     }}</p>
+    <p>Month:    {{ result.numberMonth    }}</p>
+    <p>3 Month:  {{ result.number3Month  }}</p>
+    <p>Burned:   {{ result.numberBurned   }}</p>
+    <p>Pending:  {{ result.numberPending  }}</p>
+    <p>Last Run: {{ result.lastRunDateTime }}</p>
+
+    <p style="font-size: 30px;">
+      Story: {{ result.germanStoryString }}
+    </p>
+
+    <form method="POST" action="{{ url_for('anki') }}">
+        <button id="practice_vocabulary_button"
+                type="submit"
+                class="custom-button"
+                style="display:none">
+          Practice Vocabulary
+        </button>
+        <div id="patient_text">
+          Preparing your words and sentences for review. Please be patient…
+        </div>
     </form>
 </body>
 </html>

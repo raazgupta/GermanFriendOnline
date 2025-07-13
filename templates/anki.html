@@ -9,8 +9,8 @@
         // Define a function to make the API request for Anki Sentence
         function fetchAnkiSentence() {
             $.ajax({
-                url: '/ankiSentence',  // Replace with the actual API endpoint
-                // url: '/App/GermanFriendOnline/ankiSentence',
+                // url: '/ankiSentence',  // Replace with the actual API endpoint
+                url: '/App/GermanFriendOnline/ankiSentence',
                 method: 'GET',              // Use 'GET' or 'POST' based on your API
                 success: function(data) {
                     // Update the content of the paragraph with the response data
