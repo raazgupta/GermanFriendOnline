@@ -2,13 +2,16 @@
 <html>
 <head>
     <title>German Friend Online</title>
-    <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <!-- load CSS via url_for -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dark-mode.css') }}"
+          id="dark-mode-stylesheet">
     <style>
         /* Add your CSS styling for the loading text here */
         #loading {
             display: none;
             text-align: left;
-            padding: 0px;
+            padding: 0;
         }
         /* Style the button */
         .custom-button {
@@ -24,29 +27,42 @@
 </head>
 <body>
     <h1>German Friend Online</h1>
-    <form id="story-form" method="POST" action="./germanStory">
-        <button type="submit" class="custom-button">Show German Story</button>
+
+    <form id="story-form"
+          method="POST"
+          action="{{ url_for('stats_and_start_anki') }}">
+        <button type="submit"
+                class="custom-button">
+          Show German Story
+        </button>
     </form>
-    <form id="converse-form" method="POST" action="./germanConversation">
-        <button type="submit" class="custom-button">Converse in German</button>
+
+    <form id="converse-form"
+          method="POST"
+          action="{{ url_for('germanConversation') }}">
+        <button type="submit"
+                class="custom-button">
+          Converse in German
+        </button>
     </form>
 
     <div id="loading">
-        <p style="color: white;">AI is cooking your tasty story. Please be patient ...</p>
+        <p style="color: white;">
+          AI is cooking your tasty story. Please be patient...
+        </p>
     </div>
 
     <script>
-        // JavaScript code to show the loading text
-        document.addEventListener("DOMContentLoaded", function () {
-            var storyForm = document.getElementById("story-form");
-            var loading = document.getElementById("loading");
+    // JavaScript code to show the loading text
+    document.addEventListener("DOMContentLoaded", function () {
+        var storyForm = document.getElementById("story-form");
+        var loading   = document.getElementById("loading");
 
-            storyForm.addEventListener("submit", function (event) {
-                // Display loading text while waiting for the response
-                loading.style.display = "block";
-            });
+        storyForm.addEventListener("submit", function () {
+            // Display loading text while waiting for the response
+            loading.style.display = "block";
         });
+    });
     </script>
-
 </body>
 </html>

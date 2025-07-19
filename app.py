@@ -14,13 +14,29 @@ app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
 openai.api_key = os.getenv('OPENAI_API_KEY')
 # print(openai.api_key)
 
+# In the future, when there is A2Worklist.csv with burned words, need to update this section to
+# Check whether user is running app for A2 list
+# Prioritize burned words from A2 list, asking AI to ensure they are in story and otherwise ask it to use burned words from A1 list
+def get_burned_words():
+    burned_words = []
+    with open(file_path, 'r') as file:
+        for lineNumber, line in enumerate(file):
+            if lineNumber == 0:
+                continue  # Skip header
+            line = line.strip()
+            elements = line.split(',')
+            if len(elements) >= 2:
+                word, frequency = elements[0], elements[1]
+                if frequency == "B":
+                    burned_words.append(word)
+    return burned_words
+
 
 def get_completion_from_messages(messages, model="gpt-4o-mini", temperature=0.0, max_tokens=500):
     response = openai.chat.completions.create(
         model=model,
         messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens,
+        max_completion_tokens=max_tokens,
     )
     return response.choices[0].message.content
 
@@ -163,28 +179,7 @@ def chooseSelectedWords():
 
     return selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow
 
-def assistant_create_story(selected_words):
-
-    assistant_id = "asst_qXm8leIYM7P33EpQb0m582g7"
-
-    story_content = f"""
-                    1. Write a story in simple German with maximum 3 sentences.
-                    2. Make sure these words are in the story: {",".join(selected_words)}
-                """
-
-    # Thread represents a conversation per user
-    # Once this is no longer a beta feature, can consider initiating a thread when the user clicks on Create Story button
-    # However this will require a thorough rework of the app and with little upside at the moment
-    story_thread = openai.beta.threads.create()
-
-    # Add a message to the thread
-    openai.beta.threads.messages.create(
-        thread_id=story_thread.id,
-        role="user",
-        content=story_content
-    )
-
-    story_response = get_response_from_assistant(assistant_id, story_thread.id)
+def create_anki_english_sentences(selected_words):
 
     # Function to get Anki sentences in 1 go in JSON format. This function starts the run and does not wait for completion
 
@@ -211,48 +206,6 @@ def assistant_create_story(selected_words):
     )
 
     session['sentences_run_id'] = start_assistant_run(assistant_id, sentences_thread.id)
-
-    return story_response
-
-
-
-def create_story(selected_words, temperature=0.0):
-    # Prompt to create German Story
-    # print("German Story temperature: ", temperature)
-    messages = [
-        {'role': 'system',
-         'content': """
-         You are a German teacher. 
-         """
-         },
-        {'role': 'user',
-         'content': f"""
-            Write a story in German with maximum 3 sentences.
-            Only use words that are from the Goethe-Zertifikat A1 vocabulary list. 
-            Make sure these words are in the story: {",".join(selected_words)}
-         """
-         },
-    ]
-
-    # Use the latest Assistants API beta feature here because it allows referencing vocabulary list and
-    # is better at following instructions
-
-    # Print story in German
-    # response = get_completion_from_messages(messages, model="gpt-4", temperature=temperature)
-    # response = response.strip('"')
-
-    response = assistant_create_story(selected_words)
-
-    messages.append(
-        {'role': 'assistant',
-         'content': response
-         }
-    )
-
-    return messages, response
-
-
-
 
 def save_to_csv():
 
@@ -283,27 +236,24 @@ def save_to_csv():
     with open(file_path, 'w') as file:
         file.writelines(updated_content)
 
-
-
-
-
-@app.route('/germanStory', methods=['POST'])
-def germanStory():
+@app.route('/stats_and_start_anki', methods=['POST'])
+def stats_and_start_anki():
 
     selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow = chooseSelectedWords()
     percentage_burned = number_burned / (number_burned+number_week+number_month+number_3_month+number_pending)
-    messages, response = create_story(selected_words, temperature=percentage_burned)
+
+
+    create_anki_english_sentences(selected_words)
 
     session['selected_words_position'] = 0
     session['selected_words_lineNumber'] = selected_words_lineNumber
-    session['messages'] = messages
-    session['germanStory'] = response
+    session['messages'] = []
+    session['germanStory'] = ""
 
     # Get the last run datetime from the log file
     last_run_datetime = get_last_run_datetime()
 
     result_data = {
-        'germanStoryString': response,
         'numberBurned': number_burned,
         'numberWeek': number_week,
         'numberMonth': number_month,
@@ -316,7 +266,7 @@ def germanStory():
     # Save current run datetime in log file
     log_datetime()
 
-    return render_template('germanStory.html', result = result_data)
+    return render_template('stats_and_start_anki.html', result = result_data)
 
 @app.route('/ankiSentencesResponse', methods=['POST','GET'])
 def ankiSentencesResponse():
@@ -410,6 +360,7 @@ def anki_translate():
     wort = selected_words_lineNumber[selected_words_position][0]
     lineNumber = selected_words_lineNumber[selected_words_position][1]
     final_word = 0
+    number = selected_words_position + 1
 
     if (selected_words_position + 1) == len(selected_words_lineNumber):
         final_word = 1
@@ -420,7 +371,8 @@ def anki_translate():
         'frequency2': '',
         'frequency1_display': '',
         'frequency2_display': '',
-        'final_word': final_word
+        'final_word': final_word,
+        'number': number
     }
 
     # Get the English translation using OpenAI
@@ -516,31 +468,47 @@ def correctSpellingGrammar(germanText):
     ]
     # print("correctSpellingGrammar:")
     # print(messages)
-    correctSpellingGrammarVersion = get_completion_from_messages(messages, model="gpt-4o", max_tokens=500)
+    correctSpellingGrammarVersion = get_completion_from_messages(messages, model="gpt-4o-mini", max_tokens=500)
     # print(correctSpellingGrammarVersion)
 
     return correctSpellingGrammarVersion
 
-@app.route('/englishTranslation', methods=['POST','GET'])
-def englishTranslation():
-    messages = session['messages']
-    germanStory = session['germanStory']
+@app.route('/german_story_with_translation', methods=['POST','GET'])
+def german_story_with_translation():
+    burned_words = get_burned_words()
 
-    messages.append(
-        {'role': 'user',
-         'content': 'Translate this German Story to English.'
-         }
-    )
+    if not burned_words:
+        result_data = {
+            'germanStory': "No burned words available yet. Please review and burn more words first.",
+            'englishStory': "No burned words available yet. Please review and burn more words first."
+        }
+    else:
+        prompt = f"""
+        1. Write a short story in German primarily using the following Burned words:\n{', '.join(burned_words)}\n\n
+        2. Review the short story to confirm that for Nouns or Verbs or Adjectives, only the words in the Burned words list is used
+        3. If you find Nouns, Verbs, Adjectives in the short story that are not in the Burned words list, remove them and rewrite that section of the story to use Burned words.
+        4. The output should only be the story.
+        """
 
-    # Print story in English
-    response = get_completion_from_messages(messages)
+        messages = [
+            {'role': 'system', 'content': 'You are a helpful language teacher.'},
+            {'role': 'user', 'content': prompt}
+        ]
 
-    result_data = {
-        'germanStory': germanStory,
-        'englishStory': response
-    }
+        germanStory = get_completion_from_messages(messages, model="o4-mini", temperature=0.2, max_tokens=10000)
 
-    return render_template('englishTranslation.html', result=result_data)
+        messages.append({'role': 'assistant', 'content': germanStory})
+
+        # Translate to English
+        messages.append({'role': 'user', 'content': 'Translate this German story to English.'})
+        englishStory = get_completion_from_messages(messages, model="gpt-4o-mini", max_tokens=10000)
+
+        result_data = {
+            'germanStory': germanStory.strip(),
+            'englishStory': englishStory.strip()
+        }
+
+    return render_template('german_story_with_translation.html', result=result_data)
 
 @app.route('/ankiRecord', methods=['POST'])
 def updateReviewDate():
@@ -572,13 +540,12 @@ def updateReviewDate():
 
     if (selected_words_position + 1) < len(selected_words_lineNumber):
         # return redirect(url_for('anki', _external=False))
-        return redirect('/App/GermanFriendOnline/anki')
+        return redirect(url_for('anki'))
     else:
         # Update the Wortlist file with updated frequency and date
         save_to_csv()
-        # Show the English Translation
-        # return redirect(url_for('englishTranslation', _external=False))
-        return redirect('/App/GermanFriendOnline/englishTranslation')
+        # Show the German Story with translation
+        return redirect(url_for('german_story_with_translation'))
 
 @app.route('/germanConversation', methods=['POST'])
 def germanConversation():

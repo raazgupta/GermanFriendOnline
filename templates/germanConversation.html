@@ -2,9 +2,11 @@
 <html>
 <head>
     <title>Scenario Page</title>
-    <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <!-- load CSS via url_for -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dark-mode.css') }}"
+          id="dark-mode-stylesheet">
     <style>
-        /* Style the button */
         .custom-button {
             font-size: 20px; /* Set the font size to 20 pixels */
             font-family: Arial, sans-serif; /* Set the font family */
@@ -19,9 +21,13 @@
 </head>
 <body>
     <h1>Scenario</h1>
-    <form method="POST" action="./germanScenario">
-        <textarea id="scenarioText" name="scenarioText" rows="3" cols="50" placeholder="Enter your scenario here..."></textarea>
-        <br> <!-- Add a line break to move the button to a new line -->
+    <form method="POST" action="{{ url_for('germanScenario') }}">
+        <textarea id="scenarioText"
+                  name="scenarioText"
+                  rows="3"
+                  cols="50"
+                  placeholder="Enter your scenario here..."></textarea>
+        <br>
         <button type="submit" class="custom-button">Submit</button>
     </form>
 </body>

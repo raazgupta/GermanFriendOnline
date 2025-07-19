@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>English Translation</title>
-    <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <title>German Story with Translation</title>
+    <!-- load CSS via url_for -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dark-mode.css') }}"
+          id="dark-mode-stylesheet">
     <style>
-        /* Style the button */
         .custom-button {
             font-size: 20px; /* Set the font size to 20 pixels */
             font-family: Arial, sans-serif; /* Set the font family */
@@ -16,9 +18,11 @@
 <body>
     <h3>German Story:</h3>
     <p style="font-size: 20px;">{{ result.germanStory }}</p>
+
     <h3>English Translation:</h3>
     <p style="font-size: 20px;">{{ result.englishStory }}</p>
-    <a href="./">
+
+    <a href="{{ url_for('index') }}">
         <button class="custom-button">Go Home</button>
     </a>
 </body>

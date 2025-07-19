@@ -2,7 +2,10 @@
 <html>
 <head>
     <title>I Say</title>
-    <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <!-- load CSS via url_for -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dark-mode.css') }}"
+          id="dark-mode-stylesheet">
     <style>
         /* Style the button */
         .custom-button {
@@ -19,31 +22,39 @@
         #loading {
             display: none;
             text-align: left;
-            padding: 0px;
+            padding: 0;
         }
     </style>
 </head>
 <body>
     <h1>I Say</h1>
-    <form id="iSayForm" method="POST" action="./iSayDynamic">
-        <textarea id="iSayText" name="iSayText" rows="3" cols="50" placeholder="Start or continue the conversation in German. Limit it to 1 sentence each time."></textarea>
-        <br> <!-- Add a line break to move the button to a new line -->
+
+    <form id="iSayForm"
+          method="POST"
+          action="{{ url_for('iSayDynamic') }}">
+        <textarea id="iSayText"
+                  name="iSayText"
+                  rows="3"
+                  cols="50"
+                  placeholder="Start or continue the conversation in German. Limit it to 1 sentence each time."></textarea>
+        <br>
         <button type="submit" class="custom-button">Submit</button>
     </form>
+
     <div id="loading">
         <p style="color: white;">naja ...</p>
     </div>
-    <script>
-        // JavaScript code to show the loading text
-        document.addEventListener("DOMContentLoaded", function () {
-            var storyForm = document.getElementById("iSayForm");
-            var loading = document.getElementById("loading");
 
-            storyForm.addEventListener("submit", function (event) {
-                // Display loading text while waiting for the response
-                loading.style.display = "block";
-            });
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var iSayForm = document.getElementById("iSayForm");
+        var loading  = document.getElementById("loading");
+
+        iSayForm.addEventListener("submit", function () {
+            // Display loading text while waiting for the response
+            loading.style.display = "block";
         });
+    });
     </script>
 </body>
 </html>

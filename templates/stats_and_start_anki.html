@@ -38,10 +38,18 @@
             padding: 5px 10px;
             border-radius: 5px;
         }
+        .section-title {
+            font-size: 36px;
+        }
+        .sub-section-title {
+            font-size: 24px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>German Story:</h1>
+    <h1 class="section-title">Vocabulary Practice & German Story:</h1>
+    <div class="sub-section-title">Progress so far:</div>
     <p>Tomorrow: {{ result.numberTomorrow }}</p>
     <p>Week:     {{ result.numberWeek     }}</p>
     <p>Month:    {{ result.numberMonth    }}</p>
@@ -49,10 +57,6 @@
     <p>Burned:   {{ result.numberBurned   }}</p>
     <p>Pending:  {{ result.numberPending  }}</p>
     <p>Last Run: {{ result.lastRunDateTime }}</p>
-
-    <p style="font-size: 30px;">
-      Story: {{ result.germanStoryString }}
-    </p>
 
     <form method="POST" action="{{ url_for('anki') }}">
         <button id="practice_vocabulary_button"

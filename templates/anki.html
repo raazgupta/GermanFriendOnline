@@ -2,46 +2,52 @@
 <html>
 <head>
     <title>Vocabulary Review</title>
-    <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <!-- load CSS via url_for -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dark-mode.css') }}"
+          id="dark-mode-stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        // Define a function to make the API request for Anki Sentence
-        function fetchAnkiSentence() {
-            $.ajax({
-                // url: '/ankiSentence',  // Replace with the actual API endpoint
-                url: '/App/GermanFriendOnline/ankiSentence',
-                method: 'GET',              // Use 'GET' or 'POST' based on your API
-                success: function(data) {
-                    // Update the content of the paragraph with the response data
-                    $('#dynamic-anki-sentence').text(data);
-                },
-                error: function(error) {
-                    console.error('Error:', error);
-                }
-            });
-        }
 
-        // Call the function to fetch data when the page loads
-        fetchAnkiSentence();
+    <script>
+    // Embed the real endpoint into JS
+    const ankiSentenceUrl = "{{ url_for('ankiSentence') }}";
+
+    $(document).ready(function() {
+        // Fetch the dynamic Anki sentence on page load
+        $.ajax({
+            url: ankiSentenceUrl,
+            method: 'GET',
+            success: function(data) {
+                $('#dynamic-anki-sentence').text(data);
+            },
+            error: function(err) {
+                console.error('Error fetching Anki sentence:', err);
+            }
+        });
     });
     </script>
+
     <style>
-        /* Style the button */
         .custom-button {
-            font-size: 20px; /* Set the font size to 20 pixels */
-            font-family: Arial, sans-serif; /* Set the font family */
-            padding: 5px 10px; /* Add some padding for a larger button */
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            padding: 5px 10px;
             border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <h1>Vocabulary Review:</h1>
-    <p style="font-size: 30px;">{{ result.number }}: {{ result.wort }}</p>
-    <p id="dynamic-anki-sentence" style="font-size: 30px;">naja...</p>
-    <form method="POST" action="./ankiTranslate">
-        <button type="submit" class="custom-button">Translation</button>
+    <p style="font-size: 30px;">
+      {{ result.number }}: {{ result.wort }}
+    </p>
+    <p id="dynamic-anki-sentence" style="font-size: 30px;">
+      Loading sentence…
+    </p>
+    <form method="POST" action="{{ url_for('anki_translate') }}">
+        <button type="submit" class="custom-button">
+          Translation
+        </button>
     </form>
 </body>
 </html>

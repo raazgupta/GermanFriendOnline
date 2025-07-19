@@ -2,72 +2,88 @@
 <html>
 <head>
     <title>Vocabulary Translation</title>
-    <link rel="stylesheet" href="./static/css/dark-mode.css" id="dark-mode-stylesheet">
+    <!-- load CSS via url_for -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dark-mode.css') }}"
+          id="dark-mode-stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        // Define a function to make the API request for Anki Sentence English
-        function fetchAnkiSentenceEnglish() {
-            $.ajax({
-                // url: '/ankiSentenceEnglish',  // Replace with the actual API endpoint
-                url: '/App/GermanFriendOnline/ankiSentenceEnglish',
-                method: 'GET',              // Use 'GET' or 'POST' based on your API
-                success: function(data) {
-                    // Update the content of the paragraph with the response data
-                    $('#dynamic-anki-sentence-english').text(data);
-                },
-                error: function(error) {
-                    console.error('Error:', error);
-                }
-            });
-        }
 
-        // Call the function to fetch data when the page loads
-        fetchAnkiSentenceEnglish();
+    <script>
+    // Embed the real endpoint into JS
+    const ankiSentenceEnglishUrl = "{{ url_for('ankiSentenceEnglish') }}";
+
+    $(document).ready(function() {
+        // Fetch the English sentence on page load
+        $.ajax({
+            url: ankiSentenceEnglishUrl,
+            method: 'GET',
+            success: function(data) {
+                $('#dynamic-anki-sentence-english').text(data);
+            },
+            error: function(err) {
+                console.error('Error fetching English sentence:', err);
+            }
+        });
     });
     </script>
+
     <style>
-        /* Add your CSS styling for the loading text here */
-        /* Style the button */
         .custom-button {
-            font-size: 20px; /* Set the font size to 20 pixels */
-            font-family: Arial, sans-serif; /* Set the font family */
-            padding: 5px 10px; /* Add some padding for a larger button */
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            padding: 5px 10px;
             border-radius: 5px;
         }
         #loading {
             display: none;
             text-align: left;
-            padding: 0px;
+            padding: 0;
         }
     </style>
 </head>
 <body>
     <h1>Vocabulary Translation:</h1>
-    <p style="font-size: 30px;">{{ result.translation }}</p>
-    <p id="dynamic-anki-sentence-english" style="font-size: 30px;">thinking...</p>
-    <form id="translate-form" method="POST" action="./ankiRecord">
-        <button type="submit" class="custom-button" name="frequency" value="{{ result.frequency1 }}"> {{ result.frequency1_display }} </button>
-        <span style="margin-right: 20px;"></span> <!-- Add some space between buttons -->
-        <button type="submit" class="custom-button" name="frequency" value="{{ result.frequency2 }}"> {{ result.frequency2_display }} </button>
+    <p style="font-size: 30px;">{{ result.number }}: {{ result.translation }}</p>
+    <p id="dynamic-anki-sentence-english" style="font-size: 30px;">
+      thinking...
+    </p>
+
+    <form id="translate-form"
+          method="POST"
+          action="{{ url_for('updateReviewDate') }}">
+        <button type="submit"
+                class="custom-button"
+                name="frequency"
+                value="{{ result.frequency1 }}">
+          {{ result.frequency1_display }}
+        </button>
+        <span style="margin: 0 20px;"></span>
+        <button type="submit"
+                class="custom-button"
+                name="frequency"
+                value="{{ result.frequency2 }}">
+          {{ result.frequency2_display }}
+        </button>
     </form>
+
     <div id="loading">
-        <p style="color: white;">Preparing English translation. Even I find this to be hard! Please be patient ...</p>
+        <p style="color: white;">
+          Preparing German Story and translation.
+        </p>
     </div>
 
     <script>
-        // JavaScript code to show the loading text
-        document.addEventListener("DOMContentLoaded", function () {
-            var storyForm = document.getElementById("translate-form");
-            var loading = document.getElementById("loading");
+    document.addEventListener("DOMContentLoaded", function () {
+        var form = document.getElementById("translate-form");
+        var loading = document.getElementById("loading");
 
-            storyForm.addEventListener("submit", function (event) {
-                // If it is the last word, display please be patient while waiting for the english translation
-                if ({{ result.final_word }} === 1) {
-                    loading.style.display = "block";
-                }
-            });
+        form.addEventListener("submit", function () {
+            // Show loading only if this is the final word
+            if ({{ result.final_word }} === 1) {
+                loading.style.display = "block";
+            }
         });
+    });
     </script>
 
 </body>
