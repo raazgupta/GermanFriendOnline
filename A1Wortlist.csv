@@ -4,13 +4,13 @@ Adresse,3M,2025-08-23
 Telefon,B,2024-09-30
 Geburtsdatum,,
 Geburtsort,,
-Alter,T,2025-07-21
+Alter,T,2025-07-22
 Wohnung,3M,2025-09-29
-Räume,T,2025-07-21
+Räume,T,2025-07-22
 Einrichtung,M,2025-08-15
 Möbel,B,2025-01-05
 Pflanzen,B,2024-03-11
-Tiere,T,2025-07-21
+Tiere,T,2025-07-22
 Klima,,
 Wetter,,
 Nahrungsmittel,3M,2025-08-23
@@ -20,7 +20,7 @@ Getränke,B,2025-06-25
 Lokale,B,2025-02-24
 Restaurant,B,2024-04-29
 Café,B,2025-03-26
-Post,T,2025-07-21
+Post,T,2025-07-22
 Telekommunikation,,
 Banken,B,2024-05-01
 Polizei,B,2024-06-09
@@ -45,22 +45,22 @@ Mietverhältnis,,
 Wohnungswechsel,B,2024-05-06
 privater,B,2024-05-01
 öffentlicher,B,2025-03-26
-Verkehr,T,2025-07-21
+Verkehr,T,2025-07-22
 Reisen,B,2024-06-09
 Unterkunft,B,2024-04-17
 Gepäck,B,2025-03-26
 Geschäfte,B,2025-06-25
-Preis,T,2025-07-21
+Preis,T,2025-07-22
 Bezahlen,B,2024-05-01
 Lebensmittel,,
-Kleidung,T,2025-07-21
+Kleidung,T,2025-07-22
 Kinderbetreuung,,
 Schule,B,2025-06-25
 Sprachen lernen,,
 Interessen,,
 Sport treiben,B,2024-05-21
 Radio,B,2025-06-25
-Fernsehen,T,2025-07-21
+Fernsehen,T,2025-07-22
 Internet,,
 Lektüre,B,2024-07-09
 Presse,B,2025-06-25
@@ -116,7 +116,7 @@ Dienstag,B,2025-05-06
 Mittwoch,,
 Donnerstag,B,2024-01-24
 Freitag,M,2025-07-25
-Samstag,T,2025-07-21
+Samstag,T,2025-07-22
 Sonnabend,,
 Tag,,
 Morgen,3M,2025-08-23
@@ -133,7 +133,7 @@ Woche,B,2024-02-13
 Jahr,B,2025-03-30
 Wochenende,B,2025-01-13
 Nachmittag,B,2024-05-28
-Abend,T,2025-07-21
+Abend,T,2025-07-22
 Nacht,B,2024-03-13
 Juli,B,2024-05-01
 August,M,2025-07-29
@@ -155,12 +155,12 @@ Quadratmeter,,
 Grad,,
 Prozent,,
 Liter,B,2024-02-21
-Gramm,T,2025-07-21
+Gramm,T,2025-07-22
 Pfund,B,2025-05-06
 Kilo,B,2024-05-21
 Deutschland,,
 Deutsche,B,2025-05-06
-Deutscher,T,2025-07-21
+Deutscher,T,2025-07-22
 Deutsche,B,2024-04-29
 deutsch,,
 Europa,B,2025-02-01
@@ -192,7 +192,7 @@ also,B,2024-02-21
 alt,3M,2025-08-23
 das Alter,,
 an,B,2024-11-18
-anbieten,T,2025-07-21
+anbieten,T,2025-07-22
 das Angebot,B,2024-06-11
 ander,B,2024-05-06
 anfangen,B,2024-05-21
@@ -202,11 +202,11 @@ ankommen,B,2024-11-24
 die Ankunft,3M,2025-08-13
 ankreuzen,B,2024-11-18
 anmachen,B,2024-03-13
-anmelden,T,2025-07-21
+anmelden,T,2025-07-22
 die Anmeldung,,
 die Anrede,B,2025-02-05
 anrufen,,
-der Anruf,T,2025-07-21
+der Anruf,T,2025-07-22
 beantworter,,
 die Ansage,B,2024-02-18
 der Anschluss,,
@@ -214,38 +214,38 @@ sein,,
 antworten,B,2024-06-10
 die Antwort,B,2024-09-30
 die Anzeige,B,2024-05-28
-anziehen,T,2025-07-21
+anziehen,T,2025-07-22
 das Apartment,B,2025-02-24
 der Apfel,B,2024-06-10
 der Appetit,,
 arbeiten,,
 die Arbeit,B,2024-05-06
-arbeitslos,T,2025-07-21
+arbeitslos,T,2025-07-22
 der Arbeitsplatz,B,2025-05-11
 der Arm,M,2025-07-30
 der Arzt,B,2025-01-07
 auch,B,2024-10-21
 auf,,
 die Aufgabe,B,2024-01-28
-aufhören,T,2025-07-21
-aufstehen,T,2025-07-21
+aufhören,T,2025-07-22
+aufstehen,T,2025-07-22
 der Aufzug,B,2025-05-25
 das Auge,,
 aus,,
 der Ausflug,,
-ausfüllen,T,2025-07-21
+ausfüllen,T,2025-07-22
 der Ausgang,B,2024-09-26
 die Auskunft,,
 das Ausland,B,2025-05-11
 der Ausländer,B,2024-11-18
 ausländisch,,
 ausmachen,,
-die Aussage,T,2025-07-21
-aussehen,T,2025-07-21
-aus sein,T,2025-07-21
+die Aussage,T,2025-07-22
+aussehen,T,2025-07-22
+aus sein,T,2025-07-22
 aussteigen,B,2024-03-18
 der Ausweis,B,2025-04-03
-ausziehen,T,2025-07-21
+ausziehen,T,2025-07-22
 das Auto,B,2025-04-14
 die Autobahn,,
 der Automat,B,2024-09-26
@@ -262,7 +262,7 @@ der Balkon,,
 die Banane,,
 die Bank,B,2024-10-27
 bar,,
-der Bauch,T,2025-07-21
+der Bauch,T,2025-07-22
 der Baum,B,2024-11-19
 der Beamte,,
 bedeuten,B,2024-02-21
@@ -275,12 +275,12 @@ zum Beispiel,B,2025-04-03
 bekannt,B,2025-02-25
 die Bekannte,B,2024-11-19
 bekommen,,
-benutzen,T,2025-07-21
+benutzen,T,2025-07-22
 der Beruf,B,2024-02-05
 besetzt,B,2025-04-13
 besichtigen,,
 besser,B,2024-10-28
-bestellen,T,2025-07-21
+bestellen,T,2025-07-22
 besuchen,3M,2025-09-03
 das Bett,B,2025-02-25
 bezahlen,B,2025-04-06
@@ -320,22 +320,22 @@ der Computer,B,2024-05-07
 da,,
 die Dame,B,2025-05-15
 daneben,M,2025-07-30
-danken,T,2025-07-21
+danken,T,2025-07-22
 der Dank,B,2024-11-26
-danke,T,2025-07-21
+danke,T,2025-07-22
 dann,B,2024-11-26
 das Datum,B,2024-01-28
 dauern,B,2024-06-16
 dein,B,2024-02-21
 denn,,
-dich,T,2025-07-21
+dich,T,2025-07-22
 dies,B,2024-03-18
 dir,B,2024-03-18
 die Disco,B,2024-11-26
 der Doktor,B,2024-03-18
 das Doppelzimmer,B,2024-01-28
 das Dorf,,
-dort,T,2025-07-21
+dort,T,2025-07-22
 draußen,B,2024-02-25
 drucken,B,2024-03-18
 der Drucker,,
@@ -346,7 +346,7 @@ dürfen,B,2025-04-27
 der Durst,B,2025-05-15
 duschen,3M,2025-08-24
 die Dusche,B,2024-05-28
-die Ecke,T,2025-07-21
+die Ecke,W,2025-07-28
 die Ehefrau,,
 der Ehemann,B,2025-01-14
 das Ei,,
@@ -358,7 +358,7 @@ einkaufen,M,2025-07-30
 einladen,B,2024-10-27
 die Einladung,B,2025-04-06
 einmal,B,2025-02-01
-einsteigen,T,2025-07-21
+einsteigen,W,2025-07-28
 der Eintritt,B,2024-02-06
 das Einzelzimmer,B,2024-10-08
 die Eltern,B,2024-11-26
@@ -371,8 +371,8 @@ entschuldigen,B,2025-02-25
 die Entschuldigung,B,2024-05-08
 das Ergebnis,,
 erklären,B,2024-06-23
-erlauben,T,2025-07-21
-der Erwachsene,T,2025-07-21
+erlauben,W,2025-07-28
+der Erwachsene,W,2025-07-28
 erzählen,B,2025-02-01
 es,,
 essen,B,2024-03-25
@@ -381,14 +381,14 @@ euer,B,2025-04-14
 fahren,B,2024-05-08
 der Fahrer,B,2024-02-06
 die Fahrkarte,,
-das Fahrrad,T,2025-07-21
+das Fahrrad,W,2025-07-28
 falsch,3M,2025-09-17
 die Familie,B,2024-03-25
 der Familienname,B,2024-06-10
 der Familienstand,3M,2025-08-11
 die Farbe,B,2024-02-25
 das Fax,B,2024-09-30
-Feier,T,2025-07-21
+Feier,W,2025-07-28
 feiern,,
 fehlen,B,2025-05-28
 der Fehler,,
@@ -404,20 +404,20 @@ die Flasche,B,2024-02-06
 das Fleisch,B,2025-05-26
 fliegen,B,2024-11-27
 abfliegen,,
-der Abflug,T,2025-07-21
+der Abflug,W,2025-07-28
 der Flughafen,B,2024-05-20
 das Flugzeug,B,2025-02-26
 das Formular,B,2024-11-27
 das Foto,B,2024-09-16
 fragen,B,2024-05-30
-die Frage,T,2025-07-21
+die Frage,W,2025-07-28
 die Frau,B,2024-05-08
 frei,B,2025-05-28
 die Freizeit,3M,2025-08-24
 fremd,3M,2025-08-13
 freuen,B,2024-02-07
 der Freund,B,2024-03-25
-früher,T,2025-07-21
+früher,W,2025-07-28
 frühstücken,B,2025-02-26
 das Frühstück,,
 die Führung,B,2024-03-25

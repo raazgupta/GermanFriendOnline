@@ -1,15 +1,60 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask_session import Session
 import openai
 import os
 import random
 from datetime import datetime, timedelta
 import json
 import unicodedata
+from threading import Thread
 
 file_path = "A1Wortlist.csv"
 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
+
+# Use server-side session storage
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+
+# Store background results (use Redis or DB in production)
+story_results = {}  # Dict to hold story by session ID or custom token
+
+def generate_story_background(session_key):
+    burned_words = get_burned_words()
+    if not burned_words:
+        story_results[session_key] = {
+            'german': "No burned words available yet. Please review and burn more words first.",
+            'english': "No burned words available yet. Please review and burn more words first."
+        }
+    else:
+        prompt = f"""
+                1. Write a short story in German primarily using the following Burned words:\n{', '.join(burned_words)}\n\n
+                2. Review the short story to confirm that for Nouns or Verbs or Adjectives, only the words in the Burned words list is used
+                3. If you find Nouns, Verbs, Adjectives in the short story that are not in the Burned words list, remove them and rewrite that section of the story to use Burned words.
+                4. The output should only be the story.
+                """
+        messages = [
+            {'role': 'system', 'content': 'You are a helpful language teacher.'},
+            {'role': 'user', 'content': prompt}
+        ]
+
+        try:
+            german_story = get_completion_from_messages(messages, model="o4-mini", temperature=0.2, max_tokens=10000)
+            messages.append({'role': 'assistant', 'content': german_story})
+            messages.append({'role': 'user', 'content': 'Translate this German story to English.'})
+            english_story = get_completion_from_messages(messages, model="o4-mini", max_tokens=10000)
+            story_results[session_key] = {
+                'status': 'done',
+                'german': german_story.strip(),
+                'english': english_story.strip()
+            }
+        except Exception as e:
+            story_results[session_key] = {
+                'status': 'error',
+                'german': f"Error generating story: {e}",
+                'english': ""
+            }
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 # print(openai.api_key)
@@ -66,8 +111,6 @@ def get_response_from_assistant(assistant_id, thread_id):
         response = "Error: OpenAI Run Failed"
 
     return response
-
-# ... rest of your code remains the same, using 'openai' instead of 'client'
 
 
 # Function to start the assistant run
@@ -249,6 +292,11 @@ def stats_and_start_anki():
     session['selected_words_lineNumber'] = selected_words_lineNumber
     session['messages'] = []
     session['germanStory'] = ""
+
+    # Start background story generation
+    session_key = session.sid
+    story_results[session_key] = {'status': 'in_progress'}
+    Thread(target=generate_story_background, args=(session_key,)).start()
 
     # Get the last run datetime from the log file
     last_run_datetime = get_last_run_datetime()
@@ -473,42 +521,26 @@ def correctSpellingGrammar(germanText):
 
     return correctSpellingGrammarVersion
 
+@app.route('/german_story_status', methods=['GET'])
+def german_story_status():
+    result = story_results.get(session.sid)
+    if not result:
+        return jsonify({'status': 'expired'})
+    return jsonify({'status': result['status']})
+
 @app.route('/german_story_with_translation', methods=['POST','GET'])
 def german_story_with_translation():
-    burned_words = get_burned_words()
+    result_data = story_results.get(session.sid, None)
+    if not result_data or result_data.get('status') != 'done':
+        return render_template('german_story_with_translation.html', result={
+            'germanStory': 'The story is still being generated. Even I find this to be hard! This page will refresh shortly.',
+            'englishStory': ''
+        })
 
-    if not burned_words:
-        result_data = {
-            'germanStory': "No burned words available yet. Please review and burn more words first.",
-            'englishStory': "No burned words available yet. Please review and burn more words first."
-        }
-    else:
-        prompt = f"""
-        1. Write a short story in German primarily using the following Burned words:\n{', '.join(burned_words)}\n\n
-        2. Review the short story to confirm that for Nouns or Verbs or Adjectives, only the words in the Burned words list is used
-        3. If you find Nouns, Verbs, Adjectives in the short story that are not in the Burned words list, remove them and rewrite that section of the story to use Burned words.
-        4. The output should only be the story.
-        """
-
-        messages = [
-            {'role': 'system', 'content': 'You are a helpful language teacher.'},
-            {'role': 'user', 'content': prompt}
-        ]
-
-        germanStory = get_completion_from_messages(messages, model="o4-mini", temperature=0.2, max_tokens=10000)
-
-        messages.append({'role': 'assistant', 'content': germanStory})
-
-        # Translate to English
-        messages.append({'role': 'user', 'content': 'Translate this German story to English.'})
-        englishStory = get_completion_from_messages(messages, model="gpt-4o-mini", max_tokens=10000)
-
-        result_data = {
-            'germanStory': germanStory.strip(),
-            'englishStory': englishStory.strip()
-        }
-
-    return render_template('german_story_with_translation.html', result=result_data)
+    return render_template('german_story_with_translation.html', result={
+        'germanStory': result_data['german'],
+        'englishStory': result_data['english']
+    })
 
 @app.route('/ankiRecord', methods=['POST'])
 def updateReviewDate():

@@ -14,10 +14,33 @@
             border-radius: 5px;
         }
     </style>
+    <script>
+        // Auto-refresh if story is still being generated
+        document.addEventListener("DOMContentLoaded", function () {
+            const germanText = "{{ result.germanStory }}";
+            const isGenerating = germanText.includes("still being generated");
+
+            if (isGenerating) {
+                const checkStatus = () => {
+                    fetch('/german_story_status')
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === 'done') {
+                                location.reload();
+                            } else if (data.status === 'expired') {
+                                document.getElementById('german-text').innerText =
+                                    "Session expired. Please return to the home page.";
+                            }
+                        });
+                };
+                setInterval(checkStatus, 3000);
+            }
+        });
+    </script>
 </head>
 <body>
     <h3>German Story:</h3>
-    <p style="font-size: 20px;">{{ result.germanStory }}</p>
+    <p id="german-text" style="font-size: 20px;">{{ result.germanStory }}</p>
 
     <h3>English Translation:</h3>
     <p style="font-size: 20px;">{{ result.englishStory }}</p>

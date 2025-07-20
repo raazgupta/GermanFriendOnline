@@ -34,11 +34,6 @@
             padding: 5px 10px;
             border-radius: 5px;
         }
-        #loading {
-            display: none;
-            text-align: left;
-            padding: 0;
-        }
     </style>
 </head>
 <body>
@@ -65,26 +60,5 @@
           {{ result.frequency2_display }}
         </button>
     </form>
-
-    <div id="loading">
-        <p style="color: white;">
-          Preparing German Story and translation.
-        </p>
-    </div>
-
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var form = document.getElementById("translate-form");
-        var loading = document.getElementById("loading");
-
-        form.addEventListener("submit", function () {
-            // Show loading only if this is the final word
-            if ({{ result.final_word }} === 1) {
-                loading.style.display = "block";
-            }
-        });
-    });
-    </script>
-
 </body>
 </html>
