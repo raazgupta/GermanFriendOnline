@@ -8,7 +8,7 @@ import json
 import unicodedata
 from threading import Thread
 
-file_path = "A1Wortlist.csv"
+# file_path = "A1Wortlist.csv"
 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
@@ -20,8 +20,28 @@ Session(app)
 # Store background results (use Redis or DB in production)
 story_results = {}  # Dict to hold story by session ID or custom token
 
-def generate_story_background(session_key):
-    burned_words = get_burned_words()
+# ------------------------------------------------------------------------------
+# 1) constants and helper
+# ------------------------------------------------------------------------------
+DEFAULT_WORTLIST_FILE = "A1Wortlist.csv"
+
+# replace these placeholders with your actual A2 assistant IDs:
+ASSISTANT_IDS_ANKI = {
+    "A1Wortlist.csv": "asst_qXm8leIYM7P33EpQb0m582g7",
+    "A2Wortlist.csv": "asst_tops2pTTY9Db4Nc7qkgNXULq"
+}
+ASSISTANT_IDS_CONVERSATION = {
+    "A1Wortlist.csv": "asst_SMi97meJ2ArZr2iMwNSQ2Hy0",
+    "A2Wortlist.csv": "asst_tops2pTTY9Db4Nc7qkgNXULq"
+}
+
+def get_current_wortlist_file():
+    # fall back to default if none selected
+    print(f"Using Wortlist: {session.get('wortlist_file', DEFAULT_WORTLIST_FILE)}")
+    return session.get("wortlist_file", DEFAULT_WORTLIST_FILE)
+
+def generate_story_background(session_key, wortlist_file):
+    burned_words = get_burned_words(wortlist_file)
     if not burned_words:
         story_results[session_key] = {
             'german': "No burned words available yet. Please review and burn more words first.",
@@ -59,22 +79,37 @@ def generate_story_background(session_key):
 openai.api_key = os.getenv('OPENAI_API_KEY')
 # print(openai.api_key)
 
-# In the future, when there is A2Worklist.csv with burned words, need to update this section to
-# Check whether user is running app for A2 list
-# Prioritize burned words from A2 list, asking AI to ensure they are in story and otherwise ask it to use burned words from A1 list
-def get_burned_words():
+# If reviewing A1Wortlist, the burned worts are from A1 list
+# If reviewing A2Wortlist, then burned worts are from A1 and A2 list.
+# Once A2 bunred wort list is large enough (>1000 words) can consider switching to exclusively A2 list.
+def get_burned_words(wortlist_file):
     burned_words = []
-    with open(file_path, 'r') as file:
-        for lineNumber, line in enumerate(file):
-            if lineNumber == 0:
-                continue  # Skip header
-            line = line.strip()
-            elements = line.split(',')
-            if len(elements) >= 2:
-                word, frequency = elements[0], elements[1]
-                if frequency == "B":
-                    burned_words.append(word)
+
+    file_path = wortlist_file
+
+    files_to_read = []
+    if file_path == "A2Wortlist.csv":
+        files_to_read = ["A1Wortlist.csv", "A2Wortlist.csv"]
+    else:
+        files_to_read = [file_path]
+
+    for path in files_to_read:
+        try:
+            with open(path, 'r') as file:
+                for lineNumber, line in enumerate(file):
+                    if lineNumber == 0:
+                        continue  # Skip header
+                    line = line.strip()
+                    elements = line.split(',')
+                    if len(elements) >= 2:
+                        word, frequency = elements[0], elements[1]
+                        if frequency == "B":
+                            burned_words.append(word)
+        except FileNotFoundError:
+            print(f"File not found: {path}")
+
     return burned_words
+
 
 
 def get_completion_from_messages(messages, model="gpt-4o-mini", temperature=0.0, max_tokens=500):
@@ -164,6 +199,9 @@ def chooseSelectedWords():
     number_pending = 0
     number_tomorrow = 0
     total_lines = 0
+
+    file_path = get_current_wortlist_file()
+
     with open(file_path, 'r') as file:
         # num_lines = sum(1 for line in file)
         # print(f"num_lines: {num_lines}")
@@ -224,9 +262,12 @@ def chooseSelectedWords():
 
 def create_anki_english_sentences(selected_words):
 
-    # Function to get Anki sentences in 1 go in JSON format. This function starts the run and does not wait for completion
+    #assistant_id = "asst_qXm8leIYM7P33EpQb0m582g7"
 
-    assistant_id = "asst_qXm8leIYM7P33EpQb0m582g7"
+    # Function to get Anki sentences in 1 go in JSON format. This function starts the run and does not wait for completion
+    file_path = get_current_wortlist_file()
+    assistant_id = ASSISTANT_IDS_ANKI.get(file_path, ASSISTANT_IDS_ANKI[DEFAULT_WORTLIST_FILE])
+
 
     sentences_content = f"""
                 1. Write 1 sentence in simple German for each of these words: {",".join(selected_words)}
@@ -253,7 +294,7 @@ def create_anki_english_sentences(selected_words):
 def save_to_csv():
 
     updated_content = []
-
+    file_path = get_current_wortlist_file()
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
@@ -282,6 +323,8 @@ def save_to_csv():
 @app.route('/stats_and_start_anki', methods=['POST'])
 def stats_and_start_anki():
 
+    session['wortlist_file'] = request.form.get('wortlist', DEFAULT_WORTLIST_FILE)
+
     selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow = chooseSelectedWords()
     percentage_burned = number_burned / (number_burned+number_week+number_month+number_3_month+number_pending)
 
@@ -296,7 +339,8 @@ def stats_and_start_anki():
     # Start background story generation
     session_key = session.sid
     story_results[session_key] = {'status': 'in_progress'}
-    Thread(target=generate_story_background, args=(session_key,)).start()
+    wortlist_file = session.get("wortlist_file", DEFAULT_WORTLIST_FILE)
+    Thread(target=generate_story_background, args=(session_key, wortlist_file)).start()
 
     # Get the last run datetime from the log file
     last_run_datetime = get_last_run_datetime()
@@ -582,6 +626,7 @@ def updateReviewDate():
 @app.route('/germanConversation', methods=['POST'])
 def germanConversation():
     # Save current run datetime in log file
+    session['wortlist_file'] = request.form.get('wortlist', DEFAULT_WORTLIST_FILE)
     log_datetime()
     return render_template('germanConversation.html')
 
@@ -617,7 +662,11 @@ def germanScenario():
 @app.route('/iSayDynamic', methods=['POST'])
 def iSayDynamic():
 
-    assistant_id = "asst_SMi97meJ2ArZr2iMwNSQ2Hy0"
+    #assistant_id = "asst_SMi97meJ2ArZr2iMwNSQ2Hy0"
+
+    # pick the right assistant for A1 vs A2
+    file_path = get_current_wortlist_file()
+    assistant_id = ASSISTANT_IDS_CONVERSATION.get(file_path, ASSISTANT_IDS_CONVERSATION[DEFAULT_WORTLIST_FILE])
 
     session['iSayText'] = request.form['iSayText']
     iSayText = request.form['iSayText']

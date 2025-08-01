@@ -4,13 +4,13 @@ Adresse,3M,2025-08-23
 Telefon,B,2024-09-30
 Geburtsdatum,,
 Geburtsort,,
-Alter,T,2025-07-24
+Alter,T,2025-08-03
 Wohnung,3M,2025-09-29
-Räume,W,2025-07-30
+Räume,M,2025-09-01
 Einrichtung,M,2025-08-15
 Möbel,B,2025-01-05
 Pflanzen,B,2024-03-11
-Tiere,W,2025-07-30
+Tiere,M,2025-09-01
 Klima,,
 Wetter,,
 Nahrungsmittel,3M,2025-08-23
@@ -20,14 +20,14 @@ Getränke,B,2025-06-25
 Lokale,B,2025-02-24
 Restaurant,B,2024-04-29
 Café,B,2025-03-26
-Post,W,2025-07-30
+Post,M,2025-09-01
 Telekommunikation,,
 Banken,B,2024-05-01
 Polizei,B,2024-06-09
 Arbeitsplatz,B,2024-05-01
 Urlaub,B,2025-02-24
 Geschlecht,,
-Familienstand,M,2025-07-29
+Familienstand,3M,2025-10-31
 Familie,B,2024-01-28
 Persönliche,B,2024-06-09
 Beziehungen,,
@@ -45,22 +45,22 @@ Mietverhältnis,,
 Wohnungswechsel,B,2024-05-06
 privater,B,2024-05-01
 öffentlicher,B,2025-03-26
-Verkehr,W,2025-07-30
+Verkehr,M,2025-09-01
 Reisen,B,2024-06-09
 Unterkunft,B,2024-04-17
 Gepäck,B,2025-03-26
 Geschäfte,B,2025-06-25
-Preis,W,2025-07-30
+Preis,M,2025-09-01
 Bezahlen,B,2024-05-01
 Lebensmittel,,
-Kleidung,W,2025-07-30
+Kleidung,M,2025-09-01
 Kinderbetreuung,,
 Schule,B,2025-06-25
 Sprachen lernen,,
 Interessen,,
 Sport treiben,B,2024-05-21
 Radio,B,2025-06-25
-Fernsehen,W,2025-07-30
+Fernsehen,M,2025-09-01
 Internet,,
 Lektüre,B,2024-07-09
 Presse,B,2025-06-25
@@ -115,8 +115,8 @@ Montag,,
 Dienstag,B,2025-05-06
 Mittwoch,,
 Donnerstag,B,2024-01-24
-Freitag,M,2025-07-25
-Samstag,W,2025-07-30
+Freitag,3M,2025-10-31
+Samstag,M,2025-09-01
 Sonnabend,,
 Tag,,
 Morgen,3M,2025-08-23
@@ -133,10 +133,10 @@ Woche,B,2024-02-13
 Jahr,B,2025-03-30
 Wochenende,B,2025-01-13
 Nachmittag,B,2024-05-28
-Abend,W,2025-07-30
+Abend,M,2025-09-01
 Nacht,B,2024-03-13
 Juli,B,2024-05-01
-August,M,2025-07-29
+August,3M,2025-10-31
 September,B,2025-03-30
 Oktober,B,2025-06-29
 November,B,2024-06-11
@@ -146,8 +146,8 @@ Frühjahr,,
 Sommer,B,2025-03-30
 Herbst,B,2024-09-26
 Winter,B,2024-05-06
-Euro,M,2025-07-29
-Cent,M,2025-07-29
+Euro,3M,2025-10-31
+Cent,3M,2025-10-31
 Meter,,
 Zentimeter,B,2024-05-06
 Kilometer,B,2024-03-13
@@ -155,12 +155,12 @@ Quadratmeter,,
 Grad,,
 Prozent,,
 Liter,B,2024-02-21
-Gramm,W,2025-07-30
+Gramm,M,2025-09-01
 Pfund,B,2025-05-06
 Kilo,B,2024-05-21
 Deutschland,,
 Deutsche,B,2025-05-06
-Deutscher,W,2025-07-30
+Deutscher,M,2025-09-01
 Deutsche,B,2024-04-29
 deutsch,,
 Europa,B,2025-02-01
@@ -192,7 +192,7 @@ also,B,2024-02-21
 alt,3M,2025-08-23
 das Alter,,
 an,B,2024-11-18
-anbieten,W,2025-07-30
+anbieten,M,2025-09-01
 das Angebot,B,2024-06-11
 ander,B,2024-05-06
 anfangen,B,2024-05-21
@@ -202,11 +202,11 @@ ankommen,B,2024-11-24
 die Ankunft,3M,2025-08-13
 ankreuzen,B,2024-11-18
 anmachen,B,2024-03-13
-anmelden,W,2025-07-30
+anmelden,M,2025-09-01
 die Anmeldung,,
 die Anrede,B,2025-02-05
 anrufen,,
-der Anruf,W,2025-07-30
+der Anruf,M,2025-09-01
 beantworter,,
 die Ansage,B,2024-02-18
 der Anschluss,,

@@ -20,6 +20,16 @@
             padding: 5px 10px; /* Add some padding for a larger button */
             border-radius: 5px;
         }
+        /* Style the select to match the button */
+        .custom-select {
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-left: 8px;
+            margin-right: 16px;
+        }
         #converse-form button {
             margin-top: 30px; /* Adjust the margin to your preference */
         }
@@ -31,6 +41,10 @@
     <form id="story-form"
           method="POST"
           action="{{ url_for('stats_and_start_anki') }}">
+        <select name="wortlist" id="wortlist" class="custom-select">
+            <option value="A1Wortlist.csv" selected>A1 Wortlist</option>
+            <option value="A2Wortlist.csv">A2 Wortlist</option>
+        </select>
         <button type="submit"
                 class="custom-button">
           Show German Story
@@ -40,6 +54,10 @@
     <form id="converse-form"
           method="POST"
           action="{{ url_for('germanConversation') }}">
+        <select name="wortlist" id="wortlist2" class="custom-select">
+            <option value="A1Wortlist.csv" selected>A1 Wortlist</option>
+            <option value="A2Wortlist.csv">A2 Wortlist</option>
+        </select>
         <button type="submit"
                 class="custom-button">
           Converse in German
