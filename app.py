@@ -40,7 +40,7 @@ def get_current_wortlist_file():
     print(f"Using Wortlist: {session.get('wortlist_file', DEFAULT_WORTLIST_FILE)}")
     return session.get("wortlist_file", DEFAULT_WORTLIST_FILE)
 
-def generate_story_background(session_key, wortlist_file):
+def generate_story_background(session_key, wortlist_file, scenario_text):
     burned_words = get_burned_words(wortlist_file)
     if not burned_words:
         story_results[session_key] = {
@@ -49,10 +49,12 @@ def generate_story_background(session_key, wortlist_file):
         }
     else:
         prompt = f"""
-                1. Write a short story in German primarily using the following Burned words:\n{', '.join(burned_words)}\n\n
-                2. Review the short story to confirm that for Nouns or Verbs or Adjectives, only the words in the Burned words list is used
-                3. If you find Nouns, Verbs, Adjectives in the short story that are not in the Burned words list, remove them and rewrite that section of the story to use Burned words.
-                4. The output should only be the story.
+                1. Write a short story in German about this scenario: {scenario_text}
+                2. Write this short story in German primarily using the following Burned words:\n{', '.join(burned_words)}\n\n
+                3. Review the short story to confirm that for Nouns or Verbs or Adjectives, only the words in the Burned words list is used
+                4. If you find Nouns, Verbs, Adjectives in the short story that are not in the Burned words list, remove them and rewrite that section of the story to use Burned words.
+                5. Ensure the German story is interesting and follows the user's scenario.
+                6. The output should only be the story.
                 """
         messages = [
             {'role': 'system', 'content': 'You are a helpful language teacher.'},
@@ -320,10 +322,18 @@ def save_to_csv():
     with open(file_path, 'w') as file:
         file.writelines(updated_content)
 
+
+@app.route('/story_scenario', methods=['POST'])
+def story_scenario():
+    # Save wortlist selection before showing storyScenario.html
+    session['wortlist_file'] = request.form.get('wortlist', DEFAULT_WORTLIST_FILE)
+    return render_template('storyScenario.html')
+
+
 @app.route('/stats_and_start_anki', methods=['POST'])
 def stats_and_start_anki():
 
-    session['wortlist_file'] = request.form.get('wortlist', DEFAULT_WORTLIST_FILE)
+    scenario_text = request.form.get('scenarioText', None)
 
     selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow = chooseSelectedWords()
     percentage_burned = number_burned / (number_burned+number_week+number_month+number_3_month+number_pending)
@@ -340,7 +350,7 @@ def stats_and_start_anki():
     session_key = session.sid
     story_results[session_key] = {'status': 'in_progress'}
     wortlist_file = session.get("wortlist_file", DEFAULT_WORTLIST_FILE)
-    Thread(target=generate_story_background, args=(session_key, wortlist_file)).start()
+    Thread(target=generate_story_background, args=(session_key, wortlist_file, scenario_text)).start()
 
     # Get the last run datetime from the log file
     last_run_datetime = get_last_run_datetime()

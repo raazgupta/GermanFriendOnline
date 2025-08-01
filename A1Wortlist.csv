@@ -214,38 +214,38 @@ sein,,
 antworten,B,2024-06-10
 die Antwort,B,2024-09-30
 die Anzeige,B,2024-05-28
-anziehen,W,2025-07-30
+anziehen,T,2025-08-03
 das Apartment,B,2025-02-24
 der Apfel,B,2024-06-10
 der Appetit,,
 arbeiten,,
 die Arbeit,B,2024-05-06
-arbeitslos,W,2025-07-30
+arbeitslos,T,2025-08-03
 der Arbeitsplatz,B,2025-05-11
-der Arm,M,2025-07-30
+der Arm,T,2025-08-03
 der Arzt,B,2025-01-07
 auch,B,2024-10-21
 auf,,
 die Aufgabe,B,2024-01-28
-aufhören,W,2025-07-30
-aufstehen,W,2025-07-30
+aufhören,T,2025-08-03
+aufstehen,T,2025-08-03
 der Aufzug,B,2025-05-25
 das Auge,,
 aus,,
 der Ausflug,,
-ausfüllen,W,2025-07-30
+ausfüllen,T,2025-08-03
 der Ausgang,B,2024-09-26
 die Auskunft,,
 das Ausland,B,2025-05-11
 der Ausländer,B,2024-11-18
 ausländisch,,
 ausmachen,,
-die Aussage,W,2025-07-30
-aussehen,W,2025-07-30
-aus sein,W,2025-07-30
+die Aussage,T,2025-08-03
+aussehen,T,2025-08-03
+aus sein,T,2025-08-03
 aussteigen,B,2024-03-18
 der Ausweis,B,2025-04-03
-ausziehen,W,2025-07-30
+ausziehen,T,2025-08-03
 das Auto,B,2025-04-14
 die Autobahn,,
 der Automat,B,2024-09-26
@@ -262,7 +262,7 @@ der Balkon,,
 die Banane,,
 die Bank,B,2024-10-27
 bar,,
-der Bauch,W,2025-07-30
+der Bauch,M,2025-09-01
 der Baum,B,2024-11-19
 der Beamte,,
 bedeuten,B,2024-02-21
@@ -275,23 +275,23 @@ zum Beispiel,B,2025-04-03
 bekannt,B,2025-02-25
 die Bekannte,B,2024-11-19
 bekommen,,
-benutzen,W,2025-07-30
+benutzen,M,2025-09-01
 der Beruf,B,2024-02-05
 besetzt,B,2025-04-13
 besichtigen,,
 besser,B,2024-10-28
-bestellen,W,2025-07-30
+bestellen,M,2025-09-01
 besuchen,3M,2025-09-03
 das Bett,B,2025-02-25
 bezahlen,B,2025-04-06
 das Bier,B,2025-01-13
 das Bild,B,2024-05-20
-billig,M,2025-07-30
+billig,3M,2025-10-31
 die Birne,B,2024-11-19
 bisschen,,
 bitte,B,2024-09-18
 die Bitte,B,2024-10-28
-bitten,M,2025-07-30
+bitten,3M,2025-10-31
 bitter,B,2024-10-28
 bleiben,B,2025-02-25
 der Bleistift,B,2024-05-07
@@ -319,23 +319,23 @@ circa,B,2024-09-10
 der Computer,B,2024-05-07
 da,,
 die Dame,B,2025-05-15
-daneben,M,2025-07-30
-danken,W,2025-07-30
+daneben,3M,2025-10-31
+danken,M,2025-09-01
 der Dank,B,2024-11-26
-danke,W,2025-07-30
+danke,M,2025-09-01
 dann,B,2024-11-26
 das Datum,B,2024-01-28
 dauern,B,2024-06-16
 dein,B,2024-02-21
 denn,,
-dich,T,2025-07-22
+dich,W,2025-08-09
 dies,B,2024-03-18
 dir,B,2024-03-18
 die Disco,B,2024-11-26
 der Doktor,B,2024-03-18
 das Doppelzimmer,B,2024-01-28
 das Dorf,,
-dort,T,2025-07-22
+dort,W,2025-08-09
 draußen,B,2024-02-25
 drucken,B,2024-03-18
 der Drucker,,
