@@ -4,7 +4,7 @@ Adresse,3M,2025-08-23
 Telefon,B,2024-09-30
 Geburtsdatum,,
 Geburtsort,,
-Alter,T,2025-08-03
+Alter,W,2025-08-10
 Wohnung,3M,2025-09-29
 Räume,M,2025-09-01
 Einrichtung,M,2025-08-15
@@ -214,38 +214,38 @@ sein,,
 antworten,B,2024-06-10
 die Antwort,B,2024-09-30
 die Anzeige,B,2024-05-28
-anziehen,T,2025-08-03
+anziehen,W,2025-08-10
 das Apartment,B,2025-02-24
 der Apfel,B,2024-06-10
 der Appetit,,
 arbeiten,,
 die Arbeit,B,2024-05-06
-arbeitslos,T,2025-08-03
+arbeitslos,W,2025-08-10
 der Arbeitsplatz,B,2025-05-11
-der Arm,T,2025-08-03
+der Arm,W,2025-08-10
 der Arzt,B,2025-01-07
 auch,B,2024-10-21
 auf,,
 die Aufgabe,B,2024-01-28
-aufhören,T,2025-08-03
-aufstehen,T,2025-08-03
+aufhören,W,2025-08-10
+aufstehen,W,2025-08-10
 der Aufzug,B,2025-05-25
 das Auge,,
 aus,,
 der Ausflug,,
-ausfüllen,T,2025-08-03
+ausfüllen,W,2025-08-10
 der Ausgang,B,2024-09-26
 die Auskunft,,
 das Ausland,B,2025-05-11
 der Ausländer,B,2024-11-18
 ausländisch,,
 ausmachen,,
-die Aussage,T,2025-08-03
-aussehen,T,2025-08-03
-aus sein,T,2025-08-03
+die Aussage,W,2025-08-10
+aussehen,W,2025-08-10
+aus sein,W,2025-08-10
 aussteigen,B,2024-03-18
 der Ausweis,B,2025-04-03
-ausziehen,T,2025-08-03
+ausziehen,W,2025-08-10
 das Auto,B,2025-04-14
 die Autobahn,,
 der Automat,B,2024-09-26
@@ -346,7 +346,7 @@ dürfen,B,2025-04-27
 der Durst,B,2025-05-15
 duschen,3M,2025-08-24
 die Dusche,B,2024-05-28
-die Ecke,W,2025-07-28
+die Ecke,W,2025-08-10
 die Ehefrau,,
 der Ehemann,B,2025-01-14
 das Ei,,
@@ -354,11 +354,11 @@ eilig,B,2024-04-21
 ein,B,2025-04-14
 einfach,B,2024-05-08
 der Eingang,B,2024-03-25
-einkaufen,M,2025-07-30
+einkaufen,3M,2025-10-31
 einladen,B,2024-10-27
 die Einladung,B,2025-04-06
 einmal,B,2025-02-01
-einsteigen,W,2025-07-28
+einsteigen,M,2025-09-01
 der Eintritt,B,2024-02-06
 das Einzelzimmer,B,2024-10-08
 die Eltern,B,2024-11-26
@@ -371,8 +371,8 @@ entschuldigen,B,2025-02-25
 die Entschuldigung,B,2024-05-08
 das Ergebnis,,
 erklären,B,2024-06-23
-erlauben,W,2025-07-28
-der Erwachsene,W,2025-07-28
+erlauben,W,2025-08-10
+der Erwachsene,M,2025-09-01
 erzählen,B,2025-02-01
 es,,
 essen,B,2024-03-25
@@ -381,14 +381,14 @@ euer,B,2025-04-14
 fahren,B,2024-05-08
 der Fahrer,B,2024-02-06
 die Fahrkarte,,
-das Fahrrad,W,2025-07-28
+das Fahrrad,M,2025-09-01
 falsch,3M,2025-09-17
 die Familie,B,2024-03-25
 der Familienname,B,2024-06-10
 der Familienstand,3M,2025-08-11
 die Farbe,B,2024-02-25
 das Fax,B,2024-09-30
-Feier,W,2025-07-28
+Feier,M,2025-09-01
 feiern,,
 fehlen,B,2025-05-28
 der Fehler,,
@@ -404,24 +404,24 @@ die Flasche,B,2024-02-06
 das Fleisch,B,2025-05-26
 fliegen,B,2024-11-27
 abfliegen,,
-der Abflug,W,2025-07-28
+der Abflug,M,2025-09-01
 der Flughafen,B,2024-05-20
 das Flugzeug,B,2025-02-26
 das Formular,B,2024-11-27
 das Foto,B,2024-09-16
 fragen,B,2024-05-30
-die Frage,W,2025-07-28
+die Frage,M,2025-09-01
 die Frau,B,2024-05-08
 frei,B,2025-05-28
 die Freizeit,3M,2025-08-24
 fremd,3M,2025-08-13
 freuen,B,2024-02-07
 der Freund,B,2024-03-25
-früher,W,2025-07-28
+früher,M,2025-09-01
 frühstücken,B,2025-02-26
 das Frühstück,,
 die Führung,B,2024-03-25
-für,T,2025-07-21
+für,W,2025-08-10
 der Fuß,3M,2025-09-23
 der Fußball,B,2025-01-20
 der Garten,B,2024-03-26
@@ -444,15 +444,15 @@ gerne,B,2024-03-26
 das Geschäft,,
 das Geschenk,3M,2025-09-03
 die Geschwister,B,2024-03-26
-das Gespräch,T,2025-07-21
+das Gespräch,W,2025-08-10
 gestern,B,2024-02-13
 gestorben,,
 das Getränk,,
-das Gewicht,T,2025-07-21
+das Gewicht,W,2025-08-10
 gewinnen,B,2025-02-26
 das Glas,B,2024-05-08
 glauben,B,2024-03-26
-gleich,T,2025-07-21
+gleich,W,2025-08-10
 das Gleis,,
 das Glück,B,2024-02-07
 glücklich,B,2024-10-27
@@ -462,9 +462,9 @@ gratulieren,B,2024-10-01
 grillen,B,2024-04-10
 groß,B,2024-04-10
 die Größe,B,2024-04-10
-die Großeltern,T,2025-07-21
+die Großeltern,W,2025-08-10
 die Großmutter,3M,2025-09-28
-der Großvater,M,2025-07-30
+der Großvater,3M,2025-11-01
 die Gruppe,B,2024-05-08
 der Gruß,B,2024-11-28
 gültig,3M,2025-09-29
@@ -474,27 +474,27 @@ das Haar,B,2024-05-09
 haben,B,2024-02-13
 das Hähnchen,,
 die Halbpension,B,2024-04-10
-die Halle,T,2025-07-21
-hallo,T,2025-07-21
+die Halle,W,2025-08-10
+hallo,W,2025-08-10
 halten,3M,2025-09-06
 die Haltestelle,,
 die Hand,B,2024-05-09
 das Handy,,
 das Haus,B,2025-04-27
-die Hausaufgabe,T,2025-07-21
+die Hausaufgabe,W,2025-08-10
 die Hausfrau,B,2025-04-27
 der Hausmann,B,2025-02-26
 die Heimat,B,2024-04-10
 heiraten,B,2024-02-13
 heißen,B,2025-01-21
-helfen,T,2025-07-21
+helfen,W,2025-08-10
 hell,3M,2025-09-29
 der Herd,B,2025-01-21
 der Herr,B,2024-02-08
-herzlich,T,2025-07-21
+herzlich,W,2025-08-10
 heute,B,2024-11-28
 hier,B,2024-01-24
-die Hilfe,T,2025-07-21
+die Hilfe,W,2025-08-10
 hinten,,
 das Hobby,,
 hoch,3M,2025-08-26
@@ -505,8 +505,8 @@ das Hotel,B,2024-07-09
 der Hund,,
 der Hunger,,
 ich,B,2024-04-11
-ihr,T,2025-07-21
-ihm,T,2025-07-21
+ihr,T,2025-08-04
+ihm,W,2025-08-10
 ihn,3M,2025-08-13
 immer,B,2025-02-27
 in,B,2024-04-11
@@ -515,11 +515,11 @@ international,B,2024-04-11
 das Internet,B,2024-01-29
 ja,B,2024-09-18
 die Jacke,B,2024-09-18
-jedem,T,2025-07-21
+jedem,W,2025-08-10
 jetzt,,
 der Job,B,2024-05-20
 der Jugendliche,3M,2025-09-06
-jung,T,2025-07-21
+jung,W,2025-08-10
 der Junge,,
 der Kaffee,,
 kaputt,B,2024-01-29
@@ -544,9 +544,9 @@ der Koffer,,
 der Kollege,,
 kommen,B,2024-04-11
 können,,
-das Konto,T,2025-07-21
+das Konto,W,2025-08-10
 der Kopf,B,2024-02-08
-kosten,M,2025-07-31
+kosten,3M,2025-11-01
 krank,B,2025-04-30
 kriegen,,
 die Küche,,
@@ -564,7 +564,7 @@ das Land,B,2025-02-01
 er lang,B,2024-07-15
 lange,B,2024-05-16
 langsam,B,2024-04-14
-laufen,T,2025-07-21
+laufen,W,2025-08-10
 laut,B,2024-10-28
 leben,B,2024-04-14
 das Leben,B,2025-04-30
@@ -579,7 +579,7 @@ lernen,B,2024-05-20
 lesen,B,2024-12-01
 letzt,B,2025-03-02
 die Leute,B,2024-05-30
-das Licht,T,2025-07-21
+das Licht,W,2025-08-10
 lieben,B,2025-05-06
 lieber,B,2024-02-14
 Lieblings,,
@@ -588,7 +588,7 @@ liegen,B,2025-05-29
 links,B,2025-05-06
 der Lkw,B,2025-05-29
 das Lokal,B,2024-05-16
-die Lösung,T,2025-07-21
+die Lösung,W,2025-08-10
 lustig,B,2025-05-29
 machen,B,2024-05-21
 das Mädchen,B,2024-04-14
@@ -600,19 +600,19 @@ das Meer,B,2024-10-29
 mehr,B,2025-05-07
 mein,,
 meist,B,2025-03-02
-der Mensch,M,2025-07-31
+der Mensch,3M,2025-11-01
 mieten,,
-die Miete,T,2025-07-21
+die Miete,W,2025-08-10
 die Milch,B,2024-10-29
 mit,,
-mitbringen,M,2025-07-23
+mitbringen,3M,2025-11-01
 mitkommen,B,2024-04-14
 mitmachen,B,2024-04-14
 mitnehmen,,
 die Mitte,B,2024-02-14
 die Möbel,3M,2025-09-06
 möchten,B,2025-01-27
-mögen,T,2025-07-21
+mögen,W,2025-08-10
 möglich,,
 der Moment,B,2025-01-27
 morgen,B,2024-12-02
@@ -627,12 +627,12 @@ nehmen,B,2025-06-01
 nein,B,2024-04-14
 neu,3M,2025-09-29
 nicht,B,2024-12-02
-nichts,T,2025-07-21
+nichts,W,2025-08-10
 nie,B,2024-10-04
 noch,B,2025-01-28
 normal,,
 die Nummer,B,2025-03-02
-nur,T,2025-07-21
+nur,W,2025-08-10
 oben,B,2024-06-11
 das Obst,,
 oder,B,2024-04-17

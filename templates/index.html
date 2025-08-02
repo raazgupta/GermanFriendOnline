@@ -1,86 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>German Friend Online</title>
-    <!-- load CSS via url_for -->
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/dark-mode.css') }}"
-          id="dark-mode-stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My German Friend</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
     <style>
-        /* Add your CSS styling for the loading text here */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 1em;
+            background: linear-gradient(to bottom right, #fffefc, #fdf6e3);
+            color: #1a202c;
+        }
+
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            color: #000000; /* Black */
+            margin-bottom: 1.2em;
+            text-shadow: 1px 1px #fbbf24; /* subtle gold shadow */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2em;
+        }
+
+        .custom-button {
+            font-size: 18px;
+            padding: 12px 24px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            background-color: #fbbf24; /* Gold */
+            color: black;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .custom-button:hover {
+            background-color: #ef4444; /* Red */
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .custom-select {
+            font-size: 18px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 2px solid #000000; /* Black border */
+            margin-bottom: 10px;
+            background-color: #fff5c2; /* light gold */
+            color: #000000;
+            font-weight: 500;
+        }
+
         #loading {
             display: none;
-            text-align: left;
-            padding: 0;
+            text-align: center;
+            font-style: italic;
+            margin-top: 1.5em;
+            color: #ef4444; /* red */
         }
-        /* Style the button */
-        .custom-button {
-            font-size: 20px; /* Set the font size to 20 pixels */
-            font-family: Arial, sans-serif; /* Set the font family */
-            padding: 5px 10px; /* Add some padding for a larger button */
-            border-radius: 5px;
-        }
-        /* Style the select to match the button */
-        .custom-select {
-            font-size: 20px;
-            font-family: Arial, sans-serif;
-            padding: 5px 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-left: 8px;
-            margin-right: 16px;
-        }
-        #converse-form button {
-            margin-top: 30px; /* Adjust the margin to your preference */
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 26px;
+            }
+
+            .custom-button, .custom-select {
+                font-size: 16px;
+                width: 90%;
+            }
+
+            form {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>German Friend Online</h1>
 
-    <form id="story-form"
-          method="POST"
-          action="{{ url_for('story_scenario') }}">
+    <h1>My German Friend</h1>
+
+    <form id="story-form" method="POST" action="{{ url_for('story_scenario') }}">
         <select name="wortlist" id="wortlist" class="custom-select">
             <option value="A1Wortlist.csv" selected>A1 Wortlist</option>
             <option value="A2Wortlist.csv">A2 Wortlist</option>
         </select>
-        <button type="submit"
-                class="custom-button">
-          Show German Story
-        </button>
+        <button type="submit" class="custom-button">📖 Show German Story</button>
     </form>
 
-    <form id="converse-form"
-          method="POST"
-          action="{{ url_for('germanConversation') }}">
+    <form id="converse-form" method="POST" action="{{ url_for('germanConversation') }}">
         <select name="wortlist" id="wortlist2" class="custom-select">
             <option value="A1Wortlist.csv" selected>A1 Wortlist</option>
             <option value="A2Wortlist.csv">A2 Wortlist</option>
         </select>
-        <button type="submit"
-                class="custom-button">
-          Converse in German
-        </button>
+        <button type="submit" class="custom-button">🗣️ Converse in German</button>
     </form>
 
     <div id="loading">
-        <p style="color: white;">
-          AI is cooking your tasty story. Please be patient...
-        </p>
+        <p>🇩🇪 AI is cooking your tasty story. Please be patient...</p>
     </div>
 
     <script>
-    // JavaScript code to show the loading text
-    document.addEventListener("DOMContentLoaded", function () {
-        var storyForm = document.getElementById("story-form");
-        var loading   = document.getElementById("loading");
+        document.addEventListener("DOMContentLoaded", function () {
+            const storyForm = document.getElementById("story-form");
+            const loading = document.getElementById("loading");
 
-        storyForm.addEventListener("submit", function () {
-            // Display loading text while waiting for the response
-            loading.style.display = "block";
+            storyForm.addEventListener("submit", function () {
+                loading.style.display = "block";
+            });
         });
-    });
     </script>
+
 </body>
 </html>

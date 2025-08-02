@@ -1,55 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>German Story</title>
-    <!-- load CSS via url_for -->
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/dark-mode.css') }}"
-          id="dark-mode-stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vocabulary Practice & German Story</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-    // Embed the real endpoint into JS
-    const ankiSentencesUrl = "{{ url_for('ankiSentencesResponse') }}";
+        const ankiSentencesUrl = "{{ url_for('ankiSentencesResponse') }}";
 
-    $(document).ready(function() {
-        function fetchAnkiSentencesResponse() {
-            $.ajax({
-                url: ankiSentencesUrl,
-                method: 'GET',
-                success: function(data) {
-                    $('#practice_vocabulary_button').show();
-                    $('#patient_text').hide();
-                },
-                error: function(err) {
-                    console.error('Error fetching sentences:', err);
-                }
-            });
-        }
+        $(document).ready(function() {
+            function fetchAnkiSentencesResponse() {
+                $.ajax({
+                    url: ankiSentencesUrl,
+                    method: 'GET',
+                    success: function(data) {
+                        $('#practice_vocabulary_button').show();
+                        $('#patient_text').hide();
+                    },
+                    error: function(err) {
+                        console.error('Error fetching sentences:', err);
+                    }
+                });
+            }
 
-        fetchAnkiSentencesResponse();
-    });
+            fetchAnkiSentencesResponse();
+        });
     </script>
 
     <style>
-        .custom-button {
-            font-size: 20px;
-            font-family: Arial, sans-serif;
-            padding: 5px 10px;
-            border-radius: 5px;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 1em;
+            background: linear-gradient(to bottom right, #fffefc, #fdf6e3);
+            color: #1a202c;
         }
+
         .section-title {
-            font-size: 36px;
+            font-size: 30px;
+            text-align: center;
+            color: #000;
+            margin-bottom: 1em;
+            text-shadow: 1px 1px #fbbf24;
         }
+
         .sub-section-title {
-            font-size: 24px;
-            margin-top: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            color: #ef4444; /* Red for flair */
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 20px;
+            text-align: center;
+            margin: 0.4em 0;
+        }
+
+        .custom-button {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background-color: #fbbf24;
+            color: #000;
+            cursor: pointer;
+            margin: 2em auto 1em;
+            display: block;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .custom-button:hover {
+            background-color: #ef4444;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        #patient_text {
+            text-align: center;
+            font-style: italic;
+            color: #ef4444;
+        }
+
+        @media (max-width: 600px) {
+            .section-title {
+                font-size: 24px;
+            }
+
+            .sub-section-title {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 18px;
+            }
+
+            .custom-button {
+                width: 90%;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1 class="section-title">Vocabulary Practice & German Story:</h1>
+
+    <h1 class="section-title">Vocabulary Practice & German Story 🇩🇪</h1>
+
     <div class="sub-section-title">Progress so far:</div>
+
     <p>Tomorrow: {{ result.numberTomorrow }}</p>
     <p>Week:     {{ result.numberWeek     }}</p>
     <p>Month:    {{ result.numberMonth    }}</p>
@@ -63,11 +128,12 @@
                 type="submit"
                 class="custom-button"
                 style="display:none">
-          Practice Vocabulary
+            🚀 Practice Vocabulary
         </button>
         <div id="patient_text">
-          Preparing your words and sentences for review. Please be patient…
+            🛠 Preparing your words and sentences for review. Please be patient…
         </div>
     </form>
+
 </body>
 </html>
