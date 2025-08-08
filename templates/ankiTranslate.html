@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Vocabulary Translation</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
+    <link rel="stylesheet" href="static/css/dark-mode.css" id="dark-mode-stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        const ankiSentenceEnglishUrl = "{{ url_for('ankiSentenceEnglish') }}";
+        const ankiSentenceEnglishUrl = "ankiSentenceEnglish";
 
         $(document).ready(function() {
             $.ajax({
@@ -121,7 +121,7 @@
     <p>{{ result.number }}: {{ result.translation }}</p>
     <p id="dynamic-anki-sentence-english">thinking...</p>
 
-    <form id="translate-form" method="POST" action="{{ url_for('updateReviewDate') }}">
+    <form id="translate-form" method="POST" action="ankiRecord">
         <button type="submit" class="custom-button" name="frequency" value="{{ result.frequency1 }}">
             {{ result.frequency1_display }}
         </button>

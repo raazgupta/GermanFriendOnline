@@ -328,14 +328,14 @@ das Datum,B,2024-01-28
 dauern,B,2024-06-16
 dein,B,2024-02-21
 denn,,
-dich,W,2025-08-09
+dich,M,2025-09-08
 dies,B,2024-03-18
 dir,B,2024-03-18
 die Disco,B,2024-11-26
 der Doktor,B,2024-03-18
 das Doppelzimmer,B,2024-01-28
 das Dorf,,
-dort,W,2025-08-09
+dort,M,2025-09-08
 draußen,B,2024-02-25
 drucken,B,2024-03-18
 der Drucker,,
@@ -505,7 +505,7 @@ das Hotel,B,2024-07-09
 der Hund,,
 der Hunger,,
 ich,B,2024-04-11
-ihr,T,2025-08-04
+ihr,W,2025-08-16
 ihm,W,2025-08-10
 ihn,3M,2025-08-13
 immer,B,2025-02-27
@@ -637,7 +637,7 @@ oben,B,2024-06-11
 das Obst,,
 oder,B,2024-04-17
 öffnen,B,2024-05-16
-geöffnet,T,2025-07-21
+geöffnet,W,2025-08-14
 oft,B,2024-04-14
 ohne,B,2024-12-02
 das Öl,B,2024-05-16
@@ -646,10 +646,10 @@ der Opa,,
 die Ordnung,B,2024-05-19
 der Ort,B,2024-02-15
 das Papier,B,2024-02-15
-die Papiere,T,2025-07-21
+die Papiere,W,2025-08-14
 der Partner,B,2025-03-02
 die Partnerin,,
-die Party,T,2025-07-21
+die Party,W,2025-08-14
 der Pass,,
 die Pause,B,2024-05-19
 der Plan,B,2024-12-03
@@ -662,7 +662,7 @@ das Praktikum,B,2024-12-03
 die Praxis,B,2024-07-16
 der Preis,,
 das Problem,,
-der Prospekt,T,2025-07-21
+der Prospekt,W,2025-08-14
 die Prüfung,B,2024-09-16
 pünktlich,B,2024-09-16
 Rad fahren,B,2024-04-17
@@ -679,7 +679,7 @@ das Reisebüro,B,2024-02-18
 der Reiseführer,B,2025-03-03
 reparieren,B,2024-05-21
 die Reparatur,,
-das Restaurant,T,2025-07-21
+das Restaurant,W,2025-08-14
 die Rezeption,,
 richtig,,
 riechen,B,2024-04-17
@@ -688,7 +688,7 @@ der Saft,3M,2025-09-06
 sagen,B,2024-10-29
 der Salat,B,2024-09-16
 das Salz,,
-Satz,T,2025-07-21
+Satz,W,2025-08-16
 die S-Bahn,3M,2025-09-17
 der Schalter,B,2024-12-03
 scheinen,B,2024-05-19
@@ -697,13 +697,13 @@ das Schild,3M,2025-09-06
 der Schinken,3M,2025-09-06
 schlafen,,
 schlecht,,
-schließen,T,2025-07-21
+schließen,W,2025-08-14
 geschlossen,B,2024-09-16
-der Schluss,T,2025-07-21
+der Schluss,W,2025-08-16
 der Schlüssel,B,2024-04-17
 schmecken,B,2024-12-03
 schnell,B,2024-05-19
-schon,T,2025-07-21
+schon,W,2025-08-14
 schön,B,2024-06-13
 der Schrank,B,2024-02-18
 schreiben,B,2025-05-07
@@ -712,19 +712,19 @@ die Schule,B,2024-12-03
 der Schüler,,
 schwer,B,2024-11-04
 die Schwester,B,2024-04-17
-schwimmen,T,2025-07-21
+schwimmen,W,2025-08-16
 das Schwimmbad,B,2024-07-30
 der See,B,2024-05-19
 sehen,B,2024-04-21
-die Sehenswürdigkeit,T,2025-07-21
+die Sehenswürdigkeit,W,2025-08-16
 sehr,B,2024-04-21
 sein,B,2025-05-11
 an sein,,
 auf sein,3M,2025-09-17
 weg sein,B,2024-05-19
-zu sein,T,2025-07-21
+zu sein,W,2025-08-16
 seit,B,2025-05-11
-selbstständig,T,2025-07-21
+selbstständig,T,2025-08-10
 sich,B,2024-11-04
 sie,B,2024-12-03
 Sie,,
@@ -736,7 +736,7 @@ der Sohn,B,2024-07-31
 sollen,B,2024-11-04
 die Sonne,3M,2025-08-27
 spät,,
-später,T,2025-07-21
+später,W,2025-08-16
 die Speisekarte,B,2024-05-21
 spielen,B,2024-02-26
 der Sport,B,2025-03-04
@@ -745,11 +745,11 @@ sprechen,B,2025-05-11
 die Stadt,B,2024-04-21
 stehen,,
 die Stelle,B,2024-11-04
-stellen,T,2025-07-21
-der Stock,T,2025-07-21
+stellen,T,2025-08-10
+der Stock,W,2025-08-16
 die Straße,B,2024-12-04
 die Straßenbahn,,
-studieren,T,2025-07-21
+studieren,W,2025-08-16
 das Studium,B,2024-04-24
 der Student,B,2025-06-01
 die Stunde,B,2024-04-21
@@ -763,16 +763,16 @@ telefonieren,B,2024-06-13
 das Telefon,B,2024-04-24
 der Termin,B,2024-12-04
 der Test,B,2024-02-26
-teuer,T,2025-07-21
-der Text,T,2025-07-21
+teuer,W,2025-08-16
+der Text,W,2025-08-16
 das Thema,B,2025-05-11
 das Ticket,B,2024-09-17
-der Tisch,T,2025-07-21
+der Tisch,W,2025-08-16
 die Tochter,B,2024-02-26
 die Toilette,,
 die Tomate,B,2025-02-03
 tot,B,2024-06-16
-treffen,T,2025-07-21
+treffen,W,2025-08-16
 die Treppe,B,2025-02-03
 trinken,,
 tschüss,B,2025-02-03
@@ -781,15 +781,15 @@ über,B,2025-06-02
 übernachten,,
 überweisen,B,2025-02-03
 die Uhr,B,2024-06-16
-um,T,2025-07-21
+um,W,2025-08-16
 umziehen,B,2024-06-16
 und,B,2024-04-29
 unser,,
 unten,,
 unter,,
-der Unterricht,M,2025-07-23
+der Unterricht,3M,2025-11-07
 unterschreiben,B,2024-04-29
-die Unterschrift,T,2025-07-21
+die Unterschrift,W,2025-08-16
 der Urlaub,B,2024-06-16
 der Vater,B,2024-06-16
 verboten,B,2024-04-29

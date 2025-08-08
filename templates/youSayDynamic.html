@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>You Say</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
+    <link rel="stylesheet" href="static/css/dark-mode.css" id="dark-mode-stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        const englishTranslationUrl = "{{ url_for('conversationEnglishTranslation') }}";
-        const spellGrammarCheckUrl = "{{ url_for('conversationSpellGrammarCheck') }}";
+        const englishTranslationUrl = "conversationEnglishTranslation";
+        const spellGrammarCheckUrl = "conversationSpellGrammarCheck";
 
         $(document).ready(function () {
             $.ajax({
@@ -122,11 +122,11 @@
     <h3>English Translation:</h3>
     <p id="dynamic-english">thinking...</p>
 
-    <form id="youSayForm" method="POST" action="{{ url_for('youSay') }}">
+    <form id="youSayForm" method="POST" action="youSay">
         <button class="custom-button">🗨️ Continue</button>
     </form>
 
-    <a href="{{ url_for('index') }}">
+    <a href="./">
         <button class="custom-button">🏠 Go Home</button>
     </a>
 

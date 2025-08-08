@@ -89,7 +89,7 @@
 
     <h1>My German Friend</h1>
 
-    <form id="story-form" method="POST" action="{{ url_for('story_scenario') }}">
+    <form id="story-form" method="POST" action="story_scenario">
         <select name="wortlist" id="wortlist" class="custom-select">
             <option value="A1Wortlist.csv" selected>A1 Wortlist</option>
             <option value="A2Wortlist.csv">A2 Wortlist</option>
@@ -97,7 +97,7 @@
         <button type="submit" class="custom-button">📖 Show German Story</button>
     </form>
 
-    <form id="converse-form" method="POST" action="{{ url_for('germanConversation') }}">
+    <form id="converse-form" method="POST" action="germanConversation">
         <select name="wortlist" id="wortlist2" class="custom-select">
             <option value="A1Wortlist.csv" selected>A1 Wortlist</option>
             <option value="A2Wortlist.csv">A2 Wortlist</option>

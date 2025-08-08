@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>German Story with Translation</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
+    <link rel="stylesheet" href="static/css/dark-mode.css" id="dark-mode-stylesheet">
 
     <style>
         body {
@@ -93,7 +93,7 @@
 
             if (isGenerating) {
                 const checkStatus = () => {
-                    fetch('/german_story_status')
+                    fetch('german_story_status')
                         .then(res => res.json())
                         .then(data => {
                             if (data.status === 'done') {
@@ -117,7 +117,7 @@
     <h3>English Translation 🇬🇧</h3>
     <div id="english-text" class="story-box">{{ result.englishStory | trim }}</div>
 
-    <a href="{{ url_for('index') }}">
+    <a href="./">
         <button class="custom-button">🏠 Go Home</button>
     </a>
 

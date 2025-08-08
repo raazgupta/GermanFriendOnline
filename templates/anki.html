@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Vocabulary Review</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
+    <link rel="stylesheet" href="static/css/dark-mode.css" id="dark-mode-stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        const ankiSentenceUrl = "{{ url_for('ankiSentence') }}";
+        const ankiSentenceUrl = "ankiSentence";
 
         $(document).ready(function() {
             $.ajax({
@@ -93,7 +93,7 @@
 
     <p id="dynamic-anki-sentence">Loading sentence…</p>
 
-    <form method="POST" action="{{ url_for('anki_translate') }}">
+    <form method="POST" action="ankiTranslate">
         <button type="submit" class="custom-button">🔍 Translation</button>
     </form>
 

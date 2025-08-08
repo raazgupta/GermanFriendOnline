@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <base href="./">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Story Scenario</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
+    <link rel="stylesheet" href="static/css/dark-mode.css" id="dark-mode-stylesheet">
 
     <style>
         body {
@@ -85,7 +86,7 @@
 
     <h1>Story Scenario 🇩🇪</h1>
 
-    <form method="POST" action="{{ url_for('stats_and_start_anki') }}">
+    <form method="POST" action="stats_and_start_anki">
         <textarea id="scenarioText"
                   name="scenarioText"
                   placeholder="What should the story be about?" required></textarea>

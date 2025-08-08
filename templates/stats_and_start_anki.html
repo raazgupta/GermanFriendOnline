@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Vocabulary Practice & German Story</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
+    <link rel="stylesheet" href="static/css/dark-mode.css" id="dark-mode-stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        const ankiSentencesUrl = "{{ url_for('ankiSentencesResponse') }}";
+        const ankiSentencesUrl = "ankiSentencesResponse";
 
         $(document).ready(function() {
             function fetchAnkiSentencesResponse() {
@@ -123,7 +123,7 @@
     <p>Pending:  {{ result.numberPending  }}</p>
     <p>Last Run: {{ result.lastRunDateTime }}</p>
 
-    <form method="POST" action="{{ url_for('anki') }}">
+    <form method="POST" action="anki">
         <button id="practice_vocabulary_button"
                 type="submit"
                 class="custom-button"

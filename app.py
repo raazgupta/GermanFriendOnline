@@ -7,14 +7,17 @@ from datetime import datetime, timedelta
 import json
 import unicodedata
 from threading import Thread
-
-# file_path = "A1Wortlist.csv"
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
 
 # Use server-side session storage
 app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = os.path.join(os.getcwd(), 'flask_session_data')
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
 Session(app)
 
 # Store background results (use Redis or DB in production)
@@ -626,12 +629,12 @@ def updateReviewDate():
 
     if (selected_words_position + 1) < len(selected_words_lineNumber):
         # return redirect(url_for('anki', _external=False))
-        return redirect(url_for('anki'))
+        return redirect('anki')
     else:
         # Update the Wortlist file with updated frequency and date
         save_to_csv()
         # Show the German Story with translation
-        return redirect(url_for('german_story_with_translation'))
+        return redirect('german_story_with_translation')
 
 @app.route('/germanConversation', methods=['POST'])
 def germanConversation():
@@ -756,7 +759,6 @@ def get_last_run_datetime():
 
 @app.route('/')
 def index():
-
     return render_template('index.html')
 
 if __name__ == '__main__':
