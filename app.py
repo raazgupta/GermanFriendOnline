@@ -113,6 +113,9 @@ def get_burned_words(wortlist_file):
         except FileNotFoundError:
             print(f"File not found: {path}")
 
+    # Shuffle to ensure random order each time
+    random.shuffle(burned_words)
+
     return burned_words
 
 

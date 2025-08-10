@@ -2,15 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Important for full-screen on iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#fbbf24" />
+
     <title>My German Friend</title>
 
+    <!-- Optional: your app icon for the Home Screen -->
+    <!-- <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}"> -->
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
+
     <style>
+        /* Respect iOS safe areas in standalone/full-screen mode */
+        html, body { height: 100%; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 1em;
+            padding: calc(1em + env(safe-area-inset-top)) 1em calc(1em + env(safe-area-inset-bottom)) 1em;
             background: linear-gradient(to bottom right, #fffefc, #fdf6e3);
             color: #1a202c;
         }
@@ -18,9 +29,9 @@
         h1 {
             font-size: 32px;
             text-align: center;
-            color: #000000; /* Black */
+            color: #000000;
             margin-bottom: 1.2em;
-            text-shadow: 1px 1px #fbbf24; /* subtle gold shadow */
+            text-shadow: 1px 1px #fbbf24;
         }
 
         form {
@@ -36,16 +47,15 @@
             margin-top: 10px;
             border: none;
             border-radius: 10px;
-            background-color: #fbbf24; /* Gold */
+            background-color: #fbbf24;
             color: black;
             font-weight: bold;
             box-shadow: 0 3px 6px rgba(0,0,0,0.15);
             transition: background-color 0.3s ease, transform 0.2s ease;
             cursor: pointer;
         }
-
         .custom-button:hover {
-            background-color: #ef4444; /* Red */
+            background-color: #ef4444;
             color: white;
             transform: scale(1.05);
         }
@@ -54,9 +64,9 @@
             font-size: 18px;
             padding: 10px 16px;
             border-radius: 8px;
-            border: 2px solid #000000; /* Black border */
+            border: 2px solid #000000;
             margin-bottom: 10px;
-            background-color: #fff5c2; /* light gold */
+            background-color: #fff5c2;
             color: #000000;
             font-weight: 500;
         }
@@ -66,22 +76,13 @@
             text-align: center;
             font-style: italic;
             margin-top: 1.5em;
-            color: #ef4444; /* red */
+            color: #ef4444;
         }
 
         @media (max-width: 600px) {
-            h1 {
-                font-size: 26px;
-            }
-
-            .custom-button, .custom-select {
-                font-size: 16px;
-                width: 90%;
-            }
-
-            form {
-                width: 100%;
-            }
+            h1 { font-size: 26px; }
+            .custom-button, .custom-select { font-size: 16px; width: 90%; }
+            form { width: 100%; }
         }
     </style>
 </head>
@@ -113,7 +114,6 @@
         document.addEventListener("DOMContentLoaded", function () {
             const storyForm = document.getElementById("story-form");
             const loading = document.getElementById("loading");
-
             storyForm.addEventListener("submit", function () {
                 loading.style.display = "block";
             });

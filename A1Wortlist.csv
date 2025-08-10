@@ -4,7 +4,7 @@ Adresse,3M,2025-08-23
 Telefon,B,2024-09-30
 Geburtsdatum,,
 Geburtsort,,
-Alter,W,2025-08-10
+Alter,M,2025-09-10
 Wohnung,3M,2025-09-29
 Räume,M,2025-09-01
 Einrichtung,M,2025-08-15
@@ -214,35 +214,35 @@ sein,,
 antworten,B,2024-06-10
 die Antwort,B,2024-09-30
 die Anzeige,B,2024-05-28
-anziehen,W,2025-08-10
+anziehen,M,2025-09-10
 das Apartment,B,2025-02-24
 der Apfel,B,2024-06-10
 der Appetit,,
 arbeiten,,
 die Arbeit,B,2024-05-06
-arbeitslos,W,2025-08-10
+arbeitslos,M,2025-09-10
 der Arbeitsplatz,B,2025-05-11
-der Arm,W,2025-08-10
+der Arm,M,2025-09-10
 der Arzt,B,2025-01-07
 auch,B,2024-10-21
 auf,,
 die Aufgabe,B,2024-01-28
-aufhören,W,2025-08-10
-aufstehen,W,2025-08-10
+aufhören,M,2025-09-10
+aufstehen,M,2025-09-10
 der Aufzug,B,2025-05-25
 das Auge,,
 aus,,
 der Ausflug,,
-ausfüllen,W,2025-08-10
+ausfüllen,M,2025-09-10
 der Ausgang,B,2024-09-26
 die Auskunft,,
 das Ausland,B,2025-05-11
 der Ausländer,B,2024-11-18
 ausländisch,,
 ausmachen,,
-die Aussage,W,2025-08-10
-aussehen,W,2025-08-10
-aus sein,W,2025-08-10
+die Aussage,M,2025-09-10
+aussehen,M,2025-09-10
+aus sein,T,2025-08-12
 aussteigen,B,2024-03-18
 der Ausweis,B,2025-04-03
 ausziehen,W,2025-08-10
