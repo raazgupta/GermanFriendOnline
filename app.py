@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_session import Session
 import openai
+from openai import OpenAI
 import os
 import random
 from datetime import datetime, timedelta
@@ -12,6 +13,9 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 # Use server-side session storage
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -65,10 +69,10 @@ def generate_story_background(session_key, wortlist_file, scenario_text):
         ]
 
         try:
-            german_story = get_completion_from_messages(messages, model="o4-mini", temperature=0.2, max_tokens=10000)
+            german_story = get_completion_from_messages(messages, model="gpt-5", max_tokens=20000, reasoning_effort="medium")
             messages.append({'role': 'assistant', 'content': german_story})
             messages.append({'role': 'user', 'content': 'Translate this German story to English.'})
-            english_story = get_completion_from_messages(messages, model="o4-mini", max_tokens=10000)
+            english_story = get_completion_from_messages(messages, model="gpt-5-mini", max_tokens=10000)
             story_results[session_key] = {
                 'status': 'done',
                 'german': german_story.strip(),
@@ -81,8 +85,7 @@ def generate_story_background(session_key, wortlist_file, scenario_text):
                 'english': ""
             }
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
-# print(openai.api_key)
+
 
 # If reviewing A1Wortlist, the burned worts are from A1 list
 # If reviewing A2Wortlist, then burned worts are from A1 and A2 list.
@@ -120,13 +123,21 @@ def get_burned_words(wortlist_file):
 
 
 
-def get_completion_from_messages(messages, model="gpt-4o-mini", temperature=0.0, max_tokens=500):
-    response = openai.chat.completions.create(
+def get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=2000, reasoning_effort="minimal"):
+    """
+    messages: [{'role':'system','content':'...'}, {'role':'user','content':'...'}, ...]
+    reasoning_effort: "low", "medium", or "high"
+    """
+    resp = client.responses.create(
         model=model,
-        messages=messages,
-        max_completion_tokens=max_tokens,
+        input=messages,
+        max_output_tokens=max_tokens,
+        reasoning={
+            "effort": reasoning_effort
+        }
     )
-    return response.choices[0].message.content
+
+    return resp.output_text
 
 def get_response_from_assistant(assistant_id, thread_id):
     run = openai.beta.threads.runs.create(
@@ -500,7 +511,7 @@ def anki_translate():
          'content': f"One Word English translation for: {wort}"
          },
     ]
-    response = get_completion_from_messages(messages, temperature=0)
+    response = get_completion_from_messages(messages, model="gpt-5-nano")
     result_data['translation'] = response
 
     # Request for next Frequency
@@ -558,7 +569,7 @@ def translateToEnglish(germanText):
          }
     ]
 
-    englishVersion = get_completion_from_messages(messages, max_tokens=100)
+    englishVersion = get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=100)
 
     return englishVersion
 
@@ -576,7 +587,7 @@ def correctSpellingGrammar(germanText):
     ]
     # print("correctSpellingGrammar:")
     # print(messages)
-    correctSpellingGrammarVersion = get_completion_from_messages(messages, model="gpt-4o-mini", max_tokens=500)
+    correctSpellingGrammarVersion = get_completion_from_messages(messages, model="gpt-5-mini", max_tokens=500)
     # print(correctSpellingGrammarVersion)
 
     return correctSpellingGrammarVersion
