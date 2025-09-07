@@ -12,11 +12,21 @@
         const ankiSentenceUrl = "ankiSentence";
 
         $(document).ready(function() {
+            // Fetch the German sentence for the current word
             $.ajax({
                 url: ankiSentenceUrl,
                 method: 'GET',
                 success: function(data) {
                     $('#dynamic-anki-sentence').text(data);
+                    // Kick off background prefetch of translations while the user reviews
+                    $.ajax({
+                        url: 'anki_prefetch',
+                        method: 'POST',
+                        success: function(_) {},
+                        error: function(err) {
+                            console.error('Error starting prefetch:', err);
+                        }
+                    });
                 },
                 error: function(err) {
                     console.error('Error fetching Anki sentence:', err);

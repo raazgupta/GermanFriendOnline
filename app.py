@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import json
 import unicodedata
 from threading import Thread
+from concurrent.futures import ThreadPoolExecutor
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
@@ -26,6 +27,10 @@ Session(app)
 
 # Store background results (use Redis or DB in production)
 story_results = {}  # Dict to hold story by session ID or custom token
+
+# Background prefetch state for Anki translations
+# Keyed by f"{session_id}:{card_number}" and stores statuses/results
+anki_translation_jobs = {}
 
 # ------------------------------------------------------------------------------
 # 1) constants and helper
@@ -138,6 +143,74 @@ def get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=2000, 
     )
 
     return resp.output_text
+
+def _get_session_id():
+    try:
+        return session.sid
+    except Exception:
+        # Fallback if Flask-Session sid is unavailable
+        return request.cookies.get(app.session_cookie_name, "unknown")
+
+def _anki_job_key(card_number: int):
+    return f"{_get_session_id()}:{card_number}"
+
+## Removed JSON parse fallback for sentence resolution; rely on session['anki_sentence']
+
+def _start_anki_prefetch(card_number: int, wort: str, german_sentence: str):
+    """Start background tasks to fetch: (1) one-word translation, (2) English sentence translation.
+    Stores progress/results in anki_translation_jobs.
+    """
+    if card_number is None or not wort:
+        return False
+
+    key = _anki_job_key(card_number)
+    # If an existing job for this card exists and is in progress or done, don't restart
+    existing = anki_translation_jobs.get(key)
+    if existing and (existing.get('word_status') in ('in_progress', 'done') or existing.get('sentence_status') in ('in_progress', 'done')):
+        return True
+
+    anki_translation_jobs[key] = {
+        'word': wort,
+        'german_sentence': german_sentence or '',
+        'word_translation': None,
+        'word_status': 'in_progress' if wort else 'error',
+        'sentence_translation': None,
+        'sentence_status': 'in_progress',
+        'created_at': datetime.utcnow().isoformat()
+    }
+
+    def compute_word():
+        try:
+            messages = [
+                {'role': 'system', 'content': 'You are a German teacher.'},
+                {'role': 'user', 'content': 'One Word English translation for: Klima'},
+                {'role': 'assistant', 'content': 'Climate'},
+                {'role': 'user', 'content': f'One Word English translation for: {wort}'},
+            ]
+            resp = get_completion_from_messages(messages, model="gpt-5-nano")
+            anki_translation_jobs[key]['word_translation'] = resp.strip()
+            anki_translation_jobs[key]['word_status'] = 'done'
+        except Exception as e:
+            anki_translation_jobs[key]['word_translation'] = f"Error: {e}"
+            anki_translation_jobs[key]['word_status'] = 'error'
+
+    def compute_sentence():
+        try:
+            # Use german sentence captured at job creation; avoid accessing Flask session in background threads
+            gs = german_sentence or anki_translation_jobs.get(key, {}).get('german_sentence')
+            if not gs:
+                raise ValueError('No German sentence found for this word')
+            resp = translateToEnglish(gs)
+            anki_translation_jobs[key]['sentence_translation'] = resp.strip()
+            anki_translation_jobs[key]['sentence_status'] = 'done'
+        except Exception as e:
+            anki_translation_jobs[key]['sentence_translation'] = f"Error: {e}"
+            anki_translation_jobs[key]['sentence_status'] = 'error'
+
+    # Run in background threads
+    Thread(target=compute_word, daemon=True).start()
+    Thread(target=compute_sentence, daemon=True).start()
+    return True
 
 def get_response_from_assistant(assistant_id, thread_id):
     run = openai.beta.threads.runs.create(
@@ -433,10 +506,13 @@ def anki():
 
         wort = selected_words_lineNumber[selected_words_position][0]
         session['anki_word'] = wort
+        # Track current card number for polling/prefetch keying
+        number = selected_words_position + 1
+        session['current_anki_number'] = number
 
         result_data = {
             'wort': wort,
-            'number': selected_words_position + 1
+            'number': number
         }
 
         return render_template('anki.html', result = result_data)
@@ -484,8 +560,14 @@ def anki_translate():
     if (selected_words_position + 1) == len(selected_words_lineNumber):
         final_word = 1
 
+    # Try to use prefetch results if available; otherwise, show placeholder and poll on page
+    # Ensure current card number is tracked
+    session['current_anki_number'] = number
+
+    # Prepare base result
     result_data = {
-        'translation': '',
+        'translation': 'thinking...',
+        'sentence_translation': 'thinking...',
         'frequency1': '',
         'frequency2': '',
         'frequency1_display': '',
@@ -494,25 +576,18 @@ def anki_translate():
         'number': number
     }
 
-    # Get the English translation using OpenAI
-    messages = [
-        {'role': 'system',
-         'content': """
-         You are a German teacher. 
-         """
-         },
-        {'role': 'user',
-         'content': "One Word English translation for: Klima"
-         },
-        {'role': 'assistant',
-         'content': "Climate"
-         },
-        {'role': 'user',
-         'content': f"One Word English translation for: {wort}"
-         },
-    ]
-    response = get_completion_from_messages(messages, model="gpt-5-nano")
-    result_data['translation'] = response
+    # Fill from prefetch if ready; if job absent, start it now in background
+    key = _anki_job_key(number)
+    job = anki_translation_jobs.get(key)
+    if not job:
+        # Source German sentence from session only
+        german_sentence = session.get('anki_sentence')
+        _start_anki_prefetch(number, wort, german_sentence)
+        job = anki_translation_jobs.get(key)
+    if job and job.get('word_status') == 'done' and job.get('word_translation'):
+        result_data['translation'] = job['word_translation']
+    if job and job.get('sentence_status') == 'done' and job.get('sentence_translation'):
+        result_data['sentence_translation'] = job['sentence_translation']
 
     # Request for next Frequency
     currentFrequency = selected_words_lineNumber[selected_words_position][2]
@@ -556,6 +631,54 @@ def ankiSentenceEnglish():
    anki_sentence = session['anki_sentence']
    anki_sentence_english = translateToEnglish(anki_sentence)
    return anki_sentence_english
+
+
+@app.route('/anki_prefetch', methods=['POST'])
+def anki_prefetch():
+    """Starts background prefetch of translations for the current card.
+    Called by anki.html after the German sentence is shown.
+    """
+    selected_words_lineNumber = session.get('selected_words_lineNumber')
+    selected_words_position = session.get('selected_words_position', 0)
+    if not selected_words_lineNumber:
+        return jsonify({'ok': False, 'error': 'Session expired'}), 400
+
+    wort = selected_words_lineNumber[selected_words_position][0]
+    number = selected_words_position + 1
+    session['anki_word'] = wort
+    session['current_anki_number'] = number
+
+    # Find German sentence for this wort from session only
+    german_sentence = session.get('anki_sentence')
+    if not german_sentence:
+        return jsonify({'ok': False, 'error': 'No sentence available in session'}), 400
+
+    started = _start_anki_prefetch(number, wort, german_sentence)
+    return jsonify({'ok': started})
+
+
+@app.route('/anki_poll', methods=['GET'])
+def anki_poll():
+    """Poll current card prefetch status/results for word and sentence translations."""
+    selected_words_position = session.get('selected_words_position', 0)
+    number = session.get('current_anki_number', selected_words_position + 1)
+    key = _anki_job_key(number)
+    job = anki_translation_jobs.get(key)
+    if not job:
+        return jsonify({
+            'word_status': 'pending',
+            'sentence_status': 'pending'
+        })
+
+    payload = {
+        'word_status': job.get('word_status', 'pending'),
+        'sentence_status': job.get('sentence_status', 'pending')
+    }
+    if job.get('word_status') == 'done':
+        payload['word_translation'] = job.get('word_translation', '')
+    if job.get('sentence_status') == 'done':
+        payload['sentence_translation'] = job.get('sentence_translation', '')
+    return jsonify(payload)
 
 def translateToEnglish(germanText):
     messages = [
