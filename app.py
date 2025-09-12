@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import json
 import unicodedata
 from threading import Thread
-from concurrent.futures import ThreadPoolExecutor
+import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
@@ -27,6 +27,8 @@ Session(app)
 
 # Store background results (use Redis or DB in production)
 story_results = {}  # Dict to hold story by session ID or custom token
+# Background sentences generation for Anki (Responses API)
+anki_sentences_jobs = {}  # { session_id: {status: 'in_progress'|'done'|'error', response: str, error: str} }
 
 # Background prefetch state for Anki translations
 # Keyed by f"{session_id}:{card_number}" and stores statuses/results
@@ -37,15 +39,7 @@ anki_translation_jobs = {}
 # ------------------------------------------------------------------------------
 DEFAULT_WORTLIST_FILE = "A1Wortlist.csv"
 
-# replace these placeholders with your actual A2 assistant IDs:
-ASSISTANT_IDS_ANKI = {
-    "A1Wortlist.csv": "asst_qXm8leIYM7P33EpQb0m582g7",
-    "A2Wortlist.csv": "asst_tops2pTTY9Db4Nc7qkgNXULq"
-}
-ASSISTANT_IDS_CONVERSATION = {
-    "A1Wortlist.csv": "asst_SMi97meJ2ArZr2iMwNSQ2Hy0",
-    "A2Wortlist.csv": "asst_tops2pTTY9Db4Nc7qkgNXULq"
-}
+# Assistant IDs no longer used after migration to Responses API
 
 def get_current_wortlist_file():
     # fall back to default if none selected
@@ -144,6 +138,11 @@ def get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=2000, 
 
     return resp.output_text
 
+def get_selected_level():
+    """Return 'A1' or 'A2' based on the user's wortlist choice."""
+    file_path = get_current_wortlist_file()
+    return 'A2' if file_path == 'A2Wortlist.csv' else 'A1'
+
 def _get_session_id():
     try:
         return session.sid
@@ -212,64 +211,7 @@ def _start_anki_prefetch(card_number: int, wort: str, german_sentence: str):
     Thread(target=compute_sentence, daemon=True).start()
     return True
 
-def get_response_from_assistant(assistant_id, thread_id):
-    run = openai.beta.threads.runs.create(
-        thread_id=thread_id,
-        assistant_id=assistant_id
-    )
-
-    while run.status in ["queued", "in_progress"]:
-        run = openai.beta.threads.runs.retrieve(
-            thread_id=thread_id,
-            run_id=run.id
-        )
-    if run.status == "completed":
-        thread_messages = openai.beta.threads.messages.list(thread_id=thread_id, order="desc")
-        try:
-            message_content = thread_messages.data[0].content[0].text
-            annotations = message_content.annotations
-            for annotation in annotations:
-                message_content.value = message_content.value.replace(annotation.text, "")
-            response = message_content.value
-        except Exception as e:
-            response = f"An unexpected error occurred: {e}"
-    else:
-        # print(run)        
-        response = "Error: OpenAI Run Failed"
-
-    return response
-
-
-# Function to start the assistant run
-def start_assistant_run(assistant_id, thread_id):
-    run = openai.beta.threads.runs.create(
-        thread_id=thread_id,
-        assistant_id=assistant_id
-    )
-    return run.id
-
-# Function to check if assistant run is complete and provide the latest status and if complete the latest message as response
-def check_assistant_run_completed(thread_id, run_id):
-    run = openai.beta.threads.runs.retrieve(
-        thread_id=thread_id,
-        run_id=run_id
-    )
-
-    if run.status == "completed":
-        thread_messages = openai.beta.threads.messages.list(thread_id=thread_id, order="desc")
-        try:
-            message_content = thread_messages.data[0].content[0].text
-            annotations = message_content.annotations
-            for annotation in annotations:
-                message_content.value = message_content.value.replace(annotation.text, "")
-            response = message_content.value
-        except Exception as e:
-            response = f"An unexpected error occurred: {e}"
-    else:
-        # print(run)
-        response = "Error: OpenAI Run Failed"
-
-    return run.status, response
+## Removed: Assistants API helpers (migrated to Responses API)
 
 
 def chooseSelectedWords():
@@ -353,35 +295,38 @@ def chooseSelectedWords():
     return selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow
 
 def create_anki_english_sentences(selected_words):
+    # Function to get Anki sentences in 1 go in JSON format using Responses API.
+    # Starts a background task and does not wait for completion
+    session_key = session.sid
+    anki_sentences_jobs[session_key] = {'status': 'in_progress'}
 
-    #assistant_id = "asst_qXm8leIYM7P33EpQb0m582g7"
+    def task():
+        level = get_selected_level()
+        prompt = f"""
+            You are creating example sentences for vocabulary review at level {level}.
+            1) For each of these words, write exactly one simple, natural German sentence: {', '.join(selected_words)}.
+            2) Constraint: Use only nouns and verbs that are part of the Goethe-Zertifikat {level} vocabulary list. Do not use any noun or verb that is outside this list.
+               Function words (articles, pronouns, prepositions, conjunctions) are allowed as needed.
+            3) Keep grammar and vocabulary appropriate for level {level}.
+            4) Output must be pure JSON (no markdown fences), with each key as the word and the value as its German sentence.
+            Example only: {{"Word1": "German sentence for Word1"}}
+        """
+        messages = [
+            {'role': 'system', 'content': 'You are a helpful language teacher.'},
+            {'role': 'user', 'content': prompt}
+        ]
+        try:
+            resp = get_completion_from_messages(messages, model="gpt-5-mini", max_tokens=2000)
+            cleaned = resp.strip()
+            # Clean potential code fences or leading 'json'
+            if cleaned.lower().startswith('json'):
+                cleaned = cleaned[4:].strip()
+            cleaned = cleaned.strip('`')
+            anki_sentences_jobs[session_key] = {'status': 'done', 'response': cleaned}
+        except Exception as e:
+            anki_sentences_jobs[session_key] = {'status': 'error', 'error': str(e)}
 
-    # Function to get Anki sentences in 1 go in JSON format. This function starts the run and does not wait for completion
-    file_path = get_current_wortlist_file()
-    assistant_id = ASSISTANT_IDS_ANKI.get(file_path, ASSISTANT_IDS_ANKI[DEFAULT_WORTLIST_FILE])
-
-
-    sentences_content = f"""
-                1. Write 1 sentence in simple German for each of these words: {",".join(selected_words)}
-                2. Provide the response in JSON format where the keys are the words and the values are the corresponding German sentences
-                For example: 
-                    "Word1": "German sentence for Word1",
-                    "Word2": "German sentence for Word2",
-                    "Word3": "German sentence for Word3",
-                """
-
-    # print("Sentences content" + sentences_content)
-
-    sentences_thread = openai.beta.threads.create()
-    session['sentences_thread_id'] = sentences_thread.id
-
-    openai.beta.threads.messages.create(
-        thread_id=sentences_thread.id,
-        role="user",
-        content=sentences_content
-    )
-
-    session['sentences_run_id'] = start_assistant_run(assistant_id, sentences_thread.id)
+    Thread(target=task, daemon=True).start()
 
 def save_to_csv():
 
@@ -462,40 +407,19 @@ def stats_and_start_anki():
 
 @app.route('/ankiSentencesResponse', methods=['POST','GET'])
 def ankiSentencesResponse():
-    sentences_thread_id = session['sentences_thread_id']
-    sentences_run_id = session['sentences_run_id']
-
-    run_status = "in_progress"
-    response = "Error"
-
-    # print("sentences generation in progress...")
-
-    while run_status == "queued" or run_status == "in_progress":
-        run_status, response = check_assistant_run_completed(sentences_thread_id, sentences_run_id)
-
-    # Print run steps
-
-    run_steps = openai.beta.threads.runs.steps.list(
-        thread_id=sentences_thread_id,
-        run_id=sentences_run_id
-    )
-    # print(run_steps)
-
-    # print("run status:" + run_status)
-    # print("Sentences response:" + response)
-
-    if run_status == "completed":
-
-        'Clean up the JSON response'
-        if 'json' in response:
-            response = response.replace('json','',1).strip()
-        response = response.strip("```")
-
-        session['anki_sentences'] = response
-    else:
-        session['anki_sentences'] = "Error"
-
-    return response
+    # Block until the background job (Responses API) finishes, then return the JSON string
+    session_key = session.sid
+    # Wait loop similar to previous behavior
+    while True:
+        job = anki_sentences_jobs.get(session_key)
+        if job and job.get('status') == 'done':
+            response = job.get('response', '')
+            session['anki_sentences'] = response
+            return response
+        if job and job.get('status') == 'error':
+            session['anki_sentences'] = 'Error'
+            return 'Error'
+        time.sleep(0.5)
 
 
 @app.route('/anki', methods=['POST','GET'])
@@ -786,72 +710,45 @@ def germanScenario():
 
     scenarioText = request.form['scenarioText']
 
-    # scenarioText = scenarioText + ". You will always respond in German. Only use words that are from the Goethe-Zertifikat A1 vocabulary list."
-
-    # Start a CharGPT conversation with the scenarioText as the system message
-    # conversationMessages = [
-    #     {'role': 'system',
-    #      'content': scenarioText
-    #      }
-    # ]
-
-    # session['conversationMessages'] = conversationMessages
-
-    chat_thread = openai.beta.threads.create()
-
-    message = openai.beta.threads.messages.create(
-        thread_id=chat_thread.id,
-        role="user",
-        content=scenarioText
-    )
-
-    session['chat_thread_id'] = chat_thread.id
+    # Initialize conversation using Responses API by storing messages in session
+    level = get_selected_level()
+    system_prompt = f"""
+        {scenarioText}
+        Guidelines:
+        - Respond in German.
+        - Use only nouns and verbs that are in the Goethe-Zertifikat {level} vocabulary list.
+        - Keep sentences simple and suitable for level {level}.
+    """.strip()
+    conversationMessages = [
+        {'role': 'system', 'content': system_prompt}
+    ]
+    session['conversationMessages'] = conversationMessages
 
     return render_template('iSay.html', result=result_data)
 
 @app.route('/iSayDynamic', methods=['POST'])
 def iSayDynamic():
-
-    #assistant_id = "asst_SMi97meJ2ArZr2iMwNSQ2Hy0"
-
-    # pick the right assistant for A1 vs A2
-    file_path = get_current_wortlist_file()
-    assistant_id = ASSISTANT_IDS_CONVERSATION.get(file_path, ASSISTANT_IDS_CONVERSATION[DEFAULT_WORTLIST_FILE])
-
     session['iSayText'] = request.form['iSayText']
     iSayText = request.form['iSayText']
 
-    # conversationMessages = session['conversationMessages']
+    conversationMessages = session.get('conversationMessages', [])
+    if not conversationMessages:
+        level = get_selected_level()
+        conversationMessages = [{
+            'role': 'system',
+            'content': f'You are a helpful language teacher. Respond in German and use only nouns and verbs from the Goethe-Zertifikat {level} vocabulary list. Keep sentences simple and level-appropriate ({level}).'
+        }]
 
-    """
-    conversationMessages.append(
-        {'role': 'user',
-         'content': iSayText
-         }
-    )
-    """
+    # Append the user's message
+    conversationMessages.append({'role': 'user', 'content': iSayText})
 
-    chat_thread_id = session['chat_thread_id']
+    # Get assistant reply via Responses API
+    youSayText = get_completion_from_messages(conversationMessages, model="gpt-5-mini", max_tokens=400)
 
-    isay_message = openai.beta.threads.messages.create(
-        thread_id=chat_thread_id,
-        role="user",
-        content=iSayText
-    )
-
-    # youSayText = get_completion_from_messages(conversationMessages, max_tokens=100)
-
-    youSayText = get_response_from_assistant(assistant_id, chat_thread_id)
-
-    session['youSayText'] = youSayText
-    """
-    conversationMessages.append(
-        {'role': 'assistant',
-         'content': youSayText
-         }
-    )
+    # Update conversation history
+    conversationMessages.append({'role': 'assistant', 'content': youSayText})
     session['conversationMessages'] = conversationMessages
-    """
+    session['youSayText'] = youSayText
 
     result_data = {
         'youSayText': youSayText,
