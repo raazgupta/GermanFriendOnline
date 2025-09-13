@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash, has_request_context
 from flask_session import Session
-import openai
 from openai import OpenAI
 import os
 import random
@@ -16,7 +15,6 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-openai.api_key = os.getenv('OPENAI_API_KEY')
 
 # Use server-side session storage
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -43,7 +41,8 @@ DEFAULT_WORTLIST_FILE = "A1Wortlist.csv"
 
 def get_current_wortlist_file():
     # fall back to default if none selected
-    print(f"Using Wortlist: {session.get('wortlist_file', DEFAULT_WORTLIST_FILE)}")
+    if has_request_context():
+        print(f"Using Wortlist: {session.get('wortlist_file', DEFAULT_WORTLIST_FILE)}")
     return session.get("wortlist_file", DEFAULT_WORTLIST_FILE)
 
 def generate_story_background(session_key, wortlist_file, scenario_text):
@@ -68,10 +67,14 @@ def generate_story_background(session_key, wortlist_file, scenario_text):
         ]
 
         try:
-            german_story = get_completion_from_messages(messages, model="gpt-5", max_tokens=20000, reasoning_effort="medium")
+            # Apply level constraint for vocabulary
+            level = 'A2' if wortlist_file == 'A2Wortlist.csv' else 'A1'
+            messages.insert(1, {'role': 'user', 'content': f"Use only nouns, verbs, and adjectives from the Goethe-Zertifikat {level} vocabulary list."})
+
+            german_story = get_completion_from_messages(messages, model="gpt-5", max_tokens=None, reasoning_effort="medium")
             messages.append({'role': 'assistant', 'content': german_story})
             messages.append({'role': 'user', 'content': 'Translate this German story to English.'})
-            english_story = get_completion_from_messages(messages, model="gpt-5-mini", max_tokens=10000)
+            english_story = get_completion_from_messages(messages, model="gpt-5-mini", max_tokens=None)
             story_results[session_key] = {
                 'status': 'done',
                 'german': german_story.strip(),
@@ -122,19 +125,21 @@ def get_burned_words(wortlist_file):
 
 
 
-def get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=2000, reasoning_effort="minimal"):
+def get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=2000, reasoning_effort="minimal", verbosity=None):
     """
     messages: [{'role':'system','content':'...'}, {'role':'user','content':'...'}, ...]
     reasoning_effort: "low", "medium", or "high"
     """
-    resp = client.responses.create(
-        model=model,
-        input=messages,
-        max_output_tokens=max_tokens,
-        reasoning={
-            "effort": reasoning_effort
-        }
-    )
+    create_args = {
+        "model": model,
+        "input": messages,
+        "reasoning": {"effort": reasoning_effort},
+    }
+    if max_tokens is not None:
+        create_args["max_output_tokens"] = max_tokens
+    if verbosity is not None:
+        create_args["text"] = {"verbosity": verbosity}
+    resp = client.responses.create(**create_args)
 
     return resp.output_text
 
@@ -181,12 +186,13 @@ def _start_anki_prefetch(card_number: int, wort: str, german_sentence: str):
     def compute_word():
         try:
             messages = [
-                {'role': 'system', 'content': 'You are a German teacher.'},
+                {'role': 'system', 'content': 'Respond with a single English word only. No sentences or explanations.'},
                 {'role': 'user', 'content': 'One Word English translation for: Klima'},
                 {'role': 'assistant', 'content': 'Climate'},
                 {'role': 'user', 'content': f'One Word English translation for: {wort}'},
             ]
-            resp = get_completion_from_messages(messages, model="gpt-5-nano")
+            # Remove max_output_tokens (use model default) and set verbosity low for concise output
+            resp = get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=None, verbosity="low")
             anki_translation_jobs[key]['word_translation'] = resp.strip()
             anki_translation_jobs[key]['word_status'] = 'done'
         except Exception as e:
@@ -300,14 +306,16 @@ def create_anki_english_sentences(selected_words):
     session_key = session.sid
     anki_sentences_jobs[session_key] = {'status': 'in_progress'}
 
-    def task():
-        level = get_selected_level()
+    # Capture level while inside request context; do not access session in thread
+    level = get_selected_level()
+
+    def task(level_param):
         prompt = f"""
-            You are creating example sentences for vocabulary review at level {level}.
+            You are creating example sentences for vocabulary review at level {level_param}.
             1) For each of these words, write exactly one simple, natural German sentence: {', '.join(selected_words)}.
-            2) Constraint: Use only nouns and verbs that are part of the Goethe-Zertifikat {level} vocabulary list. Do not use any noun or verb that is outside this list.
+            2) Constraint: Use only nouns, verbs and adjectives that are part of the Goethe-Zertifikat {level_param} vocabulary list. Do not use any noun or verb that is outside this list.
                Function words (articles, pronouns, prepositions, conjunctions) are allowed as needed.
-            3) Keep grammar and vocabulary appropriate for level {level}.
+            3) Keep grammar and vocabulary appropriate for level {level_param}.
             4) Output must be pure JSON (no markdown fences), with each key as the word and the value as its German sentence.
             Example only: {{"Word1": "German sentence for Word1"}}
         """
@@ -326,7 +334,7 @@ def create_anki_english_sentences(selected_words):
         except Exception as e:
             anki_sentences_jobs[session_key] = {'status': 'error', 'error': str(e)}
 
-    Thread(target=task, daemon=True).start()
+    Thread(target=task, args=(level,), daemon=True).start()
 
 def save_to_csv():
 
@@ -371,7 +379,6 @@ def stats_and_start_anki():
     scenario_text = request.form.get('scenarioText', None)
 
     selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow = chooseSelectedWords()
-    percentage_burned = number_burned / (number_burned+number_week+number_month+number_3_month+number_pending)
 
 
     create_anki_english_sentences(selected_words)
@@ -424,6 +431,11 @@ def ankiSentencesResponse():
 
 @app.route('/anki', methods=['POST','GET'])
 def anki():
+        # Guard against missing session state
+        if 'selected_words_lineNumber' not in session or 'selected_words_position' not in session:
+            print("[anki] Missing session keys; redirecting to index.")
+            flash('Session expired — please restart practice', 'warning')
+            return redirect(url_for('index'))
 
         selected_words_lineNumber = session['selected_words_lineNumber']
         selected_words_position = session['selected_words_position']
@@ -457,13 +469,14 @@ def ankiSentence():
         sentences_data = json.loads(anki_sentences)
     except json.JSONDecodeError:
         anki_sentence_for_wort = "Failed to parse JSON. Please check the JSON structure"
-
-    try:
-        wort_normalized = unicodedata.normalize('NFC', wort)
-        sentences_data_normalized = {unicodedata.normalize('NFC', k): v for k, v in sentences_data.items()}
-        anki_sentence_for_wort = sentences_data_normalized.get(wort_normalized)
-    except:
-        anki_sentence_for_wort = 'Failed to get word. Please check if word is in the JSON string'
+    # Only attempt lookup if JSON was parsed into a dict
+    if isinstance(sentences_data, dict):
+        try:
+            wort_normalized = unicodedata.normalize('NFC', wort)
+            sentences_data_normalized = {unicodedata.normalize('NFC', k): v for k, v in sentences_data.items()}
+            anki_sentence_for_wort = sentences_data_normalized.get(wort_normalized)
+        except Exception:
+            anki_sentence_for_wort = 'Failed to get word. Please check if word is in the JSON string'
 
     session['anki_sentence'] = anki_sentence_for_wort
     # print("anki_sentence_for_wort:" + anki_sentence_for_wort)
@@ -472,12 +485,17 @@ def ankiSentence():
 
 @app.route('/ankiTranslate', methods=['POST'])
 def anki_translate():
+    # Guard against missing session (expired or direct navigation)
+    if 'selected_words_lineNumber' not in session or 'selected_words_position' not in session:
+        # Minimal recovery: send user back to start to rebuild session
+        print("[anki_translate] Missing session keys; redirecting to index.")
+        flash('Session expired — please restart practice', 'warning')
+        return redirect(url_for('index'))
 
     selected_words_lineNumber = session['selected_words_lineNumber']
     selected_words_position = session['selected_words_position']
 
     wort = selected_words_lineNumber[selected_words_position][0]
-    lineNumber = selected_words_lineNumber[selected_words_position][1]
     final_word = 0
     number = selected_words_position + 1
 
@@ -598,9 +616,9 @@ def anki_poll():
         'word_status': job.get('word_status', 'pending'),
         'sentence_status': job.get('sentence_status', 'pending')
     }
-    if job.get('word_status') == 'done':
+    if job.get('word_status') in ('done','error'):
         payload['word_translation'] = job.get('word_translation', '')
-    if job.get('sentence_status') == 'done':
+    if job.get('sentence_status') in ('done','error'):
         payload['sentence_translation'] = job.get('sentence_translation', '')
     return jsonify(payload)
 
@@ -716,7 +734,7 @@ def germanScenario():
         {scenarioText}
         Guidelines:
         - Respond in German.
-        - Use only nouns and verbs that are in the Goethe-Zertifikat {level} vocabulary list.
+        - Use only nouns, verbs and adjectives that are in the Goethe-Zertifikat {level} vocabulary list.
         - Keep sentences simple and suitable for level {level}.
     """.strip()
     conversationMessages = [
@@ -736,7 +754,7 @@ def iSayDynamic():
         level = get_selected_level()
         conversationMessages = [{
             'role': 'system',
-            'content': f'You are a helpful language teacher. Respond in German and use only nouns and verbs from the Goethe-Zertifikat {level} vocabulary list. Keep sentences simple and level-appropriate ({level}).'
+            'content': f'You are a helpful language teacher. Respond in German and use only nouns, verbs and adjectives from the Goethe-Zertifikat {level} vocabulary list. Keep sentences simple and level-appropriate ({level}).'
         }]
 
     # Append the user's message
