@@ -47,45 +47,66 @@ def get_current_wortlist_file():
 
 def generate_story_background(session_key, wortlist_file, scenario_text):
     burned_words = get_burned_words(wortlist_file)
+    # Initialize status so the page can render a placeholder immediately
+    story_results[session_key] = {
+        'german_status': 'in_progress',
+        'english_status': 'pending',
+        'german': '',
+        'english': ''
+    }
+
     if not burned_words:
         story_results[session_key] = {
+            'german_status': 'done',
+            'english_status': 'done',
             'german': "No burned words available yet. Please review and burn more words first.",
             'english': "No burned words available yet. Please review and burn more words first."
         }
-    else:
-        prompt = f"""
-                1. Write a short story in German about this scenario: {scenario_text}
-                2. Write this short story in German primarily using the following Burned words:\n{', '.join(burned_words)}\n\n
-                3. Review the short story to confirm that for Nouns or Verbs or Adjectives, only the words in the Burned words list is used
-                4. If you find Nouns, Verbs, Adjectives in the short story that are not in the Burned words list, remove them and rewrite that section of the story to use Burned words.
-                5. Ensure the German story is interesting and follows the user's scenario.
-                6. The output should only be the story.
-                """
+        return
+
+    # Build a concise prompt for faster response
+    prompt = f"""
+            Write an interesting German story for this scenario: {scenario_text}.
+            Can use any Proper Nouns including those that are in the Scenario text such as 'Raj'. 
+            Write the story primarily using Nouns, Verbs and Adjectives that are in this list: {', '.join(burned_words)}.
+            """
+    messages = [
+        {'role': 'system', 'content': 'You are a helpful language teacher.'},
+        {'role': 'user', 'content': prompt}
+    ]
+
+    try:
+        # Use a lighter model and lower reasoning to speed up German story
+        german_story = get_completion_from_messages(messages, model="gpt-5", max_tokens=None, reasoning_effort="medium")
+        german_story = german_story.strip()
+        story_results[session_key]['german'] = german_story
+        story_results[session_key]['german_status'] = 'done'
+
+        # Kick off English translation in a separate thread so the page can update later
+        Thread(target=generate_english_translation, args=(session_key,), daemon=True).start()
+    except Exception as e:
+        story_results[session_key]['german'] = f"Error generating story: {e}"
+        story_results[session_key]['german_status'] = 'error'
+
+
+def generate_english_translation(session_key: str):
+    # Translate the generated German story to English
+    result = story_results.get(session_key)
+    if not result or not result.get('german'):
+        return
+    story_results[session_key]['english_status'] = 'in_progress'
+    try:
         messages = [
             {'role': 'system', 'content': 'You are a helpful language teacher.'},
-            {'role': 'user', 'content': prompt}
+            {'role': 'user', 'content': 'Translate this German story to English.'},
+            {'role': 'assistant', 'content': result['german']}
         ]
-
-        try:
-            # Apply level constraint for vocabulary
-            level = 'A2' if wortlist_file == 'A2Wortlist.csv' else 'A1'
-            messages.insert(1, {'role': 'user', 'content': f"Use only nouns, verbs, and adjectives from the Goethe-Zertifikat {level} vocabulary list."})
-
-            german_story = get_completion_from_messages(messages, model="gpt-5", max_tokens=None, reasoning_effort="medium")
-            messages.append({'role': 'assistant', 'content': german_story})
-            messages.append({'role': 'user', 'content': 'Translate this German story to English.'})
-            english_story = get_completion_from_messages(messages, model="gpt-5-mini", max_tokens=None)
-            story_results[session_key] = {
-                'status': 'done',
-                'german': german_story.strip(),
-                'english': english_story.strip()
-            }
-        except Exception as e:
-            story_results[session_key] = {
-                'status': 'error',
-                'german': f"Error generating story: {e}",
-                'english': ""
-            }
+        english_story = get_completion_from_messages(messages, model="gpt-5-mini", max_tokens=None)
+        story_results[session_key]['english'] = english_story.strip()
+        story_results[session_key]['english_status'] = 'done'
+    except Exception as e:
+        story_results[session_key]['english'] = f"Error translating story: {e}"
+        story_results[session_key]['english_status'] = 'error'
 
 
 
@@ -155,8 +176,15 @@ def _get_session_id():
         # Fallback if Flask-Session sid is unavailable
         return request.cookies.get(app.session_cookie_name, "unknown")
 
-def _anki_job_key(card_number: int):
-    return f"{_get_session_id()}:{card_number}"
+def _anki_job_key(card_number: int, wort: str = None):
+    base = f"{_get_session_id()}:{card_number}"
+    if wort:
+        try:
+            w = unicodedata.normalize('NFC', str(wort)).lower()
+        except Exception:
+            w = str(wort)
+        base = f"{base}:{w}"
+    return base
 
 ## Removed JSON parse fallback for sentence resolution; rely on session['anki_sentence']
 
@@ -167,11 +195,15 @@ def _start_anki_prefetch(card_number: int, wort: str, german_sentence: str):
     if card_number is None or not wort:
         return False
 
-    key = _anki_job_key(card_number)
+    key = _anki_job_key(card_number, wort)
     # If an existing job for this card exists and is in progress or done, don't restart
     existing = anki_translation_jobs.get(key)
-    if existing and (existing.get('word_status') in ('in_progress', 'done') or existing.get('sentence_status') in ('in_progress', 'done')):
-        return True
+    if existing:
+        # If it's for the same word and already running/done, keep it; otherwise start fresh
+        if existing.get('word') == wort and (
+            existing.get('word_status') in ('in_progress', 'done') or existing.get('sentence_status') in ('in_progress', 'done')
+        ):
+            return True
 
     anki_translation_jobs[key] = {
         'word': wort,
@@ -519,7 +551,7 @@ def anki_translate():
     }
 
     # Fill from prefetch if ready; if job absent, start it now in background
-    key = _anki_job_key(number)
+    key = _anki_job_key(number, wort)
     job = anki_translation_jobs.get(key)
     if not job:
         # Source German sentence from session only
@@ -604,7 +636,7 @@ def anki_poll():
     """Poll current card prefetch status/results for word and sentence translations."""
     selected_words_position = session.get('selected_words_position', 0)
     number = session.get('current_anki_number', selected_words_position + 1)
-    key = _anki_job_key(number)
+    key = _anki_job_key(number, session.get('anki_word'))
     job = anki_translation_jobs.get(key)
     if not job:
         return jsonify({
@@ -659,23 +691,55 @@ def correctSpellingGrammar(germanText):
 
 @app.route('/german_story_status', methods=['GET'])
 def german_story_status():
+    # Backward-compatible: return a composite status mainly for legacy polling
     result = story_results.get(session.sid)
     if not result:
         return jsonify({'status': 'expired'})
-    return jsonify({'status': result['status']})
+    # Derive a combined status
+    if result.get('german_status') == 'done' and result.get('english_status') == 'done':
+        status = 'done'
+    elif result.get('german_status') == 'error' or result.get('english_status') == 'error':
+        status = 'error'
+    else:
+        status = 'in_progress'
+    return jsonify({'status': status})
+
+@app.route('/story_progress', methods=['GET'])
+def story_progress():
+    result = story_results.get(session.sid)
+    if not result:
+        return jsonify({'german_status': 'expired', 'english_status': 'expired'})
+    payload = {
+        'german_status': result.get('german_status', 'in_progress'),
+        'english_status': result.get('english_status', 'pending')
+    }
+    if result.get('german_status') == 'done':
+        payload['german'] = result.get('german', '')
+    if result.get('english_status') == 'done':
+        payload['english'] = result.get('english', '')
+    return jsonify(payload)
 
 @app.route('/german_story_with_translation', methods=['POST','GET'])
 def german_story_with_translation():
-    result_data = story_results.get(session.sid, None)
-    if not result_data or result_data.get('status') != 'done':
-        return render_template('german_story_with_translation.html', result={
-            'germanStory': 'The story is still being generated. Even I find this to be hard! This page will refresh shortly.',
-            'englishStory': ''
-        })
+    result = story_results.get(session.sid)
+    german_text = ''
+    english_text = ''
+    if result:
+        if result.get('german_status') == 'done':
+            german_text = result.get('german', '')
+        else:
+            german_text = '🧠 Brewing a German story… this usually takes ~1–2 minutes. More time to think about how far you have come in your German language learning journey!'
+        if result.get('english_status') == 'done':
+            english_text = result.get('english', '')
+        else:
+            english_text = '🇬🇧 Translating to English… almost there!'
+    else:
+        german_text = '🧠 Brewing a German story… this usually takes ~1–2 minutes. More time to think about how far you have come in your German language learning journey!'
+        english_text = ''
 
     return render_template('german_story_with_translation.html', result={
-        'germanStory': result_data['german'],
-        'englishStory': result_data['english']
+        'germanStory': german_text,
+        'englishStory': english_text
     })
 
 @app.route('/ankiRecord', methods=['POST'])

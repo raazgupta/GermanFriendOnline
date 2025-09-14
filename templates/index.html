@@ -13,7 +13,7 @@
     <!-- Optional: your app icon for the Home Screen -->
     <!-- <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}"> -->
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}" id="dark-mode-stylesheet">
+    
 
     <style>
         /* Respect iOS safe areas in standalone/full-screen mode */
@@ -90,6 +90,18 @@
 
     <h1>My German Friend</h1>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div style="max-width: 820px; margin: 0.5em auto 1em auto;">
+        {% for category, message in messages %}
+        <div style="background:#fff3cd; color:#856404; border:1px solid #ffeeba; padding:10px 14px; border-radius:8px; font-size:16px; margin-bottom:8px;">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
     <form id="story-form" method="POST" action="story_scenario">
         <select name="wortlist" id="wortlist" class="custom-select">
             <option value="A1Wortlist.csv" selected>A1 Wortlist</option>
@@ -107,7 +119,7 @@
     </form>
 
     <div id="loading">
-        <p>🇩🇪 AI is cooking your tasty story. Please be patient...</p>
+        <p>🇩🇪 Cooking up your German story (~1–2 minutes) — more time to think about how far you have come in your German language learning journey!</p>
     </div>
 
     <script>

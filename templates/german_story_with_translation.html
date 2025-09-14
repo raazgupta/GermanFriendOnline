@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>German Story with Translation</title>
 
-    <link rel="stylesheet" href="static/css/dark-mode.css" id="dark-mode-stylesheet">
+    
 
     <style>
         body {
@@ -87,25 +87,33 @@
     </style>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const germanText = "{{ result.germanStory | trim }}";
-            const isGenerating = germanText.includes("still being generated");
+        document.addEventListener('DOMContentLoaded', function () {
+            const germanEl = document.getElementById('german-text');
+            const englishEl = document.getElementById('english-text');
 
-            if (isGenerating) {
-                const checkStatus = () => {
-                    fetch('german_story_status')
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.status === 'done') {
-                                location.reload();
-                            } else if (data.status === 'expired') {
-                                document.getElementById('german-text').innerText =
-                                    "Session expired. Please return to the home page.";
-                            }
-                        });
-                };
-                setInterval(checkStatus, 3000);
+            function poll() {
+                fetch('story_progress')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.german_status === 'done' && data.german) {
+                            germanEl.textContent = data.german.trim();
+                        } else if (data.german_status === 'expired') {
+                            germanEl.textContent = 'Session expired. Please return to the home page.';
+                        }
+
+                        if (data.english_status === 'done' && data.english) {
+                            englishEl.textContent = data.english.trim();
+                        }
+
+                        if ((data.german_status === 'done' || data.german_status === 'error') &&
+                            (data.english_status === 'done' || data.english_status === 'error')) {
+                            clearInterval(timer);
+                        }
+                    })
+                    .catch(err => console.error('Error polling story progress:', err));
             }
+
+            const timer = setInterval(poll, 1500);
         });
     </script>
 </head>

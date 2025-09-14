@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Vocabulary Translation</title>
 
-    <link rel="stylesheet" href="static/css/dark-mode.css" id="dark-mode-stylesheet">
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
@@ -26,12 +26,17 @@
                             const numberPrefix = current.split(':')[0];
                             wordEl.text(numberPrefix + ': ' + data.word_translation);
                         }
+                        if (data.word_status === 'error' && data.word_translation) {
+                            const current = wordEl.text();
+                            const numberPrefix = current.split(':')[0];
+                            wordEl.text(numberPrefix + ': ' + data.word_translation);
+                        }
                         if (data.sentence_status === 'done' && data.sentence_translation) {
                             sentenceEl.text(data.sentence_translation);
                         }
 
                         // Stop if both done
-                        if (data.word_status === 'done' && data.sentence_status === 'done') {
+                        if ((data.word_status === 'done' || data.word_status === 'error') && (data.sentence_status === 'done' || data.sentence_status === 'error')) {
                             clearInterval(timer);
                             return;
                         }
@@ -170,7 +175,7 @@
     </form>
 
     <div id="loading">
-        🕒 Preparing Story & English translation. Even I find this one tricky! Please be patient...
+        🕒 Crafting your German story (~1–2 minutes) and English translation. Hang tight!
     </div>
 
 </body>
