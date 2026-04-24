@@ -399,6 +399,21 @@ def save_to_csv():
         file.writelines(updated_content)
 
 
+def start_story_generation(scenario_text):
+    session['messages'] = []
+    session['germanStory'] = ""
+
+    session_key = session.sid
+    story_results[session_key] = {
+        'german_status': 'in_progress',
+        'english_status': 'pending',
+        'german': '',
+        'english': ''
+    }
+    wortlist_file = session.get("wortlist_file", DEFAULT_WORTLIST_FILE)
+    Thread(target=generate_story_background, args=(session_key, wortlist_file, scenario_text), daemon=True).start()
+
+
 @app.route('/story_scenario', methods=['POST'])
 def story_scenario():
     # Save wortlist selection before showing storyScenario.html
@@ -413,19 +428,18 @@ def stats_and_start_anki():
 
     selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow = chooseSelectedWords()
 
-
-    create_anki_english_sentences(selected_words)
-
     session['selected_words_position'] = 0
     session['selected_words_lineNumber'] = selected_words_lineNumber
-    session['messages'] = []
-    session['germanStory'] = ""
+    start_story_generation(scenario_text)
 
-    # Start background story generation
-    session_key = session.sid
-    story_results[session_key] = {'status': 'in_progress'}
-    wortlist_file = session.get("wortlist_file", DEFAULT_WORTLIST_FILE)
-    Thread(target=generate_story_background, args=(session_key, wortlist_file, scenario_text)).start()
+    if selected_words_lineNumber:
+        create_anki_english_sentences(selected_words)
+    else:
+        session.pop('anki_word', None)
+        session.pop('anki_sentence', None)
+        session.pop('anki_sentences', None)
+        session.pop('current_anki_number', None)
+        anki_sentences_jobs.pop(session.sid, None)
 
     # Get the last run datetime from the log file
     last_run_datetime = get_last_run_datetime()
@@ -442,6 +456,9 @@ def stats_and_start_anki():
 
     # Save current run datetime in log file
     log_datetime()
+
+    if not selected_words_lineNumber:
+        return redirect(url_for('german_story_with_translation'))
 
     return render_template('stats_and_start_anki.html', result = result_data)
 
@@ -472,6 +489,8 @@ def anki():
 
         selected_words_lineNumber = session['selected_words_lineNumber']
         selected_words_position = session['selected_words_position']
+        if not selected_words_lineNumber or selected_words_position >= len(selected_words_lineNumber):
+            return redirect(url_for('german_story_with_translation'))
 
         wort = selected_words_lineNumber[selected_words_position][0]
         session['anki_word'] = wort
@@ -527,6 +546,8 @@ def anki_translate():
 
     selected_words_lineNumber = session['selected_words_lineNumber']
     selected_words_position = session['selected_words_position']
+    if not selected_words_lineNumber or selected_words_position >= len(selected_words_lineNumber):
+        return redirect(url_for('german_story_with_translation'))
 
     wort = selected_words_lineNumber[selected_words_position][0]
     final_word = 0
