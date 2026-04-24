@@ -67,7 +67,8 @@ def generate_story_background(session_key, wortlist_file, scenario_text):
     # Build a concise prompt for faster response
     prompt = f"""
             Write an interesting German story for this scenario: {scenario_text}.
-            Can use any Proper Nouns including those that are in the Scenario text such as 'Raj'. 
+            Can use any Proper Nouns including those that are in the Scenario text such as 'Raj'.
+            Make sure the story length is 3 paragraphs. 
             Write the story primarily using Nouns, Verbs and Adjectives that are in this list: {', '.join(burned_words)}.
             """
     messages = [
