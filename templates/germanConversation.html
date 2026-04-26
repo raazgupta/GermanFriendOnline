@@ -80,17 +80,22 @@
             }
         }
     </style>
+    {% include "_theme.html" %}
 </head>
 <body>
+    <main class="page-wrapper">
+    <section class="content-card">
 
-    <h1>Describe Your Scenario 🇩🇪</h1>
+    <h1>Describe Your Scenario</h1>
 
     <form method="POST" action="germanScenario">
         <textarea id="scenarioText"
                   name="scenarioText"
                   placeholder="Enter your scenario here..."></textarea>
-        <button type="submit" class="custom-button">✍️ Submit Scenario</button>
+        <button type="submit" class="custom-button">Submit Scenario</button>
     </form>
 
+    </section>
+    </main>
 </body>
 </html>

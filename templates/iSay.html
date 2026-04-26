@@ -88,20 +88,23 @@
             }
         }
     </style>
+    {% include "_theme.html" %}
 </head>
 <body>
+    <main class="page-wrapper">
+    <section class="content-card">
 
-    <h1>I Say 🇩🇪</h1>
+    <h1>I Say</h1>
 
     <form id="iSayForm" method="POST" action="iSayDynamic">
         <textarea id="iSayText"
                   name="iSayText"
                   placeholder="Start or continue the conversation in German. Limit it to 1 sentence each time."></textarea>
-        <button type="submit" class="custom-button">💬 Submit</button>
+        <button type="submit" class="custom-button">Submit</button>
     </form>
 
     <div id="loading">
-        <p>⏳ naja ...</p>
+        <p>naja ...</p>
     </div>
 
     <script>
@@ -115,5 +118,7 @@
         });
     </script>
 
+    </section>
+    </main>
 </body>
 </html>

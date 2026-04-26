@@ -1,20 +1,61 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash, has_request_context
 from flask_session import Session
-from openai import OpenAI
 import os
 import random
 from datetime import datetime, timedelta
 import json
+import ssl
+import traceback
 import unicodedata
+import urllib.error
+import urllib.request
 from threading import Thread
 import time
 from werkzeug.middleware.proxy_fix import ProxyFix
+import certifi
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
-app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY')
+app.secret_key = os.getenv('FLASK_SESSION_SECRET_KEY') or 'local-dev-session-secret'
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+OPENAI_API_BASE = "https://api.openai.com/v1"
+OPENAI_SSL_CONTEXT = ssl.create_default_context(cafile=certifi.where())
+
+
+def openai_post(path, payload, timeout=120):
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise RuntimeError("OPENAI_API_KEY environment variable is not set.")
+
+    req = urllib.request.Request(
+        f"{OPENAI_API_BASE}{path}",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=timeout, context=OPENAI_SSL_CONTEXT) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"OpenAI API error {e.code}: {error_body}") from e
+
+
+def extract_response_text(response_json):
+    text_parts = []
+    for item in response_json.get("output", []):
+        for content in item.get("content", []):
+            if content.get("type") in ("output_text", "text") and content.get("text"):
+                text_parts.append(content["text"])
+    if text_parts:
+        return "\n".join(text_parts)
+    if response_json.get("output_text"):
+        return response_json["output_text"]
+    raise RuntimeError("OpenAI response did not include output text.")
 
 # Use server-side session storage
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -147,7 +188,7 @@ def get_burned_words(wortlist_file):
 
 
 
-def get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=2000, reasoning_effort="minimal", verbosity=None):
+def get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=2000, reasoning_effort="minimal", verbosity=None, text_format=None):
     """
     messages: [{'role':'system','content':'...'}, {'role':'user','content':'...'}, ...]
     reasoning_effort: "low", "medium", or "high"
@@ -159,11 +200,15 @@ def get_completion_from_messages(messages, model="gpt-5-nano", max_tokens=2000, 
     }
     if max_tokens is not None:
         create_args["max_output_tokens"] = max_tokens
-    if verbosity is not None:
-        create_args["text"] = {"verbosity": verbosity}
-    resp = client.responses.create(**create_args)
+    if verbosity is not None or text_format is not None:
+        create_args["text"] = {}
+        if verbosity is not None:
+            create_args["text"]["verbosity"] = verbosity
+        if text_format is not None:
+            create_args["text"]["format"] = text_format
+    resp = openai_post("/responses", create_args)
 
-    return resp.output_text
+    return extract_response_text(resp)
 
 def get_selected_level():
     """Return 'A1' or 'A2' based on the user's wortlist choice."""
@@ -357,7 +402,12 @@ def create_anki_english_sentences(selected_words):
             {'role': 'user', 'content': prompt}
         ]
         try:
-            resp = get_completion_from_messages(messages, model="gpt-5-mini", max_tokens=2000)
+            resp = get_completion_from_messages(
+                messages,
+                model="gpt-5-mini",
+                max_tokens=2000,
+                text_format={"type": "json_object"},
+            )
             cleaned = resp.strip()
             # Clean potential code fences or leading 'json'
             if cleaned.lower().startswith('json'):
@@ -368,6 +418,31 @@ def create_anki_english_sentences(selected_words):
             anki_sentences_jobs[session_key] = {'status': 'error', 'error': str(e)}
 
     Thread(target=task, args=(level,), daemon=True).start()
+
+def resolve_anki_sentences(timeout_seconds=90):
+    """Ensure generated Anki sentences are available in the current session."""
+    if session.get('anki_sentences'):
+        return session['anki_sentences']
+
+    session_key = session.sid
+    if session_key not in anki_sentences_jobs and session.get('selected_words_lineNumber'):
+        selected_words = [row[0] for row in session['selected_words_lineNumber']]
+        create_anki_english_sentences(selected_words)
+
+    deadline = time.time() + timeout_seconds
+    while time.time() < deadline:
+        job = anki_sentences_jobs.get(session_key)
+        if job and job.get('status') == 'done':
+            response = job.get('response', '')
+            session['anki_sentences'] = response
+            return response
+        if job and job.get('status') == 'error':
+            error = job.get('error', 'Error generating Anki sentences')
+            session['anki_sentences'] = 'Error'
+            return f"Error: {error}"
+        time.sleep(0.5)
+
+    return None
 
 def save_to_csv():
 
@@ -465,18 +540,12 @@ def stats_and_start_anki():
 @app.route('/ankiSentencesResponse', methods=['POST','GET'])
 def ankiSentencesResponse():
     # Block until the background job (Responses API) finishes, then return the JSON string
-    session_key = session.sid
-    # Wait loop similar to previous behavior
-    while True:
-        job = anki_sentences_jobs.get(session_key)
-        if job and job.get('status') == 'done':
-            response = job.get('response', '')
-            session['anki_sentences'] = response
-            return response
-        if job and job.get('status') == 'error':
-            session['anki_sentences'] = 'Error'
-            return 'Error'
-        time.sleep(0.5)
+    response = resolve_anki_sentences()
+    if response is None:
+        return 'Timed out waiting for Anki sentences', 504
+    if response.startswith('Error:'):
+        return response, 500
+    return response
 
 
 @app.route('/anki', methods=['POST','GET'])
@@ -492,15 +561,21 @@ def anki():
         if not selected_words_lineNumber or selected_words_position >= len(selected_words_lineNumber):
             return redirect(url_for('german_story_with_translation'))
 
+        if not resolve_anki_sentences():
+            flash('Still generating Anki sentences — please try Practice Vocabulary again in a moment.', 'warning')
+            return redirect(url_for('index'))
+
         wort = selected_words_lineNumber[selected_words_position][0]
         session['anki_word'] = wort
         # Track current card number for polling/prefetch keying
         number = selected_words_position + 1
         session['current_anki_number'] = number
+        current_frequency = selected_words_lineNumber[selected_words_position][2]
 
         result_data = {
             'wort': wort,
-            'number': number
+            'number': number,
+            'show_image_hint': current_frequency != '3M'
         }
 
         return render_template('anki.html', result = result_data)
@@ -508,32 +583,48 @@ def anki():
 
 @app.route('/ankiSentence')
 def ankiSentence():
-
-    # print("anki_word:" + session['anki_word'])
-
-    wort = session['anki_word']
-    anki_sentences = session['anki_sentences']
-    anki_sentence_for_wort = "Error"
-    sentences_data = ""
-
-    try:
-        # print("anki_sentences:" + anki_sentences)
-        sentences_data = json.loads(anki_sentences)
-    except json.JSONDecodeError:
-        anki_sentence_for_wort = "Failed to parse JSON. Please check the JSON structure"
-    # Only attempt lookup if JSON was parsed into a dict
-    if isinstance(sentences_data, dict):
         try:
-            wort_normalized = unicodedata.normalize('NFC', wort)
-            sentences_data_normalized = {unicodedata.normalize('NFC', k): v for k, v in sentences_data.items()}
-            anki_sentence_for_wort = sentences_data_normalized.get(wort_normalized)
+            if 'selected_words_lineNumber' not in session or 'selected_words_position' not in session:
+                return "Session expired. Please restart practice.", 400
+
+            selected_words_lineNumber = session['selected_words_lineNumber']
+            selected_words_position = session['selected_words_position']
+            if not selected_words_lineNumber or selected_words_position >= len(selected_words_lineNumber):
+                return "No active Anki word found.", 400
+
+            wort = session.get('anki_word') or selected_words_lineNumber[selected_words_position][0]
+            session['anki_word'] = wort
+            anki_sentences = resolve_anki_sentences()
+            if not anki_sentences:
+                return "Still generating sentence. Please try again in a moment.", 503
+            if anki_sentences.startswith('Error:') or anki_sentences == 'Error':
+                return anki_sentences, 500
+            anki_sentence_for_wort = "Error"
+            sentences_data = ""
+
+            try:
+                sentences_data = json.loads(anki_sentences)
+            except json.JSONDecodeError:
+                anki_sentence_for_wort = "Failed to parse JSON. Please check the JSON structure"
+
+            if isinstance(sentences_data, dict):
+                try:
+                    wort_normalized = unicodedata.normalize('NFC', wort)
+                    sentences_data_normalized = {unicodedata.normalize('NFC', k): v for k, v in sentences_data.items()}
+                    anki_sentence_for_wort = sentences_data_normalized.get(wort_normalized)
+                    if anki_sentence_for_wort is None:
+                        lower_lookup = {k.lower(): v for k, v in sentences_data_normalized.items()}
+                        anki_sentence_for_wort = lower_lookup.get(wort_normalized.lower())
+                    if anki_sentence_for_wort is None:
+                        anki_sentence_for_wort = f"No sentence found for '{wort}' in generated JSON."
+                except Exception:
+                    anki_sentence_for_wort = 'Failed to get word. Please check if word is in the JSON string'
+
+            session['anki_sentence'] = anki_sentence_for_wort
+            return anki_sentence_for_wort
         except Exception:
-            anki_sentence_for_wort = 'Failed to get word. Please check if word is in the JSON string'
-
-    session['anki_sentence'] = anki_sentence_for_wort
-    # print("anki_sentence_for_wort:" + anki_sentence_for_wort)
-
-    return anki_sentence_for_wort
+            print(traceback.format_exc())
+            return "Error resolving Anki sentence.", 500
 
 @app.route('/ankiTranslate', methods=['POST'])
 def anki_translate():
@@ -653,6 +744,47 @@ def anki_prefetch():
     return jsonify({'ok': started})
 
 
+@app.route('/anki_image_hint', methods=['POST'])
+def anki_image_hint():
+    """Generate a visual hint for the current Anki sentence."""
+    selected_words_lineNumber = session.get('selected_words_lineNumber')
+    selected_words_position = session.get('selected_words_position')
+    if selected_words_lineNumber and selected_words_position is not None:
+        current_frequency = selected_words_lineNumber[selected_words_position][2]
+        if current_frequency == '3M':
+            return jsonify({'ok': False, 'error': 'Image hint is not available for burn-ready cards'}), 400
+
+    sentence = session.get('anki_sentence')
+    if not sentence:
+        data = request.get_json(silent=True) or {}
+        sentence = data.get('sentence')
+
+    if not sentence:
+        return jsonify({'ok': False, 'error': 'No sentence available for this card'}), 400
+
+    sentence = str(sentence).strip()
+    if not sentence or sentence.startswith('Failed to') or sentence == 'Error':
+        return jsonify({'ok': False, 'error': 'No usable sentence available for this card'}), 400
+
+    try:
+        response = openai_post("/images/generations", {
+            "model": "gpt-image-1-mini",
+            "prompt": sentence,
+            "n": 1,
+            "size": "1024x1024",
+            "quality": "low",
+        })
+        image_base64 = response.get("data", [{}])[0].get("b64_json")
+        if not image_base64:
+            return jsonify({'ok': False, 'error': 'Image generation returned no image'}), 502
+        return jsonify({
+            'ok': True,
+            'image_url': f"data:image/png;base64,{image_base64}"
+        })
+    except Exception as e:
+        return jsonify({'ok': False, 'error': str(e)}), 502
+
+
 @app.route('/anki_poll', methods=['GET'])
 def anki_poll():
     """Poll current card prefetch status/results for word and sentence translations."""
@@ -750,13 +882,13 @@ def german_story_with_translation():
         if result.get('german_status') == 'done':
             german_text = result.get('german', '')
         else:
-            german_text = '🧠 Brewing a German story… this usually takes ~1–2 minutes. More time to think about how far you have come in your German language learning journey!'
+            german_text = 'Brewing a German story… this usually takes ~1–2 minutes. More time to think about how far you have come in your German language learning journey!'
         if result.get('english_status') == 'done':
             english_text = result.get('english', '')
         else:
-            english_text = '🇬🇧 Translating to English… almost there!'
+            english_text = 'Translating to English… almost there!'
     else:
-        german_text = '🧠 Brewing a German story… this usually takes ~1–2 minutes. More time to think about how far you have come in your German language learning journey!'
+        german_text = 'Brewing a German story… this usually takes ~1–2 minutes. More time to think about how far you have come in your German language learning journey!'
         english_text = ''
 
     return render_template('german_story_with_translation.html', result={

@@ -78,18 +78,23 @@
             .custom-button { width: 90%; font-size: 16px; }
         }
     </style>
+    {% include "_theme.html" %}
 </head>
 <body>
+    <main class="page-wrapper">
+    <section class="content-card">
 
-    <h1>Story Scenario 🇩🇪</h1>
+    <h1>Story Scenario</h1>
 
     <form method="POST" action="stats_and_start_anki">
         <textarea id="scenarioText"
                   name="scenarioText"
                   placeholder="What should the story be about?"
                   required></textarea>
-        <button type="submit" class="custom-button">✏️ Generate Story</button>
+        <button type="submit" class="custom-button">Generate Story</button>
     </form>
 
+    </section>
+    </main>
 </body>
 </html>

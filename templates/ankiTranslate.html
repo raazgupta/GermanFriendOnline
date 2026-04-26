@@ -156,10 +156,13 @@
             }
         }
     </style>
+    {% include "_theme.html" %}
 </head>
 <body>
+    <main class="page-wrapper">
+    <section class="content-card">
 
-    <h1>Vocabulary Translation 🇩🇪</h1>
+    <h1>Vocabulary Translation</h1>
 
     <p id="dynamic-anki-word-english">{{ result.number }}: {{ result.translation }}</p>
     <p id="dynamic-anki-sentence-english">{{ result.sentence_translation }}</p>
@@ -175,8 +178,10 @@
     </form>
 
     <div id="loading">
-        🕒 Crafting your German story (~1–2 minutes) and English translation. Hang tight!
+        Crafting your German story (~1–2 minutes) and English translation. Hang tight!
     </div>
 
+    </section>
+    </main>
 </body>
 </html>

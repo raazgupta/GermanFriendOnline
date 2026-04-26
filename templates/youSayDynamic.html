@@ -108,10 +108,13 @@
             }
         }
     </style>
+    {% include "_theme.html" %}
 </head>
 <body>
+    <main class="page-wrapper">
+    <section class="content-card">
 
-    <h1>You Say 🇩🇪</h1>
+    <h1>You Say</h1>
 
     <h3>Spelling and Grammar Suggestion:</h3>
     <p id="dynamic-spelling-check">naja ...</p>
@@ -123,12 +126,14 @@
     <p id="dynamic-english">thinking...</p>
 
     <form id="youSayForm" method="POST" action="youSay">
-        <button class="custom-button">🗨️ Continue</button>
+        <button class="custom-button">Continue</button>
     </form>
 
     <a href="./">
-        <button class="custom-button">🏠 Go Home</button>
+        <button class="custom-button">Go Home</button>
     </a>
 
+    </section>
+    </main>
 </body>
 </html>

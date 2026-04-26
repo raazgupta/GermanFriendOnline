@@ -85,8 +85,11 @@
             form { width: 100%; }
         }
     </style>
+    {% include "_theme.html" %}
 </head>
 <body>
+    <main class="page-wrapper">
+    <section class="content-card">
 
     <h1>My German Friend</h1>
 
@@ -107,7 +110,7 @@
             <option value="A1Wortlist.csv" selected>A1 Wortlist</option>
             <option value="A2Wortlist.csv">A2 Wortlist</option>
         </select>
-        <button type="submit" class="custom-button">📖 Show German Story</button>
+        <button type="submit" class="custom-button">Show German Story</button>
     </form>
 
     <form id="converse-form" method="POST" action="germanConversation">
@@ -115,11 +118,11 @@
             <option value="A1Wortlist.csv" selected>A1 Wortlist</option>
             <option value="A2Wortlist.csv">A2 Wortlist</option>
         </select>
-        <button type="submit" class="custom-button">🗣️ Converse in German</button>
+        <button type="submit" class="custom-button">Converse in German</button>
     </form>
 
     <div id="loading">
-        <p>🇩🇪 Cooking up your German story (~1–2 minutes) — more time to think about how far you have come in your German language learning journey!</p>
+        <p> Cooking up your German story (~1–2 minutes) — more time to think about how far you have come in your German language learning journey!</p>
     </div>
 
     <script>
@@ -132,5 +135,7 @@
         });
     </script>
 
+    </section>
+    </main>
 </body>
 </html>

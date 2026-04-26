@@ -12,12 +12,19 @@
         const ankiSentenceUrl = "ankiSentence";
 
         $(document).ready(function() {
+            const imageHintButton = $('#image-hint-button');
+            const imageHintStatus = $('#image-hint-status');
+            const imageHintResult = $('#image-hint-result');
+            const imageHintImg = $('#image-hint-img');
+
             // Fetch the German sentence for the current word
             $.ajax({
                 url: ankiSentenceUrl,
                 method: 'GET',
+                timeout: 30000,
                 success: function(data) {
                     $('#dynamic-anki-sentence').text(data);
+                    imageHintButton.prop('disabled', false);
                     // Kick off background prefetch of translations while the user reviews
                     $.ajax({
                         url: 'anki_prefetch',
@@ -29,8 +36,41 @@
                     });
                 },
                 error: function(err) {
+                    const response = err.responseText || 'Could not load sentence. Please restart practice from the home page.';
+                    $('#dynamic-anki-sentence').text(response);
                     console.error('Error fetching Anki sentence:', err);
                 }
+            });
+
+            imageHintButton.on('click', function() {
+                const sentence = $('#dynamic-anki-sentence').text();
+                imageHintButton.prop('disabled', true);
+                imageHintStatus.text('Generating image hint...');
+                imageHintResult.hide();
+                imageHintImg.attr('src', '');
+
+                $.ajax({
+                    url: 'anki_image_hint',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ sentence: sentence }),
+                    success: function(data) {
+                        if (data.ok && data.image_url) {
+                            imageHintImg.attr('src', data.image_url);
+                            imageHintResult.show();
+                            imageHintStatus.text('');
+                        } else {
+                            imageHintStatus.text(data.error || 'Could not generate image hint.');
+                        }
+                    },
+                    error: function(err) {
+                        const response = err.responseJSON || {};
+                        imageHintStatus.text(response.error || 'Could not generate image hint.');
+                    },
+                    complete: function() {
+                        imageHintButton.prop('disabled', false);
+                    }
+                });
             });
         });
     </script>
@@ -79,6 +119,43 @@
             transform: scale(1.05);
         }
 
+        .review-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 1.5em;
+        }
+
+        .review-actions form {
+            margin: 0;
+        }
+
+        .hint-status {
+            min-height: 24px;
+            margin: 1em 0 0;
+            color: #ef4444;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .image-hint-result {
+            display: none;
+            margin-top: 1.25em;
+            text-align: center;
+        }
+
+        .image-hint-result img {
+            width: min(100%, 520px);
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
+            border-radius: 14px;
+            border: 1px solid rgba(0,0,0,0.16);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+            background: #fff;
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 24px;
@@ -94,18 +171,35 @@
             }
         }
     </style>
+    {% include "_theme.html" %}
 </head>
 <body>
+    <main class="page-wrapper">
+    <section class="content-card">
 
-    <h1>Vocabulary Review 🇩🇪</h1>
+    <h1>Vocabulary Review</h1>
 
-    <p>{{ result.number }}: {{ result.wort }}</p>
+    <p class="vocab-focus">{{ result.number }}: <strong>{{ result.wort }}</strong></p>
 
     <p id="dynamic-anki-sentence">Loading sentence…</p>
 
-    <form method="POST" action="ankiTranslate">
-        <button type="submit" class="custom-button">🔍 Translation</button>
-    </form>
+    <div class="review-actions">
+        <form method="POST" action="ankiTranslate">
+            <button type="submit" class="custom-button">Translation</button>
+        </form>
+        {% if result.show_image_hint %}
+        <button type="button" id="image-hint-button" class="custom-button" disabled>Image Hint</button>
+        {% endif %}
+    </div>
 
+    {% if result.show_image_hint %}
+    <p id="image-hint-status" class="hint-status"></p>
+    <div id="image-hint-result" class="image-hint-result">
+        <img id="image-hint-img" alt="Image hint for the German sentence">
+    </div>
+    {% endif %}
+
+    </section>
+    </main>
 </body>
 </html>

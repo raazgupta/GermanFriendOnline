@@ -116,18 +116,23 @@
             const timer = setInterval(poll, 1500);
         });
     </script>
+    {% include "_theme.html" %}
 </head>
 <body>
+    <main class="page-wrapper">
+    <section class="content-card">
 
-    <h3>German Story 🇩🇪</h3>
+    <h3>German Story</h3>
     <div id="german-text" class="story-box">{{ result.germanStory | trim }}</div>
 
-    <h3>English Translation 🇬🇧</h3>
+    <h3>English Translation</h3>
     <div id="english-text" class="story-box">{{ result.englishStory | trim }}</div>
 
     <a href="./">
-        <button class="custom-button">🏠 Go Home</button>
+        <button class="custom-button">Go Home</button>
     </a>
 
+    </section>
+    </main>
 </body>
 </html>
