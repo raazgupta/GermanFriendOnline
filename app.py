@@ -96,22 +96,22 @@ def generate_story_background(session_key, wortlist_file, scenario_text):
         'english': ''
     }
 
-    if not burned_words:
-        story_results[session_key] = {
-            'german_status': 'done',
-            'english_status': 'done',
-            'german': "No burned words available yet. Please review and burn more words first.",
-            'english': "No burned words available yet. Please review and burn more words first."
-        }
-        return
-
-    # Build a concise prompt for faster response
-    prompt = f"""
-            Write an interesting German story for this scenario: {scenario_text}.
-            Can use any Proper Nouns including those that are in the Scenario text such as 'Raj'.
-            Make sure the story length is 3 paragraphs. 
-            Write the story primarily using Nouns, Verbs and Adjectives that are in this list: {', '.join(burned_words)}.
-            """
+    # Build a concise prompt for faster response. If local wortlists are not
+    # available yet, still generate a story from the scenario instead of failing.
+    if burned_words:
+        prompt = f"""
+                Write an interesting German story for this scenario: {scenario_text}.
+                Can use any Proper Nouns including those that are in the Scenario text such as 'Raj'.
+                Make sure the story length is 3 paragraphs.
+                Write the story primarily using Nouns, Verbs and Adjectives that are in this list: {', '.join(burned_words)}.
+                """
+    else:
+        prompt = f"""
+                Write an interesting German story for this scenario: {scenario_text}.
+                Can use any Proper Nouns including those that are in the Scenario text such as 'Raj'.
+                Make sure the story length is 3 paragraphs.
+                Use clear, beginner-friendly German.
+                """
     messages = [
         {'role': 'system', 'content': 'You are a helpful language teacher.'},
         {'role': 'user', 'content': prompt}
@@ -319,6 +319,10 @@ def chooseSelectedWords():
     total_lines = 0
 
     file_path = get_current_wortlist_file()
+
+    if not os.path.exists(file_path):
+        print(f"Wortlist file missing: {file_path}")
+        return [], [], 0, 0, 0, 0, 0, 0
 
     with open(file_path, 'r') as file:
         # num_lines = sum(1 for line in file)
@@ -769,7 +773,7 @@ def anki_image_hint():
     try:
         response = openai_post("/images/generations", {
             "model": "gpt-image-1-mini",
-            "prompt": sentence,
+            "prompt": f"Schoene blonde deutsche Frau: {sentence}",
             "n": 1,
             "size": "1024x1024",
             "quality": "low",
