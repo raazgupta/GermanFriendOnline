@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash, has_request_context
 from flask_session import Session
+import csv
 import os
 import random
 from datetime import datetime, timedelta
@@ -77,6 +78,23 @@ anki_translation_jobs = {}
 # 1) constants and helper
 # ------------------------------------------------------------------------------
 DEFAULT_WORTLIST_FILE = "A1Wortlist.csv"
+MAX_BACKGROUND_JOBS = 200
+BACKGROUND_JOB_TTL = timedelta(hours=1)
+FREQUENCY_OPTIONS = {
+    "": ("T", "W"),
+    "T": ("T", "W"),
+    "W": ("T", "M"),
+    "M": ("T", "3M"),
+    "3M": ("T", "B"),
+    "B": ("B", "B"),
+}
+FREQUENCY_DISPLAY = {
+    "T": "Tomorrow",
+    "W": "Week",
+    "M": "Month",
+    "3M": "3 Months",
+    "B": "Burned",
+}
 
 # Assistant IDs no longer used after migration to Responses API
 
@@ -93,7 +111,8 @@ def generate_story_background(session_key, wortlist_file, scenario_text):
         'german_status': 'in_progress',
         'english_status': 'pending',
         'german': '',
-        'english': ''
+        'english': '',
+        'created_at': datetime.utcnow().isoformat(),
     }
 
     # Build a concise prompt for faster response. If local wortlists are not
@@ -168,16 +187,12 @@ def get_burned_words(wortlist_file):
 
     for path in files_to_read:
         try:
-            with open(path, 'r') as file:
-                for lineNumber, line in enumerate(file):
-                    if lineNumber == 0:
-                        continue  # Skip header
-                    line = line.strip()
-                    elements = line.split(',')
-                    if len(elements) >= 2:
-                        word, frequency = elements[0], elements[1]
-                        if frequency == "B":
-                            burned_words.append(word)
+            with open(path, 'r', newline='') as file:
+                reader = csv.reader(file)
+                next(reader, None)
+                for row in reader:
+                    if len(row) >= 2 and row[1] == "B":
+                        burned_words.append(row[0])
         except FileNotFoundError:
             print(f"File not found: {path}")
 
@@ -232,6 +247,85 @@ def _anki_job_key(card_number: int, wort: str = None):
         base = f"{base}:{w}"
     return base
 
+
+def _job_created_at(job):
+    created_at = job.get("created_at")
+    if not created_at:
+        return datetime.min
+    try:
+        return datetime.fromisoformat(created_at)
+    except (TypeError, ValueError):
+        return datetime.min
+
+
+def _prune_job_store(job_store):
+    now = datetime.utcnow()
+    expired_keys = [
+        key for key, job in job_store.items()
+        if now - _job_created_at(job) > BACKGROUND_JOB_TTL
+    ]
+    for key in expired_keys:
+        job_store.pop(key, None)
+
+    if len(job_store) <= MAX_BACKGROUND_JOBS:
+        return
+
+    sorted_keys = sorted(job_store, key=lambda key: _job_created_at(job_store[key]))
+    for key in sorted_keys[:len(job_store) - MAX_BACKGROUND_JOBS]:
+        job_store.pop(key, None)
+
+
+def _prune_background_jobs():
+    _prune_job_store(story_results)
+    _prune_job_store(anki_sentences_jobs)
+    _prune_job_store(anki_translation_jobs)
+
+
+def _clear_session_background_jobs(session_key):
+    story_results.pop(session_key, None)
+    anki_sentences_jobs.pop(session_key, None)
+
+    prefix = f"{session_key}:"
+    stale_translation_keys = [key for key in anki_translation_jobs if key.startswith(prefix)]
+    for key in stale_translation_keys:
+        anki_translation_jobs.pop(key, None)
+
+
+def _reset_anki_session_state(session_key):
+    for session_key_name in (
+        'anki_word',
+        'anki_sentence',
+        'anki_sentences',
+        'current_anki_number',
+        'selected_words_position',
+        'selected_words_lineNumber',
+    ):
+        session.pop(session_key_name, None)
+    _clear_session_background_jobs(session_key)
+
+
+def _get_active_anki_state():
+    selected_words_lineNumber = session.get('selected_words_lineNumber')
+    selected_words_position = session.get('selected_words_position')
+
+    if selected_words_lineNumber is None or selected_words_position is None:
+        return None, 'expired'
+    if not selected_words_lineNumber or selected_words_position >= len(selected_words_lineNumber):
+        return None, 'complete'
+
+    return {
+        'selected_words_lineNumber': selected_words_lineNumber,
+        'selected_words_position': selected_words_position,
+    }, None
+
+
+def _get_session_text(key):
+    value = session.get(key)
+    if value is None:
+        return None
+    value = str(value).strip()
+    return value or None
+
 ## Removed JSON parse fallback for sentence resolution; rely on session['anki_sentence']
 
 def _start_anki_prefetch(card_number: int, wort: str, german_sentence: str):
@@ -241,6 +335,7 @@ def _start_anki_prefetch(card_number: int, wort: str, german_sentence: str):
     if card_number is None or not wort:
         return False
 
+    _prune_background_jobs()
     key = _anki_job_key(card_number, wort)
     # If an existing job for this card exists and is in progress or done, don't restart
     existing = anki_translation_jobs.get(key)
@@ -324,38 +419,36 @@ def chooseSelectedWords():
         print(f"Wortlist file missing: {file_path}")
         return [], [], 0, 0, 0, 0, 0, 0
 
-    with open(file_path, 'r') as file:
-        # num_lines = sum(1 for line in file)
-        # print(f"num_lines: {num_lines}")
-        for lineNumber, line in enumerate(file, start=0):
-            line = line.strip()
-            lineElements = line.split(',')
-            if lineNumber >= 1:
-                word = lineElements[0]
-                reviewFrequency = lineElements[1]
-                reviewDateString = lineElements[2]
+    today = datetime.now().date()
+    with open(file_path, 'r', newline='') as file:
+        reader = csv.reader(file)
+        next(reader, None)
+        for lineNumber, row in enumerate(reader, start=1):
+            if len(row) < 3:
+                continue
 
-                if reviewDateString == "":
-                    not_reviewed_words.append([word, lineNumber, reviewFrequency, reviewDateString])
-                    number_pending = number_pending + 1
-                elif reviewFrequency != "B":
-                    reviewDateObject = datetime.strptime(reviewDateString, "%Y-%m-%d").date()
-                    today = datetime.now().date()
-                    if reviewDateObject <= today and len(selected_words_lineNumber) < 10:
-                        selected_words_lineNumber.append([word, lineNumber, reviewFrequency, reviewDateString])
+            word, reviewFrequency, reviewDateString = row[0], row[1], row[2]
 
-                    if reviewFrequency == "W":
-                        number_week = number_week + 1
-                    elif reviewFrequency == "M":
-                        number_month = number_month + 1
-                    elif reviewFrequency == "3M":
-                        number_3_month = number_3_month + 1
-                    elif reviewFrequency == "T":
-                        number_tomorrow = number_tomorrow + 1
+            if reviewDateString == "":
+                not_reviewed_words.append([word, lineNumber, reviewFrequency, reviewDateString])
+                number_pending = number_pending + 1
+            elif reviewFrequency != "B":
+                reviewDateObject = datetime.strptime(reviewDateString, "%Y-%m-%d").date()
+                if reviewDateObject <= today and len(selected_words_lineNumber) < 10:
+                    selected_words_lineNumber.append([word, lineNumber, reviewFrequency, reviewDateString])
 
-                elif reviewFrequency == "B":
-                    number_burned = number_burned + 1
-                total_lines = total_lines + 1
+                if reviewFrequency == "W":
+                    number_week = number_week + 1
+                elif reviewFrequency == "M":
+                    number_month = number_month + 1
+                elif reviewFrequency == "3M":
+                    number_3_month = number_3_month + 1
+                elif reviewFrequency == "T":
+                    number_tomorrow = number_tomorrow + 1
+            else:
+                number_burned = number_burned + 1
+
+            total_lines = total_lines + 1
 
     # print("Number of selected words using reviewDate:", len(selected_words_lineNumber))
 
@@ -386,7 +479,11 @@ def create_anki_english_sentences(selected_words):
     # Function to get Anki sentences in 1 go in JSON format using Responses API.
     # Starts a background task and does not wait for completion
     session_key = session.sid
-    anki_sentences_jobs[session_key] = {'status': 'in_progress'}
+    _prune_background_jobs()
+    anki_sentences_jobs[session_key] = {
+        'status': 'in_progress',
+        'created_at': datetime.utcnow().isoformat(),
+    }
 
     # Capture level while inside request context; do not access session in thread
     level = get_selected_level()
@@ -417,14 +514,23 @@ def create_anki_english_sentences(selected_words):
             if cleaned.lower().startswith('json'):
                 cleaned = cleaned[4:].strip()
             cleaned = cleaned.strip('`')
-            anki_sentences_jobs[session_key] = {'status': 'done', 'response': cleaned}
+            anki_sentences_jobs[session_key] = {
+                'status': 'done',
+                'response': cleaned,
+                'created_at': datetime.utcnow().isoformat(),
+            }
         except Exception as e:
-            anki_sentences_jobs[session_key] = {'status': 'error', 'error': str(e)}
+            anki_sentences_jobs[session_key] = {
+                'status': 'error',
+                'error': str(e),
+                'created_at': datetime.utcnow().isoformat(),
+            }
 
     Thread(target=task, args=(level,), daemon=True).start()
 
 def resolve_anki_sentences(timeout_seconds=90):
     """Ensure generated Anki sentences are available in the current session."""
+    _prune_background_jobs()
     if session.get('anki_sentences'):
         return session['anki_sentences']
 
@@ -449,33 +555,23 @@ def resolve_anki_sentences(timeout_seconds=90):
     return None
 
 def save_to_csv():
-
-    updated_content = []
     file_path = get_current_wortlist_file()
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-
-    # Modify the rows that have updated frequency and review date
     selected_words_lineNumber = session['selected_words_lineNumber']
-    rows_to_update = []
-    for selected_word_LineNumber in selected_words_lineNumber:
-        rows_to_update.append(selected_word_LineNumber[1])
+    rows_to_update = {
+        row[1]: [row[0], row[2], row[3]]
+        for row in selected_words_lineNumber
+    }
 
-    for i, line in enumerate(lines, start=0):
-        if i in rows_to_update:
-            updated_line = ""
-            for selected_word_LineNumber in selected_words_lineNumber:
-                if selected_word_LineNumber[1] == i:
-                    updated_line = selected_word_LineNumber[0] + "," + selected_word_LineNumber[2] + ',' + selected_word_LineNumber[3] + "\n"
-            updated_content.append(updated_line)
-            #print(updated_line)
-        else:
-            updated_content.append(line)
+    with open(file_path, 'r', newline='') as file:
+        rows = list(csv.reader(file))
 
-    # Write data to CSV file
-    #print(updated_content[0])
-    with open(file_path, 'w') as file:
-        file.writelines(updated_content)
+    for index, updated_row in rows_to_update.items():
+        if 0 <= index < len(rows):
+            rows[index] = updated_row
+
+    with open(file_path, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(rows)
 
 
 def start_story_generation(scenario_text):
@@ -483,11 +579,13 @@ def start_story_generation(scenario_text):
     session['germanStory'] = ""
 
     session_key = session.sid
+    _prune_background_jobs()
     story_results[session_key] = {
         'german_status': 'in_progress',
         'english_status': 'pending',
         'german': '',
-        'english': ''
+        'english': '',
+        'created_at': datetime.utcnow().isoformat(),
     }
     wortlist_file = session.get("wortlist_file", DEFAULT_WORTLIST_FILE)
     Thread(target=generate_story_background, args=(session_key, wortlist_file, scenario_text), daemon=True).start()
@@ -504,21 +602,17 @@ def story_scenario():
 def stats_and_start_anki():
 
     scenario_text = request.form.get('scenarioText', None)
+    current_session_key = session.sid
 
     selected_words_lineNumber, selected_words, number_burned, number_week, number_month, number_3_month, number_pending, number_tomorrow = chooseSelectedWords()
 
+    _reset_anki_session_state(current_session_key)
     session['selected_words_position'] = 0
     session['selected_words_lineNumber'] = selected_words_lineNumber
     start_story_generation(scenario_text)
 
     if selected_words_lineNumber:
         create_anki_english_sentences(selected_words)
-    else:
-        session.pop('anki_word', None)
-        session.pop('anki_sentence', None)
-        session.pop('anki_sentences', None)
-        session.pop('current_anki_number', None)
-        anki_sentences_jobs.pop(session.sid, None)
 
     # Get the last run datetime from the log file
     last_run_datetime = get_last_run_datetime()
@@ -554,16 +648,16 @@ def ankiSentencesResponse():
 
 @app.route('/anki', methods=['POST','GET'])
 def anki():
-        # Guard against missing session state
-        if 'selected_words_lineNumber' not in session or 'selected_words_position' not in session:
+        active_state, state_error = _get_active_anki_state()
+        if state_error == 'expired':
             print("[anki] Missing session keys; redirecting to index.")
             flash('Session expired — please restart practice', 'warning')
             return redirect(url_for('index'))
-
-        selected_words_lineNumber = session['selected_words_lineNumber']
-        selected_words_position = session['selected_words_position']
-        if not selected_words_lineNumber or selected_words_position >= len(selected_words_lineNumber):
+        if state_error == 'complete':
             return redirect(url_for('german_story_with_translation'))
+
+        selected_words_lineNumber = active_state['selected_words_lineNumber']
+        selected_words_position = active_state['selected_words_position']
 
         if not resolve_anki_sentences():
             flash('Still generating Anki sentences — please try Practice Vocabulary again in a moment.', 'warning')
@@ -579,7 +673,7 @@ def anki():
         result_data = {
             'wort': wort,
             'number': number,
-            'show_image_hint': current_frequency != '3M'
+            'show_image_hint': current_frequency not in {'T', '3M', 'B'}
         }
 
         return render_template('anki.html', result = result_data)
@@ -588,13 +682,14 @@ def anki():
 @app.route('/ankiSentence')
 def ankiSentence():
         try:
-            if 'selected_words_lineNumber' not in session or 'selected_words_position' not in session:
+            active_state, state_error = _get_active_anki_state()
+            if state_error == 'expired':
                 return "Session expired. Please restart practice.", 400
-
-            selected_words_lineNumber = session['selected_words_lineNumber']
-            selected_words_position = session['selected_words_position']
-            if not selected_words_lineNumber or selected_words_position >= len(selected_words_lineNumber):
+            if state_error == 'complete':
                 return "No active Anki word found.", 400
+
+            selected_words_lineNumber = active_state['selected_words_lineNumber']
+            selected_words_position = active_state['selected_words_position']
 
             wort = session.get('anki_word') or selected_words_lineNumber[selected_words_position][0]
             session['anki_word'] = wort
@@ -632,17 +727,16 @@ def ankiSentence():
 
 @app.route('/ankiTranslate', methods=['POST'])
 def anki_translate():
-    # Guard against missing session (expired or direct navigation)
-    if 'selected_words_lineNumber' not in session or 'selected_words_position' not in session:
-        # Minimal recovery: send user back to start to rebuild session
+    active_state, state_error = _get_active_anki_state()
+    if state_error == 'expired':
         print("[anki_translate] Missing session keys; redirecting to index.")
         flash('Session expired — please restart practice', 'warning')
         return redirect(url_for('index'))
-
-    selected_words_lineNumber = session['selected_words_lineNumber']
-    selected_words_position = session['selected_words_position']
-    if not selected_words_lineNumber or selected_words_position >= len(selected_words_lineNumber):
+    if state_error == 'complete':
         return redirect(url_for('german_story_with_translation'))
+
+    selected_words_lineNumber = active_state['selected_words_lineNumber']
+    selected_words_position = active_state['selected_words_position']
 
     wort = selected_words_lineNumber[selected_words_position][0]
     final_word = 0
@@ -680,46 +774,25 @@ def anki_translate():
     if job and job.get('sentence_status') == 'done' and job.get('sentence_translation'):
         result_data['sentence_translation'] = job['sentence_translation']
 
-    # Request for next Frequency
     currentFrequency = selected_words_lineNumber[selected_words_position][2]
-    if currentFrequency == "" or currentFrequency == "T":
-        result_data['frequency1'] = 'T'
-        result_data['frequency2'] = 'W'
-    elif currentFrequency == "W":
-        result_data['frequency1'] = 'T'
-        result_data['frequency2'] = 'M'
-    elif currentFrequency == "M":
-        result_data['frequency1'] = 'T'
-        result_data['frequency2'] = '3M'
-    elif currentFrequency == "3M":
-        result_data['frequency1'] = 'T'
-        result_data['frequency2'] = 'B'
-    elif currentFrequency == "B":
-        result_data['frequency1'] = 'B'
-        result_data['frequency2'] = 'B'
-
-    def get_display_frequency(frequency_code):
-        if frequency_code == 'T':
-            return 'Tomorrow'
-        elif frequency_code == 'W':
-            return 'Week'
-        elif frequency_code == 'M':
-            return 'Month'
-        elif frequency_code == '3M':
-            return '3 Months'
-        elif frequency_code == 'B':
-            return 'Burned'
-        else:
-            return 'Unknown'
-
-    result_data['frequency1_display'] = get_display_frequency(result_data['frequency1'])
-    result_data['frequency2_display'] = get_display_frequency(result_data['frequency2'])
+    result_data['frequency1'], result_data['frequency2'] = FREQUENCY_OPTIONS.get(currentFrequency, ("T", "W"))
+    result_data['frequency1_display'] = FREQUENCY_DISPLAY.get(result_data['frequency1'], 'Unknown')
+    result_data['frequency2_display'] = FREQUENCY_DISPLAY.get(result_data['frequency2'], 'Unknown')
 
     return render_template('ankiTranslate.html', result=result_data)
 
 @app.route('/ankiSentenceEnglish')
 def ankiSentenceEnglish():
-   anki_sentence = session['anki_sentence']
+   active_state, state_error = _get_active_anki_state()
+   if state_error == 'expired':
+       return "Session expired. Please restart practice.", 400
+   if state_error == 'complete':
+       return "No active Anki word found.", 400
+
+   anki_sentence = _get_session_text('anki_sentence')
+   if not anki_sentence:
+       return "No sentence available for this card.", 400
+
    anki_sentence_english = translateToEnglish(anki_sentence)
    return anki_sentence_english
 
@@ -729,11 +802,12 @@ def anki_prefetch():
     """Starts background prefetch of translations for the current card.
     Called by anki.html after the German sentence is shown.
     """
-    selected_words_lineNumber = session.get('selected_words_lineNumber')
-    selected_words_position = session.get('selected_words_position', 0)
-    if not selected_words_lineNumber:
+    active_state, state_error = _get_active_anki_state()
+    if state_error:
         return jsonify({'ok': False, 'error': 'Session expired'}), 400
 
+    selected_words_lineNumber = active_state['selected_words_lineNumber']
+    selected_words_position = active_state['selected_words_position']
     wort = selected_words_lineNumber[selected_words_position][0]
     number = selected_words_position + 1
     session['anki_word'] = wort
@@ -792,6 +866,7 @@ def anki_image_hint():
 @app.route('/anki_poll', methods=['GET'])
 def anki_poll():
     """Poll current card prefetch status/results for word and sentence translations."""
+    _prune_background_jobs()
     selected_words_position = session.get('selected_words_position', 0)
     number = session.get('current_anki_number', selected_words_position + 1)
     key = _anki_job_key(number, session.get('anki_word'))
@@ -850,6 +925,7 @@ def correctSpellingGrammar(germanText):
 @app.route('/german_story_status', methods=['GET'])
 def german_story_status():
     # Backward-compatible: return a composite status mainly for legacy polling
+    _prune_background_jobs()
     result = story_results.get(session.sid)
     if not result:
         return jsonify({'status': 'expired'})
@@ -864,6 +940,7 @@ def german_story_status():
 
 @app.route('/story_progress', methods=['GET'])
 def story_progress():
+    _prune_background_jobs()
     result = story_results.get(session.sid)
     if not result:
         return jsonify({'german_status': 'expired', 'english_status': 'expired'})
@@ -879,6 +956,7 @@ def story_progress():
 
 @app.route('/german_story_with_translation', methods=['POST','GET'])
 def german_story_with_translation():
+    _prune_background_jobs()
     result = story_results.get(session.sid)
     german_text = ''
     english_text = ''
@@ -902,6 +980,13 @@ def german_story_with_translation():
 
 @app.route('/ankiRecord', methods=['POST'])
 def updateReviewDate():
+    active_state, state_error = _get_active_anki_state()
+    if state_error == 'expired':
+        flash('Session expired — please restart practice', 'warning')
+        return redirect(url_for('index'))
+    if state_error == 'complete':
+        return redirect(url_for('german_story_with_translation'))
+
     # Based on next Frequency update the review date
     today = datetime.now().date()
     nextReviewDate = ""
@@ -919,8 +1004,8 @@ def updateReviewDate():
     elif freq_input == "B":
         nextReviewDate = today
 
-    selected_words_lineNumber = session['selected_words_lineNumber']
-    selected_words_position = session['selected_words_position']
+    selected_words_lineNumber = active_state['selected_words_lineNumber']
+    selected_words_position = active_state['selected_words_position']
 
     selected_words_lineNumber[selected_words_position][2] = freq_input
     selected_words_lineNumber[selected_words_position][3] = nextReviewDate.strftime("%Y-%m-%d")
@@ -999,13 +1084,17 @@ def iSayDynamic():
 
 @app.route('/conversationEnglishTranslation')
 def conversationEnglishTranslation():
-    youSayText = session['youSayText']
+    youSayText = _get_session_text('youSayText')
+    if not youSayText:
+        return "Session expired. Please restart the conversation.", 400
     youSayTextEnglish = translateToEnglish(youSayText)
     return youSayTextEnglish
 
 @app.route('/conversationSpellGrammarCheck')
 def conversationSpellGrammarCheck():
-    iSayText = session['iSayText']
+    iSayText = _get_session_text('iSayText')
+    if not iSayText:
+        return "Session expired. Please restart the conversation.", 400
     iSayTextReviewed = correctSpellingGrammar(iSayText)
     return iSayTextReviewed
 
