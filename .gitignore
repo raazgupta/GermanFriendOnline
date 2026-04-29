@@ -15,6 +15,9 @@ flask_session_data/
 # Local environments and snapshots
 venv/
 .venv/
+.venv 2/
+.venv_fresh/
+.venv_broken_*/
 Backup/
 server_snapshot_*/
 

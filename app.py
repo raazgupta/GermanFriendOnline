@@ -669,11 +669,12 @@ def anki():
         number = selected_words_position + 1
         session['current_anki_number'] = number
         current_frequency = selected_words_lineNumber[selected_words_position][2]
+        frequency1, frequency2 = FREQUENCY_OPTIONS.get(current_frequency, ("T", "W"))
 
         result_data = {
             'wort': wort,
             'number': number,
-            'show_image_hint': current_frequency not in {'T', '3M', 'B'}
+            'show_image_hint': 'B' not in {frequency1, frequency2}
         }
 
         return render_template('anki.html', result = result_data)
@@ -758,7 +759,7 @@ def anki_translate():
         'frequency1_display': '',
         'frequency2_display': '',
         'final_word': final_word,
-        'number': number
+        'number': number,
     }
 
     # Fill from prefetch if ready; if job absent, start it now in background
