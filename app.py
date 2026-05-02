@@ -96,6 +96,20 @@ FREQUENCY_DISPLAY = {
     "B": "Burned",
 }
 
+
+def redirect_to_home():
+    # Relative redirects keep the app under /App/GermanFriendOnline/ even when
+    # the reverse proxy does not provide a URL prefix to Flask.
+    return redirect('./')
+
+
+def redirect_to_story():
+    return redirect('german_story_with_translation')
+
+
+def redirect_to_anki():
+    return redirect('anki')
+
 # Assistant IDs no longer used after migration to Responses API
 
 def get_current_wortlist_file():
@@ -295,6 +309,7 @@ def _reset_anki_session_state(session_key):
     for session_key_name in (
         'anki_word',
         'anki_sentence',
+        'anki_sentence_word',
         'anki_sentences',
         'current_anki_number',
         'selected_words_position',
@@ -326,7 +341,66 @@ def _get_session_text(key):
     value = str(value).strip()
     return value or None
 
-## Removed JSON parse fallback for sentence resolution; rely on session['anki_sentence']
+def _lookup_sentence_for_word(anki_sentences, wort):
+    if not anki_sentences or not wort:
+        return None
+
+    try:
+        sentences_data = json.loads(anki_sentences)
+    except json.JSONDecodeError:
+        return None
+
+    if not isinstance(sentences_data, dict):
+        return None
+
+    try:
+        wort_normalized = unicodedata.normalize('NFC', str(wort))
+        sentences_data_normalized = {
+            unicodedata.normalize('NFC', str(key)): value
+            for key, value in sentences_data.items()
+        }
+        sentence = sentences_data_normalized.get(wort_normalized)
+        if sentence is None:
+            lower_lookup = {key.lower(): value for key, value in sentences_data_normalized.items()}
+            sentence = lower_lookup.get(wort_normalized.lower())
+    except Exception:
+        return None
+
+    if sentence is None:
+        return None
+
+    sentence = str(sentence).strip()
+    if not sentence:
+        return None
+    return sentence
+
+
+def _get_current_anki_sentence(active_state=None, wort=None):
+    sentence_wort = _get_session_text('anki_sentence_word')
+    anki_sentence = _get_session_text('anki_sentence')
+    if anki_sentence and (not wort or wort == sentence_wort):
+        return anki_sentence
+
+    if active_state is None:
+        active_state, state_error = _get_active_anki_state()
+        if state_error:
+            return None
+
+    selected_words_lineNumber = active_state['selected_words_lineNumber']
+    selected_words_position = active_state['selected_words_position']
+    wort = wort or session.get('anki_word') or selected_words_lineNumber[selected_words_position][0]
+    anki_sentences = resolve_anki_sentences(timeout_seconds=1)
+    if not anki_sentences or anki_sentences.startswith('Error:'):
+        return None
+
+    anki_sentence = _lookup_sentence_for_word(anki_sentences, wort)
+    if not anki_sentence:
+        return None
+
+    session['anki_word'] = wort
+    session['anki_sentence'] = anki_sentence
+    session['anki_sentence_word'] = wort
+    return anki_sentence
 
 def _start_anki_prefetch(card_number: int, wort: str, german_sentence: str):
     """Start background tasks to fetch: (1) one-word translation, (2) English sentence translation.
@@ -340,11 +414,13 @@ def _start_anki_prefetch(card_number: int, wort: str, german_sentence: str):
     # If an existing job for this card exists and is in progress or done, don't restart
     existing = anki_translation_jobs.get(key)
     if existing:
-        # If it's for the same word and already running/done, keep it; otherwise start fresh
-        if existing.get('word') == wort and (
+        existing_sentence = (existing.get('german_sentence') or '').strip()
+        requested_sentence = (german_sentence or '').strip()
+        if existing.get('word') == wort and existing_sentence == requested_sentence and (
             existing.get('word_status') in ('in_progress', 'done') or existing.get('sentence_status') in ('in_progress', 'done')
         ):
             return True
+        anki_translation_jobs.pop(key, None)
 
     anki_translation_jobs[key] = {
         'word': wort,
@@ -631,7 +707,7 @@ def stats_and_start_anki():
     log_datetime()
 
     if not selected_words_lineNumber:
-        return redirect(url_for('german_story_with_translation'))
+        return redirect_to_story()
 
     return render_template('stats_and_start_anki.html', result = result_data)
 
@@ -652,19 +728,22 @@ def anki():
         if state_error == 'expired':
             print("[anki] Missing session keys; redirecting to index.")
             flash('Session expired — please restart practice', 'warning')
-            return redirect(url_for('index'))
+            return redirect_to_home()
         if state_error == 'complete':
-            return redirect(url_for('german_story_with_translation'))
+            return redirect_to_story()
 
         selected_words_lineNumber = active_state['selected_words_lineNumber']
         selected_words_position = active_state['selected_words_position']
 
         if not resolve_anki_sentences():
             flash('Still generating Anki sentences — please try Practice Vocabulary again in a moment.', 'warning')
-            return redirect(url_for('index'))
+            return redirect_to_home()
 
         wort = selected_words_lineNumber[selected_words_position][0]
         session['anki_word'] = wort
+        if _get_session_text('anki_sentence_word') != wort:
+            session.pop('anki_sentence', None)
+            session.pop('anki_sentence_word', None)
         # Track current card number for polling/prefetch keying
         number = selected_words_position + 1
         session['current_anki_number'] = number
@@ -699,28 +778,12 @@ def ankiSentence():
                 return "Still generating sentence. Please try again in a moment.", 503
             if anki_sentences.startswith('Error:') or anki_sentences == 'Error':
                 return anki_sentences, 500
-            anki_sentence_for_wort = "Error"
-            sentences_data = ""
-
-            try:
-                sentences_data = json.loads(anki_sentences)
-            except json.JSONDecodeError:
-                anki_sentence_for_wort = "Failed to parse JSON. Please check the JSON structure"
-
-            if isinstance(sentences_data, dict):
-                try:
-                    wort_normalized = unicodedata.normalize('NFC', wort)
-                    sentences_data_normalized = {unicodedata.normalize('NFC', k): v for k, v in sentences_data.items()}
-                    anki_sentence_for_wort = sentences_data_normalized.get(wort_normalized)
-                    if anki_sentence_for_wort is None:
-                        lower_lookup = {k.lower(): v for k, v in sentences_data_normalized.items()}
-                        anki_sentence_for_wort = lower_lookup.get(wort_normalized.lower())
-                    if anki_sentence_for_wort is None:
-                        anki_sentence_for_wort = f"No sentence found for '{wort}' in generated JSON."
-                except Exception:
-                    anki_sentence_for_wort = 'Failed to get word. Please check if word is in the JSON string'
+            anki_sentence_for_wort = _lookup_sentence_for_word(anki_sentences, wort)
+            if anki_sentence_for_wort is None:
+                anki_sentence_for_wort = f"No sentence found for '{wort}' in generated JSON."
 
             session['anki_sentence'] = anki_sentence_for_wort
+            session['anki_sentence_word'] = wort
             return anki_sentence_for_wort
         except Exception:
             print(traceback.format_exc())
@@ -732,14 +795,15 @@ def anki_translate():
     if state_error == 'expired':
         print("[anki_translate] Missing session keys; redirecting to index.")
         flash('Session expired — please restart practice', 'warning')
-        return redirect(url_for('index'))
+        return redirect_to_home()
     if state_error == 'complete':
-        return redirect(url_for('german_story_with_translation'))
+        return redirect_to_story()
 
     selected_words_lineNumber = active_state['selected_words_lineNumber']
     selected_words_position = active_state['selected_words_position']
 
     wort = selected_words_lineNumber[selected_words_position][0]
+    session['anki_word'] = wort
     final_word = 0
     number = selected_words_position + 1
 
@@ -752,6 +816,7 @@ def anki_translate():
 
     # Prepare base result
     result_data = {
+        'anki_word': wort,
         'translation': 'thinking...',
         'sentence_translation': 'thinking...',
         'frequency1': '',
@@ -764,10 +829,9 @@ def anki_translate():
 
     # Fill from prefetch if ready; if job absent, start it now in background
     key = _anki_job_key(number, wort)
+    german_sentence = _get_current_anki_sentence(active_state, wort=wort)
     job = anki_translation_jobs.get(key)
-    if not job:
-        # Source German sentence from session only
-        german_sentence = session.get('anki_sentence')
+    if not job or (german_sentence and job.get('german_sentence') != german_sentence):
         _start_anki_prefetch(number, wort, german_sentence)
         job = anki_translation_jobs.get(key)
     if job and job.get('word_status') == 'done' and job.get('word_translation'):
@@ -790,7 +854,8 @@ def ankiSentenceEnglish():
    if state_error == 'complete':
        return "No active Anki word found.", 400
 
-   anki_sentence = _get_session_text('anki_sentence')
+   wort = request.args.get('word', type=str) or None
+   anki_sentence = _get_current_anki_sentence(active_state, wort=wort)
    if not anki_sentence:
        return "No sentence available for this card.", 400
 
@@ -814,8 +879,7 @@ def anki_prefetch():
     session['anki_word'] = wort
     session['current_anki_number'] = number
 
-    # Find German sentence for this wort from session only
-    german_sentence = session.get('anki_sentence')
+    german_sentence = _get_current_anki_sentence(active_state, wort=wort)
     if not german_sentence:
         return jsonify({'ok': False, 'error': 'No sentence available in session'}), 400
 
@@ -833,10 +897,8 @@ def anki_image_hint():
         if current_frequency == '3M':
             return jsonify({'ok': False, 'error': 'Image hint is not available for burn-ready cards'}), 400
 
-    sentence = session.get('anki_sentence')
-    if not sentence:
-        data = request.get_json(silent=True) or {}
-        sentence = data.get('sentence')
+    data = request.get_json(silent=True) or {}
+    sentence = data.get('sentence') or _get_current_anki_sentence()
 
     if not sentence:
         return jsonify({'ok': False, 'error': 'No sentence available for this card'}), 400
@@ -847,7 +909,7 @@ def anki_image_hint():
 
     try:
         response = openai_post("/images/generations", {
-            "model": "gpt-image-1-mini",
+            "model": "gpt-image-2",
             "prompt": f"Schoene blonde deutsche Frau: {sentence}",
             "n": 1,
             "size": "1024x1024",
@@ -869,8 +931,11 @@ def anki_poll():
     """Poll current card prefetch status/results for word and sentence translations."""
     _prune_background_jobs()
     selected_words_position = session.get('selected_words_position', 0)
-    number = session.get('current_anki_number', selected_words_position + 1)
-    key = _anki_job_key(number, session.get('anki_word'))
+    number = request.args.get('number', type=int)
+    if number is None:
+        number = session.get('current_anki_number', selected_words_position + 1)
+    wort = request.args.get('word', type=str) or session.get('anki_word')
+    key = _anki_job_key(number, wort)
     job = anki_translation_jobs.get(key)
     if not job:
         return jsonify({
@@ -984,9 +1049,9 @@ def updateReviewDate():
     active_state, state_error = _get_active_anki_state()
     if state_error == 'expired':
         flash('Session expired — please restart practice', 'warning')
-        return redirect(url_for('index'))
+        return redirect_to_home()
     if state_error == 'complete':
-        return redirect(url_for('german_story_with_translation'))
+        return redirect_to_story()
 
     # Based on next Frequency update the review date
     today = datetime.now().date()
@@ -1016,12 +1081,12 @@ def updateReviewDate():
 
     if (selected_words_position + 1) < len(selected_words_lineNumber):
         # return redirect(url_for('anki', _external=False))
-        return redirect('anki')
+        return redirect_to_anki()
     else:
         # Update the Wortlist file with updated frequency and date
         save_to_csv()
         # Show the German Story with translation
-        return redirect('german_story_with_translation')
+        return redirect_to_story()
 
 @app.route('/germanConversation', methods=['POST'])
 def germanConversation():

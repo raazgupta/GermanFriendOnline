@@ -13,11 +13,17 @@
             // Poll server for prefetch status/results and update the UI when ready
             const wordEl = $('#dynamic-anki-word-english');
             const sentenceEl = $('#dynamic-anki-sentence-english');
+            const currentAnkiNumber = {{ result.number | tojson }};
+            const currentAnkiWord = {{ result.anki_word | tojson }};
 
             let sentenceFallbackTried = false;
             function poll() {
                 $.ajax({
                     url: 'anki_poll',
+                    data: {
+                        number: currentAnkiNumber,
+                        word: currentAnkiWord
+                    },
                     method: 'GET',
                     success: function(data) {
                         if (data.word_status === 'done' && data.word_translation) {
@@ -46,6 +52,9 @@
                             sentenceFallbackTried = true;
                             $.ajax({
                                 url: 'ankiSentenceEnglish',
+                                data: {
+                                    word: currentAnkiWord
+                                },
                                 method: 'GET',
                                 success: function(txt) {
                                     sentenceEl.text(txt);
@@ -119,6 +128,15 @@
             transform: scale(1.05);
         }
 
+        .biergarten-green {
+            background: #2f6f3e !important;
+            box-shadow: 0 10px 20px rgba(47, 111, 62, 0.22), inset 0 -3px 0 rgba(23, 23, 23, 0.16) !important;
+        }
+
+        .biergarten-green:hover {
+            background: #214f2d !important;
+        }
+
         form {
             display: flex;
             justify-content: center;
@@ -172,7 +190,7 @@
             {{ result.frequency1_display }}
         </button>
 
-        <button type="submit" class="custom-button" name="frequency" value="{{ result.frequency2 }}">
+        <button type="submit" class="custom-button biergarten-green" name="frequency" value="{{ result.frequency2 }}">
             {{ result.frequency2_display }}
         </button>
     </form>

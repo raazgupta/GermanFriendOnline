@@ -124,12 +124,26 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 12px;
             margin-top: 0.5em;
         }
 
         .review-actions form {
             margin: 0;
+            width: 100%;
+        }
+
+        .review-actions .custom-button {
+            margin: 0;
+        }
+
+        .biergarten-green {
+            background: #2f6f3e !important;
+            box-shadow: 0 10px 20px rgba(47, 111, 62, 0.22), inset 0 -3px 0 rgba(23, 23, 23, 0.16) !important;
+        }
+
+        .biergarten-green:hover {
+            background: #214f2d !important;
         }
 
         .hint-status {
@@ -168,6 +182,11 @@
             .custom-button {
                 width: 90%;
                 font-size: 16px;
+            }
+
+            .review-actions .custom-button,
+            .review-actions form {
+                width: 100%;
             }
         }
     </style>
