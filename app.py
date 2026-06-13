@@ -907,20 +907,27 @@ def anki_image_hint():
     if not sentence or sentence.startswith('Failed to') or sentence == 'Error':
         return jsonify({'ok': False, 'error': 'No usable sentence available for this card'}), 400
 
+    image_prompt = f"Eine schoene blonde deutsche Frau: {sentence}"
+
     try:
         response = openai_post("/images/generations", {
             "model": "gpt-image-2",
-            "prompt": f"Schoene blonde deutsche Frau: {sentence}",
+            "prompt": image_prompt,
             "n": 1,
+            # gpt-image-2 supports arbitrary sizes, but 512x512 is below the
+            # current minimum pixel budget in production. Use the smallest
+            # standard size from the current spec.
             "size": "1024x1024",
             "quality": "low",
+            "output_format": "webp",
         })
         image_base64 = response.get("data", [{}])[0].get("b64_json")
         if not image_base64:
             return jsonify({'ok': False, 'error': 'Image generation returned no image'}), 502
+        image_url = f"data:image/webp;base64,{image_base64}"
         return jsonify({
             'ok': True,
-            'image_url': f"data:image/png;base64,{image_base64}"
+            'image_url': image_url
         })
     except Exception as e:
         return jsonify({'ok': False, 'error': str(e)}), 502
