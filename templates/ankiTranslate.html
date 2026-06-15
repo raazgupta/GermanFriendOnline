@@ -8,13 +8,26 @@
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    {% set result = result | default({}, true) %}
+    {% set result_number = result.get('number', 0) %}
+    {% set result_anki_word = result.get('anki_word', '') %}
+    {% set result_sentence_token = result.get('sentence_token', '') %}
+    {% set result_final_word = result.get('final_word', 0) %}
+    {% set result_translation = result.get('translation', 'thinking...') %}
+    {% set result_sentence_translation = result.get('sentence_translation', 'thinking...') %}
+    {% set result_frequency1 = result.get('frequency1', '') %}
+    {% set result_frequency2 = result.get('frequency2', '') %}
+    {% set result_frequency1_display = result.get('frequency1_display', 'Unknown') %}
+    {% set result_frequency2_display = result.get('frequency2_display', 'Unknown') %}
+
     <script>
         $(document).ready(function() {
             // Poll server for prefetch status/results and update the UI when ready
             const wordEl = $('#dynamic-anki-word-english');
             const sentenceEl = $('#dynamic-anki-sentence-english');
-            const currentAnkiNumber = {{ result.number | tojson }};
-            const currentAnkiWord = {{ result.anki_word | tojson }};
+            const currentAnkiNumber = {{ result_number | tojson }};
+            const currentAnkiWord = {{ result_anki_word | tojson }};
+            const currentSentenceToken = {{ result_sentence_token | tojson }};
 
             let sentenceFallbackTried = false;
             function poll() {
@@ -22,7 +35,8 @@
                     url: 'anki_poll',
                     data: {
                         number: currentAnkiNumber,
-                        word: currentAnkiWord
+                        word: currentAnkiWord,
+                        sentence_token: currentSentenceToken
                     },
                     method: 'GET',
                     success: function(data) {
@@ -79,7 +93,7 @@
             const form = document.getElementById('translate-form');
             const loading = document.getElementById('loading');
             form.addEventListener('submit', function () {
-                if ({{ result.final_word }} === 1) {
+                if ({{ result_final_word }} === 1) {
                     loading.style.display = 'block';
                 }
             });
@@ -182,16 +196,16 @@
 
     <h1>Vocabulary Translation</h1>
 
-    <p id="dynamic-anki-word-english">{{ result.number }}: {{ result.translation }}</p>
-    <p id="dynamic-anki-sentence-english">{{ result.sentence_translation }}</p>
+    <p id="dynamic-anki-word-english">{{ result_number }}: {{ result_translation }}</p>
+    <p id="dynamic-anki-sentence-english">{{ result_sentence_translation }}</p>
 
     <form id="translate-form" method="POST" action="ankiRecord">
-        <button type="submit" class="custom-button" name="frequency" value="{{ result.frequency1 }}">
-            {{ result.frequency1_display }}
+        <button type="submit" class="custom-button" name="frequency" value="{{ result_frequency1 }}">
+            {{ result_frequency1_display }}
         </button>
 
-        <button type="submit" class="custom-button biergarten-green" name="frequency" value="{{ result.frequency2 }}">
-            {{ result.frequency2_display }}
+        <button type="submit" class="custom-button biergarten-green" name="frequency" value="{{ result_frequency2 }}">
+            {{ result_frequency2_display }}
         </button>
     </form>
 

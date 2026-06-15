@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash, has_request_context
 from flask_session import Session
 import csv
+import hashlib
 import os
 import random
 from datetime import datetime, timedelta
@@ -251,7 +252,15 @@ def _get_session_id():
         # Fallback if Flask-Session sid is unavailable
         return request.cookies.get(app.session_cookie_name, "unknown")
 
-def _anki_job_key(card_number: int, wort: str = None):
+def _anki_sentence_token(german_sentence: str = None):
+    normalized = (german_sentence or '').strip()
+    if not normalized:
+        return "no-sentence"
+    normalized = unicodedata.normalize('NFC', normalized)
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:16]
+
+
+def _anki_job_key(card_number: int, wort: str = None, german_sentence: str = None):
     base = f"{_get_session_id()}:{card_number}"
     if wort:
         try:
@@ -259,6 +268,8 @@ def _anki_job_key(card_number: int, wort: str = None):
         except Exception:
             w = str(wort)
         base = f"{base}:{w}"
+    if german_sentence is not None:
+        base = f"{base}:{_anki_sentence_token(german_sentence)}"
     return base
 
 
@@ -410,7 +421,7 @@ def _start_anki_prefetch(card_number: int, wort: str, german_sentence: str):
         return False
 
     _prune_background_jobs()
-    key = _anki_job_key(card_number, wort)
+    key = _anki_job_key(card_number, wort, german_sentence)
     # If an existing job for this card exists and is in progress or done, don't restart
     existing = anki_translation_jobs.get(key)
     if existing:
@@ -819,6 +830,7 @@ def anki_translate():
         'anki_word': wort,
         'translation': 'thinking...',
         'sentence_translation': 'thinking...',
+        'sentence_token': '',
         'frequency1': '',
         'frequency2': '',
         'frequency1_display': '',
@@ -828,8 +840,9 @@ def anki_translate():
     }
 
     # Fill from prefetch if ready; if job absent, start it now in background
-    key = _anki_job_key(number, wort)
     german_sentence = _get_current_anki_sentence(active_state, wort=wort)
+    result_data['sentence_token'] = _anki_sentence_token(german_sentence)
+    key = _anki_job_key(number, wort, german_sentence)
     job = anki_translation_jobs.get(key)
     if not job or (german_sentence and job.get('german_sentence') != german_sentence):
         _start_anki_prefetch(number, wort, german_sentence)
@@ -907,7 +920,7 @@ def anki_image_hint():
     if not sentence or sentence.startswith('Failed to') or sentence == 'Error':
         return jsonify({'ok': False, 'error': 'No usable sentence available for this card'}), 400
 
-    image_prompt = f"Eine schoene blonde deutsche Frau: {sentence}"
+    image_prompt = sentence
 
     try:
         response = openai_post("/images/generations", {
@@ -942,7 +955,10 @@ def anki_poll():
     if number is None:
         number = session.get('current_anki_number', selected_words_position + 1)
     wort = request.args.get('word', type=str) or session.get('anki_word')
+    sentence_token = request.args.get('sentence_token', type=str)
     key = _anki_job_key(number, wort)
+    if sentence_token:
+        key = f"{key}:{sentence_token}"
     job = anki_translation_jobs.get(key)
     if not job:
         return jsonify({
