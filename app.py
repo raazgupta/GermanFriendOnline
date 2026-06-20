@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash, has_request_context
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash, has_request_context, send_from_directory
 from flask_session import Session
+import base64
 import csv
 import hashlib
 import os
@@ -81,6 +82,9 @@ anki_translation_jobs = {}
 DEFAULT_WORTLIST_FILE = "A1Wortlist.csv"
 MAX_BACKGROUND_JOBS = 200
 BACKGROUND_JOB_TTL = timedelta(hours=1)
+GENERATED_IMAGE_TTL = timedelta(hours=6)
+MAX_GENERATED_IMAGES = 200
+GENERATED_IMAGES_DIR = os.path.join(os.getcwd(), 'generated_images')
 FREQUENCY_OPTIONS = {
     "": ("T", "W"),
     "T": ("T", "W"),
@@ -112,6 +116,53 @@ def redirect_to_anki():
     return redirect('anki')
 
 # Assistant IDs no longer used after migration to Responses API
+
+
+def _ensure_generated_images_dir():
+    os.makedirs(GENERATED_IMAGES_DIR, exist_ok=True)
+
+
+def _prune_generated_images():
+    _ensure_generated_images_dir()
+    now = time.time()
+    entries = []
+    for name in os.listdir(GENERATED_IMAGES_DIR):
+        path = os.path.join(GENERATED_IMAGES_DIR, name)
+        if not os.path.isfile(path):
+            continue
+        try:
+            mtime = os.path.getmtime(path)
+        except OSError:
+            continue
+        if now - mtime > GENERATED_IMAGE_TTL.total_seconds():
+            try:
+                os.remove(path)
+            except OSError:
+                pass
+            continue
+        entries.append((mtime, path))
+
+    if len(entries) <= MAX_GENERATED_IMAGES:
+        return
+
+    entries.sort(key=lambda item: item[0])
+    for _, path in entries[:len(entries) - MAX_GENERATED_IMAGES]:
+        try:
+            os.remove(path)
+        except OSError:
+            pass
+
+
+def _save_generated_image(image_base64: str, sentence: str) -> str:
+    _prune_generated_images()
+    sentence_token = _anki_sentence_token(sentence)
+    unique_token = hashlib.sha256(f"{sentence_token}:{time.time()}".encode("utf-8")).hexdigest()[:24]
+    filename = f"{unique_token}.webp"
+    path = os.path.join(GENERATED_IMAGES_DIR, filename)
+    image_bytes = base64.b64decode(image_base64, validate=True)
+    with open(path, 'wb') as image_file:
+        image_file.write(image_bytes)
+    return filename
 
 def get_current_wortlist_file():
     # fall back to default if none selected
@@ -937,13 +988,20 @@ def anki_image_hint():
         image_base64 = response.get("data", [{}])[0].get("b64_json")
         if not image_base64:
             return jsonify({'ok': False, 'error': 'Image generation returned no image'}), 502
-        image_url = f"data:image/webp;base64,{image_base64}"
+        filename = _save_generated_image(image_base64, sentence)
+        image_url = f"./generated_images/{filename}"
         return jsonify({
             'ok': True,
             'image_url': image_url
         })
     except Exception as e:
         return jsonify({'ok': False, 'error': str(e)}), 502
+
+
+@app.route('/generated_images/<path:filename>')
+def generated_image_file(filename):
+    _prune_generated_images()
+    return send_from_directory(GENERATED_IMAGES_DIR, filename, mimetype='image/webp')
 
 
 @app.route('/anki_poll', methods=['GET'])

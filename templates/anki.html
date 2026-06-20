@@ -47,6 +47,7 @@
                 imageHintButton.prop('disabled', true);
                 imageHintStatus.text('Generating image hint...');
                 imageHintResult.hide();
+                imageHintImg.off('load error');
                 imageHintImg.attr('src', '');
 
                 $.ajax({
@@ -56,9 +57,17 @@
                     data: JSON.stringify({ sentence: sentence }),
                     success: function(data) {
                         if (data.ok && data.image_url) {
-                            imageHintImg.attr('src', data.image_url);
-                            imageHintResult.show();
-                            imageHintStatus.text('');
+                            const imageUrl = data.image_url + '?t=' + Date.now();
+                            imageHintImg
+                                .one('load', function() {
+                                    imageHintResult.show();
+                                    imageHintStatus.text('');
+                                })
+                                .one('error', function() {
+                                    imageHintResult.hide();
+                                    imageHintStatus.text('Image was generated, but the browser could not load it.');
+                                });
+                            imageHintImg.attr('src', imageUrl);
                         } else {
                             imageHintStatus.text(data.error || 'Could not generate image hint.');
                         }
